@@ -1,10 +1,12 @@
 import type { ArchidektDeckResponse } from '../types/archidekt'
 
-// Use proxy endpoint (works in both dev and production via Vercel serverless function)
-const ARCHIDEKT_API_BASE = '/api/archidekt/decks'
-
 export async function fetchDeck(deckId: string): Promise<ArchidektDeckResponse> {
-  const response = await fetch(`${ARCHIDEKT_API_BASE}/${deckId}/`)
+  // Use proxy in dev (Vite proxy), serverless function in production
+  const url = import.meta.env.DEV
+    ? `/api/archidekt/decks/${deckId}/`
+    : `/api/deck?id=${deckId}`
+
+  const response = await fetch(url)
 
   if (!response.ok) {
     if (response.status === 404) {
