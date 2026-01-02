@@ -1,5 +1,9 @@
 # Archidekt Swiper - Project Summary
 
+## Links
+- **Live App**: https://archidekt-swiper.vercel.app
+- **GitHub**: https://github.com/Interkz/archidekt-swiper
+
 ## Overview
 A Tinder-style swipe app for MTG Commander deckbuilding that connects to the Archidekt API. Users can swipe to keep or remove cards when trimming decks from 200+ cards down to ~100.
 
@@ -13,6 +17,8 @@ A Tinder-style swipe app for MTG Commander deckbuilding that connects to the Arc
 ## Project Structure
 
 ```
+api/
+└── deck.ts                    # Vercel serverless proxy for Archidekt API
 src/
 ├── components/
 │   ├── CardStack.tsx          # Swipeable card stack
@@ -85,7 +91,9 @@ Three options in ResultsPage:
 
 ### Archidekt API
 - Read-only, no write endpoints
-- CORS blocked from localhost - uses Vite proxy in `vite.config.ts`:
+- CORS blocked from browsers - requires proxy solution
+
+**Development**: Vite proxy in `vite.config.ts`:
 ```typescript
 server: {
   proxy: {
@@ -97,7 +105,10 @@ server: {
   },
 }
 ```
-- `archidektApi.ts` uses `/api/archidekt/decks` in dev mode
+
+**Production**: Vercel serverless function at `api/deck.ts`:
+- Endpoint: `/api/deck?id={deckId}`
+- Proxies requests to `https://archidekt.com/api/decks/{id}/`
 
 ### Scryfall API
 - Used for card images: `https://api.scryfall.com/cards/{scryfallId}?format=image&version={size}`
@@ -138,6 +149,16 @@ getUniqueCategories, getCategoryKeptCards, getCategoryAvailableCards, canAddToCa
 ```bash
 npm run dev    # Start dev server
 npm run build  # Build for production
+```
+
+## Deployment
+- **Hosting**: Vercel (auto-deploys on push to GitHub)
+- **Serverless Function**: `api/deck.ts` handles CORS proxy
+- **Config**: `vercel.json` for SPA routing rewrites
+
+To deploy manually:
+```bash
+vercel --prod
 ```
 
 ## Future Enhancements to Consider
