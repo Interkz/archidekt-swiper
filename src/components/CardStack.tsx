@@ -7,9 +7,10 @@ interface CardStackProps {
   cards: NormalizedCard[]
   onKeep: (card: NormalizedCard) => void
   onRemove: (card: NormalizedCard) => void
+  onMaybe?: (card: NormalizedCard) => void
 }
 
-export default function CardStack({ cards, onKeep, onRemove }: CardStackProps) {
+export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStackProps) {
   const cardsToShow = cards.slice(0, 3) // Show top 3 cards in stack
   const currentCard = cards[0]
   const preloadedRef = useRef<Set<string>>(new Set())
@@ -35,9 +36,11 @@ export default function CardStack({ cards, onKeep, onRemove }: CardStackProps) {
         onKeep(currentCard)
       } else if (direction === 'left') {
         onRemove(currentCard)
+      } else if (direction === 'up' && onMaybe) {
+        onMaybe(currentCard)
       }
     },
-    [currentCard, onKeep, onRemove]
+    [currentCard, onKeep, onRemove, onMaybe]
   )
 
   const handleCardLeftScreen = useCallback(() => {

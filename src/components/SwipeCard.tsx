@@ -24,7 +24,7 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
       className="absolute w-full perspective-1000"
       onSwipe={handleSwipe}
       onCardLeftScreen={onCardLeftScreen}
-      preventSwipe={['up', 'down']}
+      preventSwipe={['down']}
     >
       <div className="relative preserve-3d">
         {/* ACCEPTED stamp - clinical approval */}
@@ -49,6 +49,19 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
           <div className="flex gap-0.5 mt-1 justify-center">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="w-1.5 h-1.5 border border-[var(--lumon-black)] bg-transparent" />
+            ))}
+          </div>
+        </div>
+
+        {/* DEFERRED stamp - clinical deferral */}
+        <div
+          className={`absolute top-8 left-1/2 -translate-x-1/2 z-10 stamp stamp-deferred
+                      ${swipeDirection === 'up' ? 'stamp-visible' : ''}`}
+        >
+          <span className="text-sm tracking-widest">DEFERRED</span>
+          <div className="flex gap-0.5 mt-1 justify-center">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="w-1.5 h-1.5 border border-[#8b5a2b] bg-transparent" />
             ))}
           </div>
         </div>

@@ -5,6 +5,9 @@ import type {
   ArchidektCardEntry,
   NormalizedCard,
   SwipeAction,
+  SwipeHistoryEntry,
+  BulkSwipeAction,
+  BulkActionType,
   ViewMode,
   CategorySection,
 } from '../types/archidekt'
@@ -23,12 +26,16 @@ interface DeckState {
   keptCards: NormalizedCard[]
   removedCards: NormalizedCard[]
 
+  // Maybe pile for deferred decisions
+  maybeCards: NormalizedCard[]
+  isReviewingMaybes: boolean
+
   // Sideboard card lists
   allSideboardCards: NormalizedCard[]
   remainingSideboardCards: NormalizedCard[]
 
-  // Swipe history for undo
-  swipeHistory: SwipeAction[]
+  // Swipe history for undo (supports single and bulk actions)
+  swipeHistory: SwipeHistoryEntry[]
 
   // UI State
   isLoading: boolean
@@ -51,9 +58,18 @@ interface DeckState {
   setSwipeMode: (mode: SwipeMode) => void
   keepCard: (card: NormalizedCard) => void
   removeCard: (card: NormalizedCard) => void
+  maybeCard: (card: NormalizedCard) => void
   undoLastSwipe: () => NormalizedCard | null
   resetDeck: () => void
   clearState: () => void
+
+  // Maybe pile actions
+  startMaybeReview: () => void
+
+  // Quick actions
+  getRemainingLands: () => NormalizedCard[]
+  getRemainingByCategory: (category: string) => NormalizedCard[]
+  bulkKeepCards: (cards: NormalizedCard[], actionType: BulkActionType, label: string) => void
 
   // View mode actions
   setViewMode: (mode: ViewMode) => void
@@ -100,6 +116,7 @@ function normalizeCards(cards: ArchidektCardEntry[], includeSideboard: boolean =
       quantity: entry.quantity,
       categories: entry.categories,
       setCode: entry.card.edition.editioncode,
+      colorIdentity: entry.card.oracleCard.colorIdentity || [],
     }))
     .sort((a, b) => {
       // Sort by CMC, then alphabetically
@@ -120,6 +137,8 @@ export const useDeckStore = create<DeckState>()(
         remainingCards: [],
         keptCards: [],
         removedCards: [],
+        maybeCards: [],
+        isReviewingMaybes: false,
         allSideboardCards: [],
         remainingSideboardCards: [],
         swipeHistory: [],
@@ -147,6 +166,8 @@ export const useDeckStore = create<DeckState>()(
             remainingCards: [...mainDeck],
             keptCards: [],
             removedCards: [],
+            maybeCards: [],
+            isReviewingMaybes: false,
             allSideboardCards: sideboard,
             remainingSideboardCards: [...sideboard],
             swipeHistory: [],
@@ -303,46 +324,146 @@ export const useDeckStore = create<DeckState>()(
           }
         },
 
+        maybeCard: (card) => {
+          const { remainingCards, remainingSideboardCards, maybeCards, swipeHistory, swipeMode } = get()
+
+          if (swipeMode === 'sideboard') {
+            set({
+              remainingSideboardCards: remainingSideboardCards.filter((c) => c.id !== card.id),
+              maybeCards: [...maybeCards, card],
+              swipeHistory: [
+                ...swipeHistory,
+                { card, action: 'maybe', timestamp: Date.now(), fromSideboard: true },
+              ],
+            })
+          } else {
+            set({
+              remainingCards: remainingCards.filter((c) => c.id !== card.id),
+              maybeCards: [...maybeCards, card],
+              swipeHistory: [
+                ...swipeHistory,
+                { card, action: 'maybe', timestamp: Date.now(), fromSideboard: false },
+              ],
+            })
+          }
+        },
+
+        startMaybeReview: () => {
+          const { maybeCards } = get()
+          // Move all maybe cards back to remaining for review
+          set({
+            remainingCards: [...maybeCards],
+            maybeCards: [],
+            isReviewingMaybes: true,
+          })
+        },
+
+        // Quick action selectors
+        getRemainingLands: () => {
+          const { remainingCards } = get()
+          return remainingCards.filter((card) =>
+            card.typeLine.toLowerCase().includes('land')
+          )
+        },
+
+        getRemainingByCategory: (category: string) => {
+          const { remainingCards } = get()
+          return remainingCards.filter((card) =>
+            card.categories.some((cat) => cat.toLowerCase() === category.toLowerCase())
+          )
+        },
+
+        bulkKeepCards: (cards, actionType, label) => {
+          if (cards.length === 0) return
+
+          const { remainingCards, keptCards, swipeHistory } = get()
+          const cardIds = new Set(cards.map((c) => c.id))
+
+          set({
+            remainingCards: remainingCards.filter((c) => !cardIds.has(c.id)),
+            keptCards: [...keptCards, ...cards],
+            swipeHistory: [
+              ...swipeHistory,
+              {
+                type: 'bulk',
+                actionType,
+                cards,
+                timestamp: Date.now(),
+                label,
+              } as BulkSwipeAction,
+            ],
+          })
+        },
+
         undoLastSwipe: () => {
-          const { swipeHistory, keptCards, removedCards, remainingCards, remainingSideboardCards } = get()
+          const { swipeHistory, keptCards, removedCards, maybeCards, remainingCards, remainingSideboardCards } = get()
           if (swipeHistory.length === 0) return null
 
           const lastAction = swipeHistory[swipeHistory.length - 1]
           const newHistory = swipeHistory.slice(0, -1)
-          const fromSideboard = (lastAction as SwipeAction & { fromSideboard?: boolean }).fromSideboard
+
+          // Handle bulk actions
+          if ('type' in lastAction && lastAction.type === 'bulk') {
+            const bulkAction = lastAction as BulkSwipeAction
+            const bulkCardIds = new Set(bulkAction.cards.map((c) => c.id))
+
+            set({
+              keptCards: keptCards.filter((c) => !bulkCardIds.has(c.id)),
+              remainingCards: [...bulkAction.cards, ...remainingCards],
+              swipeHistory: newHistory,
+            })
+
+            return bulkAction.cards[0] // Return first card for UI feedback
+          }
+
+          // Handle single card actions
+          const singleAction = lastAction as SwipeAction
+          const fromSideboard = singleAction.fromSideboard
 
           if (fromSideboard) {
             // Restore to sideboard
-            if (lastAction.action === 'keep') {
+            if (singleAction.action === 'keep') {
               set({
-                keptCards: keptCards.filter((c) => c.id !== lastAction.card.id),
-                remainingSideboardCards: [lastAction.card, ...remainingSideboardCards],
+                keptCards: keptCards.filter((c) => c.id !== singleAction.card.id),
+                remainingSideboardCards: [singleAction.card, ...remainingSideboardCards],
+                swipeHistory: newHistory,
+              })
+            } else if (singleAction.action === 'maybe') {
+              set({
+                maybeCards: maybeCards.filter((c) => c.id !== singleAction.card.id),
+                remainingSideboardCards: [singleAction.card, ...remainingSideboardCards],
                 swipeHistory: newHistory,
               })
             } else {
               set({
-                remainingSideboardCards: [lastAction.card, ...remainingSideboardCards],
+                remainingSideboardCards: [singleAction.card, ...remainingSideboardCards],
                 swipeHistory: newHistory,
               })
             }
           } else {
             // Restore to main deck
-            if (lastAction.action === 'keep') {
+            if (singleAction.action === 'keep') {
               set({
-                keptCards: keptCards.filter((c) => c.id !== lastAction.card.id),
-                remainingCards: [lastAction.card, ...remainingCards],
+                keptCards: keptCards.filter((c) => c.id !== singleAction.card.id),
+                remainingCards: [singleAction.card, ...remainingCards],
+                swipeHistory: newHistory,
+              })
+            } else if (singleAction.action === 'maybe') {
+              set({
+                maybeCards: maybeCards.filter((c) => c.id !== singleAction.card.id),
+                remainingCards: [singleAction.card, ...remainingCards],
                 swipeHistory: newHistory,
               })
             } else {
               set({
-                removedCards: removedCards.filter((c) => c.id !== lastAction.card.id),
-                remainingCards: [lastAction.card, ...remainingCards],
+                removedCards: removedCards.filter((c) => c.id !== singleAction.card.id),
+                remainingCards: [singleAction.card, ...remainingCards],
                 swipeHistory: newHistory,
               })
             }
           }
 
-          return lastAction.card
+          return singleAction.card
         },
 
         resetDeck: () => {
@@ -352,6 +473,8 @@ export const useDeckStore = create<DeckState>()(
             remainingSideboardCards: [...allSideboardCards],
             keptCards: [],
             removedCards: [],
+            maybeCards: [],
+            isReviewingMaybes: false,
             swipeHistory: [],
             swipeMode: 'main',
             viewMode: 'swipe',
@@ -371,6 +494,8 @@ export const useDeckStore = create<DeckState>()(
             remainingCards: [],
             keptCards: [],
             removedCards: [],
+            maybeCards: [],
+            isReviewingMaybes: false,
             allSideboardCards: [],
             remainingSideboardCards: [],
             swipeHistory: [],
@@ -393,6 +518,8 @@ export const useDeckStore = create<DeckState>()(
           deckOwner: state.deckOwner,
           keptCards: state.keptCards,
           removedCards: state.removedCards,
+          maybeCards: state.maybeCards,
+          isReviewingMaybes: state.isReviewingMaybes,
           remainingCards: state.remainingCards,
           allCards: state.allCards,
           allSideboardCards: state.allSideboardCards,

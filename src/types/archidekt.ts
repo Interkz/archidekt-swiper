@@ -55,18 +55,41 @@ export interface NormalizedCard {
   quantity: number
   categories: string[]
   setCode: string
+  colorIdentity: string[] // W, U, B, R, G
 }
 
 // Swipe action for undo history
 export interface SwipeAction {
   card: NormalizedCard
-  action: 'keep' | 'remove'
+  action: 'keep' | 'remove' | 'maybe'
   timestamp: number
   fromSideboard?: boolean
 }
+
+// Bulk action types for quick actions
+export type BulkActionType = 'keep-lands' | 'keep-category'
+
+export interface BulkSwipeAction {
+  type: 'bulk'
+  actionType: BulkActionType
+  cards: NormalizedCard[]
+  timestamp: number
+  label: string // e.g., "All Lands" or "Commander"
+}
+
+// Union type for swipe history entries
+export type SwipeHistoryEntry = SwipeAction | BulkSwipeAction
 
 // View mode for hybrid swipe/category selection
 export type ViewMode = 'swipe' | 'category'
 
 // Category selection section
 export type CategorySection = 'kept' | 'available'
+
+// Quick action for bulk operations
+export interface QuickAction {
+  type: BulkActionType
+  category?: string
+  cards: NormalizedCard[]
+  label: string
+}
