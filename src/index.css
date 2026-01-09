@@ -1,11 +1,60 @@
+/* Google Fonts - JetBrains Mono for terminal aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   ARCHIDEKT SWIPER - LUMON INDUSTRIES DESIGN SYSTEM
+   Severance + Swiss International Style
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* ─────────────────────────────────────────────────────────────────────────
+     COLOR PALETTE: "The Lumon Void"
+     ───────────────────────────────────────────────────────────────────────── */
+
+  /* Core Colors */
+  --lumon-white: #f4f4f0;           /* Cool paper white, fluorescent-lit */
+  --lumon-cream: #e8e8e4;           /* Slightly darker for contrast */
+  --lumon-black: #080f0d;           /* Deep almost-green black */
+  --lumon-green: #1f4234;           /* Severance forest green accent */
+  --lumon-green-light: #2d5a47;     /* Lighter green for hover states */
+  --lumon-green-pale: #d4e5dc;      /* Very pale green for backgrounds */
+
+  /* Grid & Structure */
+  --grid-line: #c8c8c4;             /* Visible ledger lines */
+  --grid-line-heavy: #1f4234;       /* Thick dividers (green-tinted) */
+
+  /* Status (NO traffic lights - clinical approach) */
+  --status-positive: #1f4234;       /* Forest green = keep/success */
+  --status-negative: #080f0d;       /* Black = remove/loss */
+  --status-neutral: #6b6b68;        /* Muted gray */
+  --status-warning: #8b7355;        /* Muted amber/brown */
+
+  /* Surfaces */
+  --surface-primary: #ffffff;       /* Pure white cards */
+  --surface-elevated: #fafaf8;      /* Slight elevation */
+  --surface-sunken: #ececea;        /* Recessed areas */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     TYPOGRAPHY: "Rational vs. Human"
+     ───────────────────────────────────────────────────────────────────────── */
+
+  /* Display - Tight, massive Helvetica */
+  --font-display: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+
+  /* Monospace - Mainframe terminal */
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', monospace;
+
+  /* Body - Clean geometric sans */
+  --font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+
+  /* Base settings */
+  font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
-  color: #1f2937;
-  background-color: #f8fafc;
+  color: var(--lumon-black);
+  background-color: var(--lumon-white);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -15,7 +64,11 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-color: var(--lumon-white);
+  /* Subtle paper texture effect */
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.8) 0%, transparent 50%),
+    linear-gradient(180deg, var(--lumon-white) 0%, var(--lumon-cream) 100%);
   background-attachment: fixed;
 }
 
@@ -25,51 +78,411 @@ body {
   flex-direction: column;
 }
 
-/* Custom scrollbar for light theme */
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR - Clinical, minimal
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
+  background: var(--lumon-cream);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: var(--grid-line);
+  border: 1px solid var(--lumon-cream);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--lumon-green);
 }
 
-/* Card shadow utilities */
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHADOW UTILITIES - Physical card presence
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Card resting on table - subtle contact shadow */
 .card-shadow {
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 0, 0, 0.05);
+    0 1px 2px rgba(8, 15, 13, 0.08),
+    0 4px 8px rgba(8, 15, 13, 0.04),
+    0 0 0 1px rgba(8, 15, 13, 0.03);
 }
 
+/* Elevated card - being picked up */
 .card-shadow-lg {
   box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 0, 0, 0.05);
+    0 4px 8px rgba(8, 15, 13, 0.12),
+    0 12px 24px rgba(8, 15, 13, 0.08),
+    0 0 0 1px rgba(8, 15, 13, 0.05);
 }
 
+/* Hover state - card lifting */
 .card-shadow-hover {
   box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 0, 0, 0.05);
+    0 8px 16px rgba(8, 15, 13, 0.15),
+    0 24px 48px rgba(8, 15, 13, 0.1),
+    0 0 0 1px rgba(8, 15, 13, 0.05);
 }
 
-/* Table surface effect */
+/* Table contact shadow - where card meets surface */
+.table-contact-shadow {
+  box-shadow:
+    0 2px 4px rgba(8, 15, 13, 0.1),
+    0 0 20px rgba(8, 15, 13, 0.05);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BORDER UTILITIES - Swiss grid lines
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.border-grid {
+  border-color: var(--grid-line);
+}
+
+.border-grid-heavy {
+  border-color: var(--grid-line-heavy);
+  border-width: 2px;
+}
+
+.divider-line {
+  height: 1px;
+  background-color: var(--grid-line);
+}
+
+.divider-heavy {
+  height: 2px;
+  background-color: var(--grid-line-heavy);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-lumon-black {
+  color: var(--lumon-black);
+}
+
+.text-lumon-green {
+  color: var(--lumon-green);
+}
+
+.text-lumon-neutral {
+  color: var(--status-neutral);
+}
+
+/* Terminal-style uppercase */
+.text-terminal {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTON UTILITIES - Brutalist style
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn-brutalist {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--lumon-black);
+  background-color: transparent;
+  color: var(--lumon-black);
+  padding: 0.75rem 1.5rem;
+  transition: all 150ms ease-out;
+  cursor: pointer;
+}
+
+.btn-brutalist:hover {
+  background-color: var(--lumon-black);
+  color: var(--lumon-white);
+}
+
+.btn-brutalist:active {
+  transform: scale(0.98);
+}
+
+.btn-brutalist:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-brutalist:disabled:hover {
+  background-color: transparent;
+  color: var(--lumon-black);
+}
+
+.btn-brutalist-green {
+  border-color: var(--lumon-green);
+  color: var(--lumon-green);
+}
+
+.btn-brutalist-green:hover {
+  background-color: var(--lumon-green);
+  color: var(--lumon-white);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3D CARD FLIP ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Card flip animation keyframes */
+@keyframes cardFlipRight {
+  0% {
+    transform: rotateY(0deg) translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateY(45deg) translateX(50px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotateY(90deg) translateX(150px);
+    opacity: 0;
+  }
+}
+
+@keyframes cardFlipLeft {
+  0% {
+    transform: rotateY(0deg) translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateY(-45deg) translateX(-50px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotateY(-90deg) translateX(-150px);
+    opacity: 0;
+  }
+}
+
+.card-flip-right {
+  animation: cardFlipRight 400ms ease-out forwards;
+}
+
+.card-flip-left {
+  animation: cardFlipLeft 400ms ease-out forwards;
+}
+
+/* Card stack entrance animation */
+@keyframes cardSlideUp {
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.card-enter {
+  animation: cardSlideUp 300ms ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STAMP INDICATORS - Clinical approval/rejection
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.stamp {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 1rem;
+  border: 3px solid currentColor;
+  transform: rotate(-12deg);
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+.stamp-accepted {
+  color: var(--lumon-green);
+  border-color: var(--lumon-green);
+  background-color: rgba(31, 66, 52, 0.1);
+}
+
+.stamp-rejected {
+  color: var(--lumon-black);
+  border-color: var(--lumon-black);
+  background-color: rgba(8, 15, 13, 0.05);
+  transform: rotate(12deg);
+}
+
+.stamp-visible {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INPUT UTILITIES - Terminal style
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.input-terminal {
+  font-family: var(--font-mono);
+  background-color: var(--surface-primary);
+  border: 2px solid var(--lumon-black);
+  color: var(--lumon-black);
+  padding: 1rem 1.25rem;
+  outline: none;
+  transition: all 150ms ease-out;
+}
+
+.input-terminal:focus {
+  border-color: var(--lumon-green);
+  box-shadow: 0 0 0 3px rgba(31, 66, 52, 0.15);
+}
+
+.input-terminal::placeholder {
+  color: var(--status-neutral);
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PROGRESS BAR - Ledger style
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.progress-ledger {
+  height: 8px;
+  background-color: var(--lumon-cream);
+  border: 1px solid var(--grid-line);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-ledger-fill {
+  height: 100%;
+  background-color: var(--lumon-green);
+  transition: width 300ms ease-out;
+}
+
+/* Segmented progress style */
+.progress-segments {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+}
+
+.progress-segment {
+  flex: 1;
+  background-color: var(--lumon-cream);
+  border: 1px solid var(--grid-line);
+  transition: background-color 200ms ease-out;
+}
+
+.progress-segment-filled {
+  background-color: var(--lumon-green);
+  border-color: var(--lumon-green);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODAL UTILITIES - Sharp overlay
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.modal-backdrop {
+  background-color: rgba(8, 15, 13, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background-color: var(--surface-primary);
+  border: 2px solid var(--lumon-black);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TABLE SURFACE - Where cards rest
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .table-surface {
   background:
-    radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, transparent 70%),
-    linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    radial-gradient(ellipse at center bottom, rgba(31, 66, 52, 0.03) 0%, transparent 60%),
+    linear-gradient(180deg, var(--lumon-white) 0%, var(--lumon-cream) 100%);
+  position: relative;
+}
+
+.table-surface::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--grid-line), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Lumon colors as Tailwind-style utilities */
+.bg-lumon-white { background-color: var(--lumon-white); }
+.bg-lumon-cream { background-color: var(--lumon-cream); }
+.bg-lumon-black { background-color: var(--lumon-black); }
+.bg-lumon-green { background-color: var(--lumon-green); }
+.bg-lumon-green-pale { background-color: var(--lumon-green-pale); }
+.bg-surface { background-color: var(--surface-primary); }
+.bg-surface-elevated { background-color: var(--surface-elevated); }
+.bg-surface-sunken { background-color: var(--surface-sunken); }
+
+/* Border colors */
+.border-lumon-black { border-color: var(--lumon-black); }
+.border-lumon-green { border-color: var(--lumon-green); }
+.border-grid { border-color: var(--grid-line); }
+
+/* Spacing consistency - 8px baseline */
+.space-grid-1 { margin: 8px; }
+.space-grid-2 { margin: 16px; }
+.space-grid-3 { margin: 24px; }
+.space-grid-4 { margin: 32px; }
+
+/* Selection styling */
+::selection {
+  background-color: var(--lumon-green);
+  color: var(--lumon-white);
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--lumon-green);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

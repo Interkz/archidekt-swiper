@@ -7,20 +7,22 @@ interface CategoryLimitBadgeProps {
 export default function CategoryLimitBadge({ current, max, isActive }: CategoryLimitBadgeProps) {
   const hasLimit = max !== null && max > 0
   const atLimit = hasLimit && current >= max
-  const nearLimit = hasLimit && current >= max * 0.8
 
-  let colorClass = isActive ? 'text-violet-200' : 'text-slate-400'
+  // Clinical color coding without traffic lights
+  // Use green for positive state, neutral for default
+  let colorClass = isActive ? 'text-[var(--lumon-white)]/60' : 'text-[var(--status-neutral)]'
+
   if (atLimit) {
-    colorClass = isActive ? 'text-red-300' : 'text-red-500'
-  } else if (nearLimit) {
-    colorClass = isActive ? 'text-amber-300' : 'text-amber-500'
+    // At limit - use a muted warning instead of red
+    colorClass = isActive ? 'text-[var(--lumon-white)]' : 'text-[var(--lumon-black)]'
   } else if (current > 0) {
-    colorClass = isActive ? 'text-emerald-300' : 'text-emerald-500'
+    // Has cards - use green
+    colorClass = isActive ? 'text-[var(--lumon-white)]' : 'text-[var(--lumon-green)]'
   }
 
   return (
-    <span className={`text-xs font-medium ${colorClass}`}>
-      {current}/{hasLimit ? max : '--'}
+    <span className={`font-mono text-[10px] ${colorClass} mt-1 block`}>
+      {current.toString().padStart(2, '0')}/{hasLimit ? max.toString().padStart(2, '0') : '--'}
     </span>
   )
 }

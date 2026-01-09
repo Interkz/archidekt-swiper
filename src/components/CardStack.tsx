@@ -48,23 +48,32 @@ export default function CardStack({ cards, onKeep, onRemove }: CardStackProps) {
     return (
       <div className="flex items-center justify-center h-[500px]">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
-            <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+          {/* Clinical completion indicator */}
+          <div className="w-16 h-16 mx-auto mb-6 border-2 border-[var(--lumon-green)] flex items-center justify-center">
+            <svg className="w-8 h-8 text-[var(--lumon-green)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <p className="text-slate-500 text-lg font-medium">No more cards to swipe!</p>
+          <p className="text-terminal text-[var(--lumon-green)] tracking-widest">
+            SORTING COMPLETE
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="relative w-full max-w-[350px] h-[550px] mx-auto">
-      {/* Subtle table surface glow */}
-      <div className="absolute inset-0 -z-10 blur-3xl opacity-30">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full transform scale-150" />
-      </div>
+    <div className="relative w-full max-w-[350px] h-[550px] mx-auto perspective-1000">
+      {/* Table surface indicator - subtle grid line beneath cards */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-px bg-[var(--grid-line)]" />
+
+      {/* Contact shadow on table */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[70%] h-8 opacity-20"
+           style={{
+             background: 'radial-gradient(ellipse at center, var(--lumon-black) 0%, transparent 70%)',
+             filter: 'blur(8px)'
+           }}
+      />
 
       {/* Render cards in reverse order so first card is on top */}
       {cardsToShow
@@ -77,11 +86,15 @@ export default function CardStack({ cards, onKeep, onRemove }: CardStackProps) {
           return (
             <div
               key={card.id}
-              className="absolute inset-0 transition-all duration-300"
+              className={`absolute inset-0 transition-all duration-300 ${isTop ? 'card-enter' : ''}`}
               style={{
-                transform: `scale(${1 - reverseIndex * 0.04}) translateY(${reverseIndex * 12}px)`,
+                // Physical deck stacking - cards slightly offset
+                transform: `translateY(${reverseIndex * 4}px) translateX(${reverseIndex * 2}px)`,
                 zIndex: cardsToShow.length - reverseIndex,
-                opacity: isTop ? 1 : 0.6 - reverseIndex * 0.15,
+                // Cards behind are slightly visible (deck edge effect)
+                opacity: isTop ? 1 : 0.4,
+                // Slight rotation for natural stack look
+                rotate: `${reverseIndex * 0.5}deg`,
               }}
             >
               {isTop ? (
@@ -91,7 +104,8 @@ export default function CardStack({ cards, onKeep, onRemove }: CardStackProps) {
                   onCardLeftScreen={handleCardLeftScreen}
                 />
               ) : (
-                <div className="bg-white rounded-2xl overflow-hidden card-shadow">
+                // Background cards - just show edge
+                <div className="bg-surface overflow-hidden card-shadow border border-[var(--grid-line)]">
                   <img
                     src={`https://api.scryfall.com/cards/${card.scryfallId}?format=image&version=normal`}
                     alt={card.name}

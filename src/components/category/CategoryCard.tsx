@@ -18,9 +18,15 @@ export default function CategoryCard({
     <button
       onClick={onClick}
       disabled={isDisabled}
-      className={`flex-shrink-0 w-24 rounded-xl overflow-hidden transition-all duration-200 bg-white card-shadow
-        ${isFocused ? 'ring-2 ring-violet-500 ring-offset-2 scale-105' : ''}
-        ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:scale-105 cursor-pointer'}
+      className={`flex-shrink-0 w-24 overflow-hidden transition-all duration-150 bg-[var(--surface-primary)] border
+        ${isFocused
+          ? 'border-2 border-[var(--lumon-green)] scale-105'
+          : 'border-[var(--grid-line)]'
+        }
+        ${isDisabled
+          ? 'opacity-40 cursor-not-allowed'
+          : 'hover:border-[var(--lumon-black)] cursor-pointer'
+        }
       `}
     >
       <img
@@ -29,7 +35,7 @@ export default function CategoryCard({
         className="w-full h-auto"
         draggable={false}
       />
-      <p className="text-xs text-center text-slate-700 truncate px-1.5 py-1.5 bg-white font-medium">
+      <p className="font-mono text-[10px] text-center text-[var(--lumon-black)] truncate px-1.5 py-1.5 bg-[var(--surface-primary)] border-t border-[var(--grid-line)]">
         {card.name}
       </p>
     </button>

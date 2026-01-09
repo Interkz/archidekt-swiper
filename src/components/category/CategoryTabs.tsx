@@ -16,20 +16,22 @@ export default function CategoryTabs({
   onTabClick,
 }: CategoryTabsProps) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-2">
+    <div className="flex gap-0 overflow-x-auto border-2 border-[var(--lumon-black)]">
       {categories.map((category, index) => {
         const isActive = index === activeIndex
         const keptCount = getCategoryKeptCount(category)
         const limit = categoryLimits[category] || null
+        const isLast = index === categories.length - 1
 
         return (
           <button
             key={category}
             onClick={() => onTabClick(index)}
-            className={`flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+            className={`flex-shrink-0 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-wider transition-all duration-150
+              ${!isLast ? 'border-r border-[var(--lumon-black)]' : ''}
               ${isActive
-                ? 'bg-violet-600 text-white shadow-md'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                ? 'bg-[var(--lumon-black)] text-[var(--lumon-white)]'
+                : 'bg-transparent text-[var(--lumon-black)] hover:bg-[var(--lumon-cream)]'
               }
             `}
           >

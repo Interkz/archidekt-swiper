@@ -161,9 +161,66 @@ To deploy manually:
 vercel --prod
 ```
 
+## Design System (Updated Jan 2026)
+
+### Theme: Severance + Swiss International Style ("Corporate Brutalism")
+Clinical, retro-futuristic aesthetic inspired by Lumon Industries from Apple TV's Severance, combined with Swiss International typographic precision. The UI feels like a corporate mainframe terminal meets physical card manipulation.
+
+### Color Palette ("The Lumon Void")
+```css
+--lumon-white: #f4f4f0;      /* Cool paper white, fluorescent-lit */
+--lumon-cream: #e8e8e4;      /* Slightly darker for contrast */
+--lumon-black: #080f0d;      /* Deep almost-green black */
+--lumon-green: #1f4234;      /* Severance forest green accent */
+--lumon-green-light: #2d5a47; /* Lighter green for hover states */
+--lumon-green-pale: #d4e5dc;  /* Very pale green for backgrounds */
+--grid-line: #c8c8c4;         /* Visible ledger lines */
+--status-neutral: #6b6b68;    /* Muted gray */
+```
+
+**Key Design Decision**: No traffic light colors (red/green for good/bad). Instead:
+- Forest green (`--lumon-green`) for positive/accept states
+- Black (`--lumon-black`) for negative/reject states
+
+### Typography
+- **Display**: Helvetica Neue (tight, bold, -0.03em letter-spacing)
+- **Monospace**: JetBrains Mono (terminal/data aesthetic)
+- **Body**: Helvetica Neue
+
+### UI Patterns
+- **Borders**: 2px solid black for primary elements, 1px grid lines for structure
+- **Buttons**: Brutalist rectangles with thick borders, fill on hover
+- **Inputs**: Terminal-style with 2px black borders, green focus state
+- **Progress**: Ledger-style counter with padded numbers (007/200)
+- **Stamps**: ACCEPTED/REJECTED indicators with fill patterns
+
+### Shadow Classes (defined in `index.css`)
+```css
+.card-shadow        /* Subtle contact shadow */
+.card-shadow-lg     /* Elevated card being picked up */
+.card-shadow-hover  /* Hover state - card lifting */
+.table-contact-shadow /* Where card meets surface */
+```
+
+### Animation Classes
+```css
+.card-flip-right    /* 3D flip animation for accept */
+.card-flip-left     /* 3D flip animation for reject */
+.card-enter         /* Card sliding up into stack */
+.stamp-visible      /* Stamp fade-in */
+```
+
+### Component Styling Conventions
+- Buttons: Transparent bg with 2px borders, fills with color on hover
+- Inputs: White bg, 2px black border, green focus ring
+- Cards: Sharp corners, subtle shadows, no rounded corners
+- Active states: Black bg with white text
+- Modal backdrop: `modal-backdrop` class with blur
+
 ## Future Enhancements to Consider
-- Card preview on hover/click
+- Card preview on hover/click (larger image modal)
 - Drag and drop in category mode
-- Save/load deck selections
+- Save/load deck selections to localStorage
 - Multiple deck comparison
 - Commander zone handling
+- Dark mode toggle (design system supports it)

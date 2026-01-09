@@ -17,6 +17,9 @@ export default function ResultsPage() {
   const [exportFormat, setExportFormat] = useState<ExportFormat>('archidekt')
   const [copied, setCopied] = useState(false)
 
+  // Format numbers with leading zeros
+  const formatNumber = (n: number) => n.toString().padStart(3, '0')
+
   const getExportText = () => {
     switch (exportFormat) {
       case 'grouped':
@@ -56,171 +59,193 @@ export default function ResultsPage() {
     return null
   }
 
+  const deckComplete = keptCards.length === 100
+  const cardDifference = 100 - keptCards.length
+
   return (
-    <div className="min-h-screen flex flex-col p-4 max-w-2xl mx-auto">
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="mb-6">
-        <Link
-          to="/"
-          className="text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1 font-medium mb-4"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Home
-        </Link>
-        <h1 className="text-2xl font-bold text-slate-800">Results</h1>
-        <p className="text-slate-500">{deckName}</p>
+      <header className="border-b-2 border-[var(--lumon-black)] p-4">
+        <div className="flex items-center justify-between max-w-2xl mx-auto">
+          <Link
+            to="/"
+            className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-[var(--status-neutral)]
+                       hover:text-[var(--lumon-black)] transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M15 19l-7-7 7-7" />
+            </svg>
+            Home
+          </Link>
+          <span className="text-terminal text-[var(--lumon-green)]">SORTING COMPLETE</span>
+        </div>
       </header>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center">
-          <p className="text-3xl font-bold text-emerald-600">{keptCards.length}</p>
-          <p className="text-emerald-600/80 text-sm font-medium">Cards Kept</p>
+      <div className="flex-1 p-4 max-w-2xl mx-auto w-full">
+        {/* Deck name */}
+        <div className="mb-6 pb-4 border-b border-[var(--grid-line)]">
+          <span className="text-terminal text-[var(--status-neutral)]">DECK:</span>
+          <h1 className="font-mono text-xl font-bold text-[var(--lumon-black)]">{deckName}</h1>
         </div>
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-center">
-          <p className="text-3xl font-bold text-red-500">{removedCards.length}</p>
-          <p className="text-red-500/80 text-sm font-medium">Cards Removed</p>
-        </div>
-      </div>
 
-      {/* Commander deck check */}
-      {keptCards.length === 100 && (
-        <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4 mb-6 text-center">
-          <div className="flex items-center justify-center gap-2">
-            <svg className="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <p className="text-violet-700 font-medium">
-              Perfect! Your deck is exactly 100 cards (including commander)
-            </p>
+        {/* Stats table */}
+        <div className="mb-6">
+          <div className="text-terminal text-[var(--status-neutral)] mb-3">INVENTORY REPORT</div>
+          <div className="border-2 border-[var(--lumon-black)]">
+            {/* Header row */}
+            <div className="grid grid-cols-3 border-b-2 border-[var(--lumon-black)] bg-[var(--lumon-cream)]">
+              <div className="p-3 font-mono text-xs font-bold uppercase tracking-wider text-center border-r border-[var(--grid-line)]">
+                Accepted
+              </div>
+              <div className="p-3 font-mono text-xs font-bold uppercase tracking-wider text-center border-r border-[var(--grid-line)]">
+                Rejected
+              </div>
+              <div className="p-3 font-mono text-xs font-bold uppercase tracking-wider text-center">
+                Total
+              </div>
+            </div>
+            {/* Data row */}
+            <div className="grid grid-cols-3">
+              <div className="p-4 font-mono text-2xl font-bold text-center text-[var(--lumon-green)] border-r border-[var(--grid-line)]">
+                {formatNumber(keptCards.length)}
+              </div>
+              <div className="p-4 font-mono text-2xl font-bold text-center text-[var(--lumon-black)] border-r border-[var(--grid-line)]">
+                {formatNumber(removedCards.length)}
+              </div>
+              <div className="p-4 font-mono text-2xl font-bold text-center text-[var(--status-neutral)]">
+                {formatNumber(allCards.length)}
+              </div>
+            </div>
           </div>
         </div>
-      )}
-      {keptCards.length !== 100 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-center">
-          <div className="flex items-center justify-center gap-2">
-            <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <p className="text-amber-700 font-medium">
-              Commander decks need 100 cards. You have {keptCards.length}.
-            </p>
-          </div>
-        </div>
-      )}
 
-      {/* Export section */}
-      <div className="flex-1">
-        <h2 className="text-lg font-semibold text-slate-800 mb-3">Export Kept Cards</h2>
-
-        {/* Format selector */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <button
-            onClick={() => setExportFormat('plain')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-              exportFormat === 'plain'
-                ? 'bg-violet-600 text-white shadow-md'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
-            }`}
-          >
-            Plain
-          </button>
-          <button
-            onClick={() => setExportFormat('grouped')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-              exportFormat === 'grouped'
-                ? 'bg-violet-600 text-white shadow-md'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
-            }`}
-          >
-            Grouped by Type
-          </button>
-          <button
-            onClick={() => setExportFormat('archidekt')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-              exportFormat === 'archidekt'
-                ? 'bg-violet-600 text-white shadow-md'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
-            }`}
-          >
-            With Categories
-          </button>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 mb-4 max-h-[300px] overflow-auto card-shadow">
-          <pre className="text-sm text-slate-600 whitespace-pre-wrap font-mono">
-            {exportText}
-          </pre>
-        </div>
-
-        <div className="flex gap-3">
-          <button
-            onClick={handleCopy}
-            className={`flex-1 px-4 py-3.5 rounded-xl font-semibold transition-all duration-200
-                       flex items-center justify-center gap-2 ${
-                         copied
-                           ? 'bg-emerald-500 text-white'
-                           : 'bg-violet-600 hover:bg-violet-700 text-white hover:shadow-lg hover:shadow-violet-200'
-                       }`}
-          >
-            {copied ? (
+        {/* Commander deck check */}
+        <div className={`mb-6 border-2 p-4 ${deckComplete ? 'border-[var(--lumon-green)]' : 'border-[var(--lumon-black)]'}`}>
+          <div className="flex items-center gap-3">
+            {deckComplete ? (
               <>
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Copied!
+                <div className="w-6 h-6 border-2 border-[var(--lumon-green)] flex items-center justify-center">
+                  <svg className="w-4 h-4 text-[var(--lumon-green)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="square" strokeLinejoin="miter" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="font-mono text-sm text-[var(--lumon-green)]">
+                  DECK SIZE: 100 CARDS (COMMANDER LEGAL)
+                </span>
               </>
             ) : (
               <>
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                Copy to Clipboard
+                <div className="w-6 h-6 border-2 border-[var(--lumon-black)] flex items-center justify-center">
+                  <span className="font-mono text-xs text-[var(--lumon-black)]">!</span>
+                </div>
+                <span className="font-mono text-sm text-[var(--lumon-black)]">
+                  {cardDifference > 0
+                    ? `REQUIRES ${cardDifference} ADDITIONAL CARDS`
+                    : `EXCEEDS LIMIT BY ${Math.abs(cardDifference)} CARDS`}
+                </span>
               </>
             )}
+          </div>
+        </div>
+
+        {/* Export section */}
+        <div className="mb-6">
+          <div className="text-terminal text-[var(--status-neutral)] mb-3">EXPORT OPTIONS</div>
+
+          {/* Format selector */}
+          <div className="flex mb-4 border-2 border-[var(--lumon-black)]">
+            {(['plain', 'grouped', 'archidekt'] as const).map((format, index) => (
+              <button
+                key={format}
+                onClick={() => setExportFormat(format)}
+                className={`flex-1 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider transition-all duration-150
+                           ${index < 2 ? 'border-r border-[var(--lumon-black)]' : ''}
+                           ${exportFormat === format
+                             ? 'bg-[var(--lumon-black)] text-[var(--lumon-white)]'
+                             : 'bg-transparent text-[var(--lumon-black)] hover:bg-[var(--lumon-cream)]'
+                           }`}
+              >
+                {format === 'archidekt' ? 'Categorized' : format}
+              </button>
+            ))}
+          </div>
+
+          {/* Export text box */}
+          <div className="border-2 border-[var(--lumon-black)] p-4 max-h-[250px] overflow-auto bg-[var(--surface-elevated)]">
+            <pre className="font-mono text-sm text-[var(--lumon-black)] whitespace-pre-wrap">
+              {exportText}
+            </pre>
+          </div>
+
+          {/* Export buttons */}
+          <div className="flex gap-3 mt-4">
+            <button
+              onClick={handleCopy}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3
+                         font-mono font-semibold uppercase tracking-wider transition-all duration-150
+                         ${copied
+                           ? 'bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)] text-[var(--lumon-white)]'
+                           : 'bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)] text-[var(--lumon-white)] hover:bg-[var(--lumon-green-light)]'
+                         }`}
+            >
+              {copied ? (
+                <>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="square" strokeLinejoin="miter" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Copied
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="square" strokeLinejoin="miter" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Copy
+                </>
+              )}
+            </button>
+            <button
+              onClick={handleDownload}
+              className="px-6 py-3 border-2 border-[var(--lumon-black)] font-mono font-semibold uppercase tracking-wider
+                         hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-all duration-150
+                         flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download
+            </button>
+          </div>
+        </div>
+
+        {/* Import instructions */}
+        <div className="mb-6 border border-[var(--grid-line)] p-4 bg-[var(--surface-elevated)]">
+          <div className="text-terminal text-[var(--status-neutral)] mb-3">IMPORT INSTRUCTIONS</div>
+          <ol className="font-mono text-sm text-[var(--lumon-black)] space-y-2 list-decimal list-inside">
+            <li>Open deck on Archidekt</li>
+            <li>Menu (three dots) → "Clear Deck"</li>
+            <li>"Add Cards" → "Import"</li>
+            <li>Paste list and click "Import"</li>
+          </ol>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-3">
+          <button
+            onClick={handleSwipeAgain}
+            className="flex-1 px-4 py-3 border-2 border-[var(--lumon-black)] font-mono font-semibold uppercase tracking-wider
+                       hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-all duration-150"
+          >
+            Re-sort
           </button>
           <button
-            onClick={handleDownload}
-            className="px-4 py-3.5 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300
-                       rounded-xl font-semibold text-slate-700 transition-all duration-200 flex items-center gap-2"
+            onClick={handleStartOver}
+            className="flex-1 px-4 py-3 border-2 border-[var(--lumon-black)] font-mono font-semibold uppercase tracking-wider
+                       hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-all duration-150"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download
+            New Deck
           </button>
         </div>
-      </div>
-
-      {/* Import instructions */}
-      <div className="mt-6 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
-        <h3 className="font-semibold text-slate-800 mb-3">How to import into Archidekt:</h3>
-        <ol className="text-sm text-slate-600 space-y-2 list-decimal list-inside">
-          <li>Go to your deck on Archidekt</li>
-          <li>Click the menu (three dots) → "Clear Deck" to remove all cards</li>
-          <li>Click "Add Cards" → "Import"</li>
-          <li>Paste the copied list and click "Import"</li>
-        </ol>
-      </div>
-
-      {/* Actions */}
-      <div className="mt-6 flex gap-3">
-        <button
-          onClick={handleSwipeAgain}
-          className="flex-1 px-4 py-3.5 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300
-                     rounded-xl font-semibold text-slate-700 transition-all duration-200"
-        >
-          Swipe Again
-        </button>
-        <button
-          onClick={handleStartOver}
-          className="flex-1 px-4 py-3.5 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300
-                     rounded-xl font-semibold text-slate-700 transition-all duration-200"
-        >
-          New Deck
-        </button>
       </div>
     </div>
   )

@@ -6,16 +6,32 @@ interface CardDetailsProps {
 
 export default function CardDetails({ card }: CardDetailsProps) {
   return (
-    <div className="mt-4 text-center">
-      <h2 className="text-xl font-semibold text-slate-800">{card.name}</h2>
-      <div className="flex items-center justify-center gap-2 mt-1">
-        {card.manaCost && (
-          <span className="text-slate-600 font-mono text-sm bg-slate-100 px-2 py-0.5 rounded-md">
+    <div className="mt-6 text-center">
+      {/* Card name - clinical typography */}
+      <h2 className="font-display text-xl tracking-tight text-[var(--lumon-black)]">
+        {card.name}
+      </h2>
+
+      {/* Mana cost - monospace terminal style */}
+      {card.manaCost && (
+        <div className="mt-2">
+          <span className="font-mono text-sm text-[var(--lumon-green)] bg-[var(--lumon-green-pale)] px-3 py-1 border border-[var(--lumon-green)]/20">
             {formatManaCost(card.manaCost)}
           </span>
-        )}
-      </div>
-      <p className="text-slate-500 text-sm mt-1">{card.typeLine}</p>
+        </div>
+      )}
+
+      {/* Type line - subdued */}
+      <p className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--status-neutral)]">
+        {card.typeLine}
+      </p>
+
+      {/* Category badge if present */}
+      {card.categories && card.categories.length > 0 && (
+        <p className="mt-1 text-terminal text-[var(--status-neutral)]">
+          // {card.categories[0]}
+        </p>
+      )}
     </div>
   )
 }

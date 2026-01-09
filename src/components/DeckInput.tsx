@@ -34,68 +34,63 @@ export default function DeckInput() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
+        {/* Label */}
+        <label className="text-terminal text-[var(--status-neutral)] tracking-widest">
+          ENTER DECK IDENTIFIER:
+        </label>
+
+        {/* Input field - terminal style */}
         <div className="relative">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Paste Archidekt deck URL or ID"
-            className="w-full px-5 py-4 rounded-xl bg-white border border-slate-200
-                       text-slate-800 placeholder-slate-400 card-shadow
-                       focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent
-                       transition-all duration-200"
+            placeholder="archidekt.com/decks/______"
+            className="input-terminal w-full"
             disabled={isLoading}
           />
           {input && !isLoading && (
             <button
               type="button"
               onClick={() => setInput('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--status-neutral)] hover:text-[var(--lumon-black)] transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           )}
         </div>
 
+        {/* Submit button - brutalist */}
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="w-full px-6 py-4 bg-violet-600 hover:bg-violet-700
-                     disabled:bg-slate-300 disabled:cursor-not-allowed
-                     rounded-xl font-semibold text-white transition-all duration-200
-                     hover:shadow-lg hover:shadow-violet-200 active:scale-[0.98]"
+          className="w-full px-6 py-4 border-2 border-[var(--lumon-green)] bg-[var(--lumon-green)]
+                     text-[var(--lumon-white)] font-mono font-semibold uppercase tracking-wider
+                     transition-all duration-150
+                     hover:bg-[var(--lumon-green-light)]
+                     disabled:bg-[var(--grid-line)] disabled:border-[var(--grid-line)] disabled:cursor-not-allowed
+                     active:scale-[0.98]"
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-3">
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
-              </svg>
-              Loading Deck...
+              <div className="w-5 h-5 border-2 border-[var(--lumon-white)] border-t-transparent animate-spin" />
+              Initializing...
             </span>
           ) : (
-            'Load Deck'
+            'Initialize Sorting Protocol'
           )}
         </button>
 
+        {/* Error message - clinical style */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-3">
-            <p className="text-red-600 text-sm text-center">{error}</p>
+          <div className="border-2 border-[var(--lumon-black)] p-4 bg-[var(--surface-elevated)]">
+            <div className="flex items-start gap-3">
+              <span className="text-terminal text-[var(--lumon-black)]">ERROR:</span>
+              <p className="font-mono text-sm text-[var(--lumon-black)]">{error}</p>
+            </div>
           </div>
         )}
       </div>

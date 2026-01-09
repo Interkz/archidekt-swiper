@@ -32,6 +32,9 @@ export default function SwipePage() {
   const currentCards = swipeMode === 'sideboard' ? remainingSideboardCards : remainingCards
   const totalCards = swipeMode === 'sideboard' ? allSideboardCards.length : allCards.length
 
+  // Format numbers with leading zeros
+  const formatNumber = (n: number) => n.toString().padStart(3, '0')
+
   // Redirect if no deck loaded
   useEffect(() => {
     if (allCards.length === 0) {
@@ -113,75 +116,98 @@ export default function SwipePage() {
   const sideboardAvailable = allSideboardCards.length > 0
 
   return (
-    <div className="min-h-screen flex flex-col p-4">
-      {/* Header */}
-      <header className="flex items-center justify-between mb-4">
-        <Link
-          to="/"
-          className="text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1 font-medium"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back
-        </Link>
+    <div className="min-h-screen flex flex-col">
+      {/* Header - clinical top bar */}
+      <header className="border-b-2 border-[var(--lumon-black)] p-4">
+        <div className="flex items-center justify-between max-w-4xl mx-auto">
+          <Link
+            to="/"
+            className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-[var(--status-neutral)]
+                       hover:text-[var(--lumon-black)] transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M15 19l-7-7 7-7" />
+            </svg>
+            Exit
+          </Link>
 
-        <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
+          <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
 
-        <button
-          onClick={() => setShowKeptModal(true)}
-          className="text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors"
-        >
-          View Kept ({keptCards.length})
-        </button>
+          <button
+            onClick={() => setShowKeptModal(true)}
+            className="font-mono text-sm uppercase tracking-wider text-[var(--lumon-green)]
+                       hover:text-[var(--lumon-green-light)] transition-colors"
+          >
+            Inventory ({formatNumber(keptCards.length)})
+          </button>
+        </div>
       </header>
 
       {/* Kept cards modal */}
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
 
-      {/* Deck name */}
-      <h1 className="text-lg font-semibold text-slate-800 text-center mb-4 truncate">
-        {deckName}
-      </h1>
+      {/* Deck info bar */}
+      <div className="border-b border-[var(--grid-line)] py-3 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-terminal text-[var(--status-neutral)]">ACTIVE DECK:</span>
+              <h1 className="font-mono text-lg font-bold text-[var(--lumon-black)] truncate max-w-[200px] sm:max-w-none">
+                {deckName}
+              </h1>
+            </div>
+            <div className="text-right">
+              <span className="text-terminal text-[var(--status-neutral)]">STATUS:</span>
+              <p className="font-mono text-sm text-[var(--lumon-green)]">
+                {swipeMode === 'main' ? 'MAIN DECK' : 'SIDEBOARD'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Mode toggle (if sideboard available) */}
       {sideboardAvailable && (
-        <div className="flex justify-center gap-2 mb-4">
-          <button
-            onClick={() => setSwipeMode('main')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-              swipeMode === 'main'
-                ? 'bg-violet-600 text-white shadow-md'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
-            }`}
-          >
-            Main Deck ({remainingCards.length}/{allCards.length})
-          </button>
-          <button
-            onClick={() => setSwipeMode('sideboard')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-              swipeMode === 'sideboard'
-                ? 'bg-violet-600 text-white shadow-md'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
-            }`}
-          >
-            Sideboard ({remainingSideboardCards.length}/{allSideboardCards.length})
-          </button>
+        <div className="border-b border-[var(--grid-line)] py-3 px-4">
+          <div className="flex justify-center gap-0">
+            <button
+              onClick={() => setSwipeMode('main')}
+              className={`px-6 py-2 font-mono text-xs font-semibold uppercase tracking-wider border-2 border-r-0
+                         transition-all duration-150 ${
+                swipeMode === 'main'
+                  ? 'bg-[var(--lumon-black)] text-[var(--lumon-white)] border-[var(--lumon-black)]'
+                  : 'bg-transparent text-[var(--lumon-black)] border-[var(--lumon-black)] hover:bg-[var(--lumon-cream)]'
+              }`}
+            >
+              Main ({formatNumber(remainingCards.length)}/{formatNumber(allCards.length)})
+            </button>
+            <button
+              onClick={() => setSwipeMode('sideboard')}
+              className={`px-6 py-2 font-mono text-xs font-semibold uppercase tracking-wider border-2
+                         transition-all duration-150 ${
+                swipeMode === 'sideboard'
+                  ? 'bg-[var(--lumon-black)] text-[var(--lumon-white)] border-[var(--lumon-black)]'
+                  : 'bg-transparent text-[var(--lumon-black)] border-[var(--lumon-black)] hover:bg-[var(--lumon-cream)]'
+              }`}
+            >
+              Sideboard ({formatNumber(remainingSideboardCards.length)}/{formatNumber(allSideboardCards.length)})
+            </button>
+          </div>
         </div>
       )}
 
       {/* Progress */}
-      <div className="mb-6">
+      <div className="py-6 px-4">
         <ProgressBar current={currentCards.length} total={totalCards} />
         {swipeMode === 'sideboard' && (
-          <p className="text-center text-amber-600 text-xs mt-2 font-medium">
-            Swipe right to add sideboard cards to your deck
+          <p className="text-center font-mono text-xs text-[var(--status-warning)] mt-3 uppercase tracking-wider">
+            Accept sideboard cards to add to deck
           </p>
         )}
       </div>
 
       {/* Card stack or completion message */}
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center px-4 pb-4">
         {currentCards.length > 0 ? (
           <CardStack
             cards={currentCards}
@@ -190,39 +216,42 @@ export default function SwipePage() {
           />
         ) : (
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 flex items-center justify-center">
-              <svg className="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <div className="w-16 h-16 mx-auto mb-6 border-2 border-[var(--lumon-green)] flex items-center justify-center">
+              <svg className="w-8 h-8 text-[var(--lumon-green)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <p className="text-slate-600 text-lg font-medium mb-4">
-              {swipeMode === 'main' ? 'Main deck complete!' : 'Sideboard complete!'}
+            <p className="text-terminal text-[var(--lumon-green)] tracking-widest mb-6">
+              {swipeMode === 'main' ? 'MAIN DECK COMPLETE' : 'SIDEBOARD COMPLETE'}
             </p>
             {mainDeckDone && sideboardAvailable && remainingSideboardCards.length > 0 && swipeMode === 'main' && (
               <button
                 onClick={() => setSwipeMode('sideboard')}
-                className="px-6 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-semibold text-white
-                           transition-all duration-200 hover:shadow-lg hover:shadow-violet-200"
+                className="px-6 py-3 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
+                           font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
+                           hover:bg-[var(--lumon-green-light)] transition-all duration-150"
               >
-                Swipe Sideboard Cards
+                Process Sideboard
               </button>
             )}
             {(mainDeckDone && (!sideboardAvailable || remainingSideboardCards.length === 0)) && (
               <button
                 onClick={() => navigate('/results')}
-                className="px-6 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-semibold text-white
-                           transition-all duration-200 hover:shadow-lg hover:shadow-violet-200"
+                className="px-6 py-3 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
+                           font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
+                           hover:bg-[var(--lumon-green-light)] transition-all duration-150"
               >
-                View Results
+                View Report
               </button>
             )}
             {swipeMode === 'sideboard' && remainingSideboardCards.length === 0 && (
               <button
                 onClick={() => navigate('/results')}
-                className="px-6 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-semibold text-white
-                           transition-all duration-200 hover:shadow-lg hover:shadow-violet-200"
+                className="px-6 py-3 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
+                           font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
+                           hover:bg-[var(--lumon-green-light)] transition-all duration-150"
               >
-                View Results
+                View Report
               </button>
             )}
           </div>
@@ -231,23 +260,31 @@ export default function SwipePage() {
 
       {/* Controls */}
       {currentCards.length > 0 && (
-        <SwipeControls
-          onKeep={handleKeep}
-          onRemove={handleRemove}
-          onUndo={handleUndo}
-          canUndo={swipeHistory.length > 0}
-          disabled={currentCards.length === 0}
-        />
+        <div className="px-4 pb-6">
+          <SwipeControls
+            onKeep={handleKeep}
+            onRemove={handleRemove}
+            onUndo={handleUndo}
+            canUndo={swipeHistory.length > 0}
+            disabled={currentCards.length === 0}
+          />
+        </div>
       )}
 
       {/* Keyboard hints */}
-      <div className="text-center text-slate-400 text-xs mt-6">
-        <span className="hidden sm:inline">
-          Use <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">←</kbd> / <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">→</kbd> arrow keys or swipe. <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">Z</kbd> to undo.
-        </span>
-        <span className="sm:hidden">
-          Swipe left to remove, right to keep
-        </span>
+      <div className="border-t border-[var(--grid-line)] py-4 px-4">
+        <div className="text-center">
+          <span className="hidden sm:inline text-terminal text-[var(--status-neutral)]">
+            CONTROLS: <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">←</kbd> REJECT
+            <span className="mx-2">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">→</kbd> ACCEPT
+            <span className="mx-2">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">Z</kbd> UNDO
+          </span>
+          <span className="sm:hidden text-terminal text-[var(--status-neutral)]">
+            SWIPE LEFT TO REJECT, RIGHT TO ACCEPT
+          </span>
+        </div>
       </div>
     </div>
   )

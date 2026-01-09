@@ -44,6 +44,9 @@ export default function CategoryModePage() {
   // Current section's cards
   const currentCards = activeSection === 'kept' ? keptInCategory : availableInCategory
 
+  // Format numbers with leading zeros
+  const formatNumber = (n: number) => n.toString().padStart(3, '0')
+
   // Redirect if no deck loaded
   useEffect(() => {
     if (allCards.length === 0) {
@@ -155,16 +158,17 @@ export default function CategoryModePage() {
   if (categories.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-          <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div className="w-16 h-16 border-2 border-[var(--grid-line)] flex items-center justify-center mb-6">
+          <svg className="w-8 h-8 text-[var(--status-neutral)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="square" strokeLinejoin="miter" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <p className="text-slate-500 text-lg mb-4">No categories found in this deck.</p>
+        <p className="text-terminal text-[var(--status-neutral)] mb-6">NO CATEGORIES DETECTED</p>
         <button
           onClick={() => navigate('/swipe')}
-          className="px-6 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-semibold text-white
-                     transition-all duration-200 hover:shadow-lg hover:shadow-violet-200"
+          className="px-6 py-3 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
+                     font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
+                     hover:bg-[var(--lumon-green-light)] transition-all duration-150"
         >
           Use Swipe Mode
         </button>
@@ -173,129 +177,145 @@ export default function CategoryModePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col p-4">
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between mb-4">
-        <Link
-          to="/"
-          className="text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1 font-medium"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back
-        </Link>
+      <header className="border-b-2 border-[var(--lumon-black)] p-4">
+        <div className="flex items-center justify-between max-w-4xl mx-auto">
+          <Link
+            to="/"
+            className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-[var(--status-neutral)]
+                       hover:text-[var(--lumon-black)] transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M15 19l-7-7 7-7" />
+            </svg>
+            Exit
+          </Link>
 
-        <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
+          <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
 
-        <button
-          onClick={() => setShowKeptModal(true)}
-          className="text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors"
-        >
-          View Kept ({keptCards.length})
-        </button>
+          <button
+            onClick={() => setShowKeptModal(true)}
+            className="font-mono text-sm uppercase tracking-wider text-[var(--lumon-green)]
+                       hover:text-[var(--lumon-green-light)] transition-colors"
+          >
+            Inventory ({formatNumber(keptCards.length)})
+          </button>
+        </div>
       </header>
 
       {/* Kept cards modal */}
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
 
-      {/* Deck name */}
-      <h1 className="text-lg font-semibold text-slate-800 text-center mb-4 truncate">
-        {deckName}
-      </h1>
-
-      {/* Category tabs */}
-      <div className="mb-4">
-        <CategoryTabs
-          categories={categories}
-          activeIndex={activeCategoryIndex}
-          categoryLimits={categoryLimits}
-          getCategoryKeptCount={(cat) => getCategoryKeptCards(cat).length}
-          onTabClick={setActiveCategoryIndex}
-        />
+      {/* Deck info */}
+      <div className="border-b border-[var(--grid-line)] py-3 px-4">
+        <div className="max-w-4xl mx-auto">
+          <span className="text-terminal text-[var(--status-neutral)]">ACTIVE DECK:</span>
+          <h1 className="font-mono text-lg font-bold text-[var(--lumon-black)] truncate">
+            {deckName}
+          </h1>
+        </div>
       </div>
 
-      {/* Limit setting */}
-      <div className="flex items-center justify-center gap-2 mb-4">
-        {showLimitInput ? (
-          <>
-            <input
-              type="number"
-              min="0"
-              value={limitValue}
-              onChange={(e) => setLimitValue(e.target.value)}
-              placeholder="Max cards"
-              className="w-24 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent"
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSetLimit()
-                if (e.key === 'Escape') setShowLimitInput(false)
+      <div className="flex-1 p-4 max-w-4xl mx-auto w-full">
+        {/* Category tabs */}
+        <div className="mb-4">
+          <CategoryTabs
+            categories={categories}
+            activeIndex={activeCategoryIndex}
+            categoryLimits={categoryLimits}
+            getCategoryKeptCount={(cat) => getCategoryKeptCards(cat).length}
+            onTabClick={setActiveCategoryIndex}
+          />
+        </div>
+
+        {/* Limit setting */}
+        <div className="flex items-center justify-center gap-3 mb-6 py-3 border-y border-[var(--grid-line)]">
+          {showLimitInput ? (
+            <>
+              <input
+                type="number"
+                min="0"
+                value={limitValue}
+                onChange={(e) => setLimitValue(e.target.value)}
+                placeholder="Max"
+                className="w-20 px-3 py-2 border-2 border-[var(--lumon-black)] font-mono text-sm
+                           focus:border-[var(--lumon-green)] focus:outline-none transition-colors"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSetLimit()
+                  if (e.key === 'Escape') setShowLimitInput(false)
+                }}
+              />
+              <button
+                onClick={handleSetLimit}
+                className="px-4 py-2 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
+                           font-mono text-xs font-semibold uppercase text-[var(--lumon-white)]
+                           hover:bg-[var(--lumon-green-light)] transition-colors"
+              >
+                Set
+              </button>
+              <button
+                onClick={() => setShowLimitInput(false)}
+                className="px-4 py-2 border-2 border-[var(--lumon-black)] font-mono text-xs font-semibold uppercase
+                           hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-colors"
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => {
+                setLimitValue(currentLimit?.toString() || '')
+                setShowLimitInput(true)
               }}
-            />
-            <button
-              onClick={handleSetLimit}
-              className="px-3 py-1.5 bg-violet-600 hover:bg-violet-700 rounded-lg text-sm text-white font-medium transition-colors"
+              className="font-mono text-sm text-[var(--status-neutral)] hover:text-[var(--lumon-black)] transition-colors"
             >
-              Set
+              {currentLimit ? `LIMIT: ${currentLimit}` : 'SET LIMIT'} // {activeCategory.toUpperCase()}
             </button>
-            <button
-              onClick={() => setShowLimitInput(false)}
-              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm text-slate-600 font-medium transition-colors"
-            >
-              Cancel
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={() => {
-              setLimitValue(currentLimit?.toString() || '')
-              setShowLimitInput(true)
-            }}
-            className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
-          >
-            {currentLimit ? `Limit: ${currentLimit}` : 'Set limit'} for {activeCategory}
-          </button>
-        )}
-      </div>
+          )}
+        </div>
 
-      {/* Card sections */}
-      <div className="flex-1 space-y-4">
-        <CategorySection
-          title="Kept"
-          cards={keptInCategory}
-          isActiveSection={activeSection === 'kept'}
-          activeCardIndex={activeCardIndex}
-          onCardClick={(card, index) => handleCardClick(card, index, 'kept')}
-        />
+        {/* Card sections */}
+        <div className="space-y-6">
+          <CategorySection
+            title="Kept"
+            cards={keptInCategory}
+            isActiveSection={activeSection === 'kept'}
+            activeCardIndex={activeCardIndex}
+            onCardClick={(card, index) => handleCardClick(card, index, 'kept')}
+          />
 
-        <CategorySection
-          title="Available"
-          cards={availableInCategory}
-          isActiveSection={activeSection === 'available'}
-          activeCardIndex={activeCardIndex}
-          onCardClick={(card, index) => handleCardClick(card, index, 'available')}
-          limitReached={!canAddToCategory(activeCategory)}
-        />
+          <CategorySection
+            title="Available"
+            cards={availableInCategory}
+            isActiveSection={activeSection === 'available'}
+            activeCardIndex={activeCardIndex}
+            onCardClick={(card, index) => handleCardClick(card, index, 'available')}
+            limitReached={!canAddToCategory(activeCategory)}
+          />
+        </div>
       </div>
 
       {/* Keyboard hints */}
-      <div className="text-center text-slate-400 text-xs mt-4 space-y-1">
-        <p>
-          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">←</kbd>
-          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px] ml-1">→</kbd>
-          {' '}Navigate cards
-          <span className="mx-2 text-slate-300">|</span>
-          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">↑</kbd>
-          {' '}Keep
-          <span className="mx-2 text-slate-300">|</span>
-          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">↓</kbd>
-          {' '}Remove
-        </p>
-        <p>
-          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">Tab</kbd>
-          {' '}Switch sections
-        </p>
+      <div className="border-t border-[var(--grid-line)] py-4 px-4">
+        <div className="text-center space-y-1">
+          <p className="text-terminal text-[var(--status-neutral)]">
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">←</kbd>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">→</kbd>
+            NAVIGATE
+            <span className="mx-3">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">↑</kbd>
+            ACCEPT
+            <span className="mx-3">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">↓</kbd>
+            REJECT
+          </p>
+          <p className="text-terminal text-[var(--status-neutral)]">
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">Tab</kbd>
+            SWITCH SECTIONS
+          </p>
+        </div>
       </div>
     </div>
   )

@@ -21,46 +21,59 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
 
   return (
     <TinderCard
-      className="absolute w-full"
+      className="absolute w-full perspective-1000"
       onSwipe={handleSwipe}
       onCardLeftScreen={onCardLeftScreen}
       preventSwipe={['up', 'down']}
     >
-      <div className="relative">
-        {/* Swipe indicators */}
+      <div className="relative preserve-3d">
+        {/* ACCEPTED stamp - clinical approval */}
         <div
-          className={`absolute top-4 left-4 z-10 px-4 py-2 rounded-xl font-bold text-xl
-                      bg-red-50 border-2 border-red-400 text-red-500 rotate-[-15deg]
-                      transition-all duration-200 ${swipeDirection === 'left' ? 'opacity-100 scale-110' : 'opacity-0 scale-95'}`}
+          className={`absolute top-8 left-4 z-10 stamp stamp-accepted
+                      ${swipeDirection === 'right' ? 'stamp-visible' : ''}`}
         >
-          REMOVE
-        </div>
-        <div
-          className={`absolute top-4 right-4 z-10 px-4 py-2 rounded-xl font-bold text-xl
-                      bg-emerald-50 border-2 border-emerald-400 text-emerald-500 rotate-[15deg]
-                      transition-all duration-200 ${swipeDirection === 'right' ? 'opacity-100 scale-110' : 'opacity-0 scale-95'}`}
-        >
-          KEEP
+          <span className="text-sm tracking-widest">ACCEPTED</span>
+          <div className="flex gap-0.5 mt-1 justify-center">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="w-1.5 h-1.5 bg-[var(--lumon-green)]" />
+            ))}
+          </div>
         </div>
 
-        {/* Card image with table shadow effect */}
-        <div className="relative bg-white rounded-2xl overflow-hidden card-shadow-lg transform transition-transform hover:scale-[1.01]">
-          {/* Subtle top shine effect */}
-          <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white/20 to-transparent pointer-events-none z-10 rounded-t-2xl" />
+        {/* REJECTED stamp - clinical rejection */}
+        <div
+          className={`absolute top-8 right-4 z-10 stamp stamp-rejected
+                      ${swipeDirection === 'left' ? 'stamp-visible' : ''}`}
+        >
+          <span className="text-sm tracking-widest">REJECTED</span>
+          <div className="flex gap-0.5 mt-1 justify-center">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="w-1.5 h-1.5 border border-[var(--lumon-black)] bg-transparent" />
+            ))}
+          </div>
+        </div>
 
+        {/* Card image with physical presence */}
+        <div className="relative bg-surface overflow-hidden card-shadow-lg transition-all duration-200 hover:card-shadow-hover">
+          {/* Subtle paper texture overlay */}
+          <div className="absolute inset-0 pointer-events-none z-10 opacity-30"
+               style={{
+                 backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
+                 mixBlendMode: 'multiply'
+               }}
+          />
+
+          {/* Card border - thin black line */}
+          <div className="absolute inset-0 border border-[var(--lumon-black)]/10 pointer-events-none z-10" />
+
+          {/* Loading state - clinical placeholder */}
           {!imageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-slate-100 animate-pulse">
-              <svg className="w-16 h-16 text-slate-300" fill="none" viewBox="0 0 24 24">
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-lumon-cream">
+              <div className="w-12 h-12 border-2 border-[var(--lumon-black)] border-t-transparent animate-spin" />
+              <span className="mt-4 text-terminal text-[var(--status-neutral)]">Loading</span>
             </div>
           )}
+
           <img
             src={getCardImageUrl(card.scryfallId, 'normal')}
             alt={card.name}

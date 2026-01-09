@@ -4,19 +4,38 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ current, total }: ProgressBarProps) {
-  const progress = total > 0 ? ((total - current) / total) * 100 : 0
+  const swiped = total - current
+  const progress = total > 0 ? (swiped / total) * 100 : 0
+
+  // Format numbers with leading zeros for that terminal look
+  const formatNumber = (n: number) => n.toString().padStart(3, '0')
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="flex justify-between text-sm text-slate-500 mb-2">
-        <span className="font-medium">{total - current} swiped</span>
-        <span className="font-medium">{current} remaining</span>
+      {/* Terminal-style header */}
+      <div className="flex justify-between items-baseline mb-3">
+        <span className="text-terminal text-[var(--status-neutral)]">DECK PROGRESS</span>
+        <span className="font-mono text-sm text-[var(--lumon-black)]">
+          {formatNumber(swiped)} / {formatNumber(total)}
+        </span>
       </div>
-      <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+
+      {/* Ledger-style progress bar */}
+      <div className="progress-ledger">
         <div
-          className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 transition-all duration-300 ease-out"
+          className="progress-ledger-fill"
           style={{ width: `${progress}%` }}
         />
+      </div>
+
+      {/* Status line */}
+      <div className="flex justify-between mt-2">
+        <span className="font-mono text-xs text-[var(--status-neutral)]">
+          {formatNumber(swiped)} PROCESSED
+        </span>
+        <span className="font-mono text-xs text-[var(--lumon-green)]">
+          {formatNumber(current)} REMAINING
+        </span>
       </div>
     </div>
   )

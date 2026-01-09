@@ -7,24 +7,25 @@ interface ViewModeToggleProps {
 
 export default function ViewModeToggle({ mode, onChange }: ViewModeToggleProps) {
   return (
-    <div className="flex bg-white rounded-xl p-1 card-shadow">
+    <div className="flex border-2 border-[var(--lumon-black)]">
       <button
         onClick={() => onChange('swipe')}
-        className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200
+        className={`px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider transition-all duration-150
           ${mode === 'swipe'
-            ? 'bg-violet-600 text-white shadow-sm'
-            : 'text-slate-500 hover:text-slate-700'
+            ? 'bg-[var(--lumon-black)] text-[var(--lumon-white)]'
+            : 'bg-transparent text-[var(--lumon-black)] hover:bg-[var(--lumon-cream)]'
           }
         `}
       >
         Swipe
       </button>
+      <div className="w-px bg-[var(--lumon-black)]" />
       <button
         onClick={() => onChange('category')}
-        className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200
+        className={`px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider transition-all duration-150
           ${mode === 'category'
-            ? 'bg-violet-600 text-white shadow-sm'
-            : 'text-slate-500 hover:text-slate-700'
+            ? 'bg-[var(--lumon-black)] text-[var(--lumon-white)]'
+            : 'bg-transparent text-[var(--lumon-black)] hover:bg-[var(--lumon-cream)]'
           }
         `}
       >

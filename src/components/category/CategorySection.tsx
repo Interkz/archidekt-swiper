@@ -34,32 +34,43 @@ export default function CategorySection({
   }, [isActiveSection, activeCardIndex])
 
   const isKept = title === 'Kept'
-  const bgClass = isKept ? 'bg-emerald-50/50' : 'bg-slate-50'
-  const borderClass = isActiveSection ? 'border-violet-400 shadow-sm' : 'border-slate-200'
 
   return (
-    <div className={`rounded-2xl border-2 ${borderClass} ${bgClass} p-4 transition-all duration-200`}>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className={`text-sm font-semibold ${isKept ? 'text-emerald-600' : 'text-slate-600'}`}>
-          {title} ({cards.length})
-        </h3>
+    <div className={`border-2 p-4 transition-all duration-150
+      ${isActiveSection
+        ? 'border-[var(--lumon-green)]'
+        : 'border-[var(--grid-line)]'
+      }
+      ${isKept ? 'bg-[var(--lumon-green-pale)]/30' : 'bg-[var(--surface-elevated)]'}
+    `}>
+      {/* Section header */}
+      <div className="flex items-center justify-between mb-4 pb-2 border-b border-[var(--grid-line)]">
+        <div className="flex items-center gap-2">
+          <span className={`text-terminal ${isKept ? 'text-[var(--lumon-green)]' : 'text-[var(--status-neutral)]'}`}>
+            // {title.toUpperCase()}
+          </span>
+          <span className="font-mono text-xs text-[var(--status-neutral)]">
+            ({cards.length})
+          </span>
+        </div>
         {isActiveSection && (
-          <span className="text-xs font-medium text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">
-            {isKept ? '↓ to remove' : '↑ to keep'}
+          <span className="font-mono text-xs text-[var(--lumon-green)] border border-[var(--lumon-green)] px-2 py-1">
+            {isKept ? '↓ REJECT' : '↑ ACCEPT'}
           </span>
         )}
       </div>
 
+      {/* Cards list */}
       {cards.length === 0 ? (
-        <div className="h-36 flex items-center justify-center">
+        <div className="h-32 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2">
-              <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            <div className="w-12 h-12 border border-[var(--grid-line)] flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-[var(--status-neutral)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <p className="text-slate-400 text-sm">
-              {isKept ? 'No cards kept yet' : 'All cards in this category are kept'}
+            <p className="text-terminal text-[var(--status-neutral)]">
+              {isKept ? 'NO CARDS RETAINED' : 'ALL CARDS RETAINED'}
             </p>
           </div>
         </div>

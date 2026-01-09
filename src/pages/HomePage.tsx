@@ -23,61 +23,105 @@ export default function HomePage() {
     clearState()
   }
 
+  // Format numbers with leading zeros
+  const formatNumber = (n: number) => n.toString().padStart(3, '0')
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6">
-      {/* Decorative background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-violet-100 to-indigo-100 rounded-full blur-3xl opacity-50" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-emerald-100 to-cyan-100 rounded-full blur-3xl opacity-50" />
-      </div>
+      {/* Subtle grid background */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03]"
+           style={{
+             backgroundImage: `
+               linear-gradient(var(--lumon-black) 1px, transparent 1px),
+               linear-gradient(90deg, var(--lumon-black) 1px, transparent 1px)
+             `,
+             backgroundSize: '40px 40px'
+           }}
+      />
 
-      <div className="relative z-10 text-center mb-10">
-        <h1 className="text-4xl font-bold text-slate-800 mb-3 tracking-tight">
-          Archidekt Swiper
+      {/* Header section */}
+      <div className="relative z-10 text-center mb-12">
+        {/* Horizontal rule above */}
+        <div className="w-64 h-0.5 bg-[var(--lumon-black)] mx-auto mb-8" />
+
+        <h1 className="font-display text-4xl md:text-5xl tracking-tight text-[var(--lumon-black)] mb-2">
+          ARCHIDEKT SWIPER
         </h1>
-        <p className="text-slate-500 max-w-md text-lg">
-          Trim your Commander deck the fun way! Swipe right to keep, left to remove.
+        <div className="h-px bg-[var(--grid-line)] w-48 mx-auto my-4" />
+        <p className="text-terminal text-[var(--status-neutral)] tracking-widest">
+          DECK SORTING INTERFACE
         </p>
+        <p className="font-mono text-xs text-[var(--status-neutral)] mt-2">v2.0.0</p>
+
+        {/* Horizontal rule below */}
+        <div className="w-64 h-0.5 bg-[var(--lumon-black)] mx-auto mt-8" />
       </div>
 
       {hasExistingSession ? (
-        <div className="relative z-10 w-full max-w-md space-y-4">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 card-shadow text-center">
-            <p className="text-slate-700 font-medium mb-1">You have an existing session</p>
-            <p className="text-slate-500 text-sm">
-              {remainingCards.length} cards remaining out of {allCards.length}
-            </p>
+        <div className="relative z-10 w-full max-w-md space-y-6">
+          {/* Session status box */}
+          <div className="border-2 border-[var(--lumon-black)] p-6">
+            <span className="text-terminal text-[var(--status-neutral)]">ACTIVE SESSION DETECTED</span>
+            <div className="mt-4 space-y-2">
+              <div className="flex justify-between font-mono text-sm">
+                <span className="text-[var(--status-neutral)]">REMAINING:</span>
+                <span className="text-[var(--lumon-green)]">{formatNumber(remainingCards.length)}</span>
+              </div>
+              <div className="flex justify-between font-mono text-sm">
+                <span className="text-[var(--status-neutral)]">TOTAL:</span>
+                <span className="text-[var(--lumon-black)]">{formatNumber(allCards.length)}</span>
+              </div>
+              <div className="h-px bg-[var(--grid-line)] my-3" />
+              <div className="flex justify-between font-mono text-sm">
+                <span className="text-[var(--status-neutral)]">PROGRESS:</span>
+                <span className="text-[var(--lumon-black)]">
+                  {Math.round(((allCards.length - remainingCards.length) / allCards.length) * 100)}%
+                </span>
+              </div>
+            </div>
           </div>
 
+          {/* Action buttons */}
           <button
             onClick={handleContinueSession}
-            className="w-full px-6 py-3.5 bg-violet-600 hover:bg-violet-700
-                       rounded-xl font-semibold text-white transition-all duration-200
-                       hover:shadow-lg hover:shadow-violet-200 active:scale-[0.98]"
+            className="w-full px-6 py-4 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
+                       font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
+                       hover:bg-[var(--lumon-green-light)] transition-all duration-150
+                       active:scale-[0.98]"
           >
-            Continue Swiping
+            Resume Sorting
           </button>
 
           <button
             onClick={handleNewSession}
-            className="w-full px-6 py-3.5 bg-white border border-slate-200
-                       hover:bg-slate-50 hover:border-slate-300
-                       rounded-xl font-semibold text-slate-700 transition-all duration-200"
+            className="w-full px-6 py-4 bg-transparent border-2 border-[var(--lumon-black)]
+                       font-mono font-semibold uppercase tracking-wider text-[var(--lumon-black)]
+                       hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)]
+                       transition-all duration-150 active:scale-[0.98]"
           >
-            Start New Deck
+            New Session
           </button>
         </div>
       ) : (
-        <div className="relative z-10">
+        <div className="relative z-10 w-full max-w-md">
           <DeckInput />
         </div>
       )}
 
-      <footer className="relative z-10 mt-12 text-center text-slate-400 text-sm">
-        <p>Enter your Archidekt deck URL or ID to get started.</p>
-        <p className="mt-2">
-          Example: <code className="bg-slate-100 text-slate-600 px-2 py-1 rounded-md text-xs">archidekt.com/decks/123456</code>
+      {/* Footer */}
+      <footer className="relative z-10 mt-16 text-center">
+        <div className="h-px bg-[var(--grid-line)] w-64 mx-auto mb-6" />
+        <p className="text-terminal text-[var(--status-neutral)]">
+          ACCEPTABLE INPUT FORMATS
         </p>
+        <div className="mt-3 space-y-1">
+          <p className="font-mono text-xs text-[var(--status-neutral)]">
+            URL: archidekt.com/decks/123456
+          </p>
+          <p className="font-mono text-xs text-[var(--status-neutral)]">
+            ID: 123456
+          </p>
+        </div>
       </footer>
     </div>
   )

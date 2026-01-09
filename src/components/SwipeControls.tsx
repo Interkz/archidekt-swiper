@@ -14,54 +14,65 @@ export default function SwipeControls({
   disabled,
 }: SwipeControlsProps) {
   return (
-    <div className="flex items-center justify-center gap-5 mt-6">
-      {/* Remove button */}
-      <button
-        onClick={onRemove}
-        disabled={disabled}
-        className="w-16 h-16 rounded-full bg-white border-2 border-red-200
-                   text-red-500 flex items-center justify-center card-shadow
-                   hover:border-red-400 hover:bg-red-50 hover:scale-105
-                   disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100
-                   transition-all duration-200 active:scale-95"
-        title="Remove (Left Arrow)"
-      >
-        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+    <div className="mt-8 space-y-4">
+      {/* Main action buttons - brutalist rectangles */}
+      <div className="flex items-center justify-center gap-6">
+        {/* REJECT button */}
+        <button
+          onClick={onRemove}
+          disabled={disabled}
+          className="group flex items-center gap-3 px-6 py-4 border-2 border-[var(--lumon-black)]
+                     bg-transparent transition-all duration-150
+                     hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)]
+                     disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[var(--lumon-black)]
+                     active:scale-[0.98]"
+          aria-label="Reject card"
+          title="Reject (Left Arrow)"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="square" strokeLinejoin="miter" d="M19 12H5M12 5l-7 7 7 7" />
+          </svg>
+          <span className="font-mono text-sm font-semibold uppercase tracking-wider">Reject</span>
+        </button>
 
-      {/* Undo button */}
-      <button
-        onClick={onUndo}
-        disabled={!canUndo || disabled}
-        className="w-12 h-12 rounded-full bg-white border-2 border-amber-200
-                   text-amber-500 flex items-center justify-center card-shadow
-                   hover:border-amber-400 hover:bg-amber-50 hover:scale-105
-                   disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100
-                   transition-all duration-200 active:scale-95"
-        title="Undo (Z)"
-      >
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-        </svg>
-      </button>
+        {/* ACCEPT button */}
+        <button
+          onClick={onKeep}
+          disabled={disabled}
+          className="group flex items-center gap-3 px-6 py-4 border-2 border-[var(--lumon-green)]
+                     text-[var(--lumon-green)] bg-transparent transition-all duration-150
+                     hover:bg-[var(--lumon-green)] hover:text-[var(--lumon-white)]
+                     disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[var(--lumon-green)]
+                     active:scale-[0.98]"
+          aria-label="Accept card"
+          title="Accept (Right Arrow)"
+        >
+          <span className="font-mono text-sm font-semibold uppercase tracking-wider">Accept</span>
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="square" strokeLinejoin="miter" d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
 
-      {/* Keep button */}
-      <button
-        onClick={onKeep}
-        disabled={disabled}
-        className="w-16 h-16 rounded-full bg-white border-2 border-emerald-200
-                   text-emerald-500 flex items-center justify-center card-shadow
-                   hover:border-emerald-400 hover:bg-emerald-50 hover:scale-105
-                   disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100
-                   transition-all duration-200 active:scale-95"
-        title="Keep (Right Arrow)"
-      >
-        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-      </button>
+      {/* Undo button - smaller, secondary */}
+      <div className="flex justify-center">
+        <button
+          onClick={onUndo}
+          disabled={!canUndo || disabled}
+          className="flex items-center gap-2 px-4 py-2 border border-[var(--grid-line)]
+                     text-[var(--status-neutral)] bg-transparent transition-all duration-150
+                     hover:border-[var(--lumon-black)] hover:text-[var(--lumon-black)]
+                     disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[var(--grid-line)] disabled:hover:text-[var(--status-neutral)]
+                     active:scale-[0.98]"
+          aria-label="Undo last action"
+          title="Undo (Z)"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="square" strokeLinejoin="miter" d="M3 10h10a5 5 0 015 5v2M3 10l5-5M3 10l5 5" />
+          </svg>
+          <span className="font-mono text-xs font-medium uppercase tracking-wider">Undo</span>
+        </button>
+      </div>
     </div>
   )
 }
