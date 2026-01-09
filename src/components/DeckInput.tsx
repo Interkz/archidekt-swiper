@@ -35,25 +35,41 @@ export default function DeckInput() {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
       <div className="flex flex-col gap-4">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Paste Archidekt deck URL or ID"
-          className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20
-                     text-white placeholder-white/50 focus:outline-none focus:ring-2
-                     focus:ring-purple-500 focus:border-transparent"
-          disabled={isLoading}
-        />
+        <div className="relative">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Paste Archidekt deck URL or ID"
+            className="w-full px-5 py-4 rounded-xl bg-white border border-slate-200
+                       text-slate-800 placeholder-slate-400 card-shadow
+                       focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent
+                       transition-all duration-200"
+            disabled={isLoading}
+          />
+          {input && !isLoading && (
+            <button
+              type="button"
+              onClick={() => setInput('')}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
 
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-600/50
-                     disabled:cursor-not-allowed rounded-lg font-semibold transition-colors"
+          className="w-full px-6 py-4 bg-violet-600 hover:bg-violet-700
+                     disabled:bg-slate-300 disabled:cursor-not-allowed
+                     rounded-xl font-semibold text-white transition-all duration-200
+                     hover:shadow-lg hover:shadow-violet-200 active:scale-[0.98]"
         >
           {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
+            <span className="flex items-center justify-center gap-3">
               <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
@@ -78,7 +94,9 @@ export default function DeckInput() {
         </button>
 
         {error && (
-          <p className="text-red-400 text-sm text-center">{error}</p>
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3">
+            <p className="text-red-600 text-sm text-center">{error}</p>
+          </div>
         )}
       </div>
     </form>

@@ -155,10 +155,16 @@ export default function CategoryModePage() {
   if (categories.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <p className="text-gray-400 text-lg mb-4">No categories found in this deck.</p>
+        <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+          <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <p className="text-slate-500 text-lg mb-4">No categories found in this deck.</p>
         <button
           onClick={() => navigate('/swipe')}
-          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold"
+          className="px-6 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-semibold text-white
+                     transition-all duration-200 hover:shadow-lg hover:shadow-violet-200"
         >
           Use Swipe Mode
         </button>
@@ -172,7 +178,7 @@ export default function CategoryModePage() {
       <header className="flex items-center justify-between mb-4">
         <Link
           to="/"
-          className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
+          className="text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1 font-medium"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -184,7 +190,7 @@ export default function CategoryModePage() {
 
         <button
           onClick={() => setShowKeptModal(true)}
-          className="text-sm text-purple-400 hover:text-purple-300"
+          className="text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors"
         >
           View Kept ({keptCards.length})
         </button>
@@ -194,7 +200,7 @@ export default function CategoryModePage() {
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
 
       {/* Deck name */}
-      <h1 className="text-lg font-semibold text-white text-center mb-4 truncate">
+      <h1 className="text-lg font-semibold text-slate-800 text-center mb-4 truncate">
         {deckName}
       </h1>
 
@@ -219,7 +225,8 @@ export default function CategoryModePage() {
               value={limitValue}
               onChange={(e) => setLimitValue(e.target.value)}
               placeholder="Max cards"
-              className="w-24 px-2 py-1 bg-white/10 rounded text-white text-sm"
+              className="w-24 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSetLimit()
@@ -228,13 +235,13 @@ export default function CategoryModePage() {
             />
             <button
               onClick={handleSetLimit}
-              className="px-2 py-1 bg-purple-600 rounded text-sm"
+              className="px-3 py-1.5 bg-violet-600 hover:bg-violet-700 rounded-lg text-sm text-white font-medium transition-colors"
             >
               Set
             </button>
             <button
               onClick={() => setShowLimitInput(false)}
-              className="px-2 py-1 bg-white/10 rounded text-sm"
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm text-slate-600 font-medium transition-colors"
             >
               Cancel
             </button>
@@ -245,7 +252,7 @@ export default function CategoryModePage() {
               setLimitValue(currentLimit?.toString() || '')
               setShowLimitInput(true)
             }}
-            className="text-sm text-gray-400 hover:text-white"
+            className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
           >
             {currentLimit ? `Limit: ${currentLimit}` : 'Set limit'} for {activeCategory}
           </button>
@@ -273,20 +280,20 @@ export default function CategoryModePage() {
       </div>
 
       {/* Keyboard hints */}
-      <div className="text-center text-gray-500 text-xs mt-4 space-y-1">
+      <div className="text-center text-slate-400 text-xs mt-4 space-y-1">
         <p>
-          <kbd className="px-1.5 py-0.5 bg-white/10 rounded">←</kbd>
-          <kbd className="px-1.5 py-0.5 bg-white/10 rounded ml-1">→</kbd>
+          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">←</kbd>
+          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px] ml-1">→</kbd>
           {' '}Navigate cards
-          <span className="mx-2">|</span>
-          <kbd className="px-1.5 py-0.5 bg-white/10 rounded">↑</kbd>
+          <span className="mx-2 text-slate-300">|</span>
+          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">↑</kbd>
           {' '}Keep
-          <span className="mx-2">|</span>
-          <kbd className="px-1.5 py-0.5 bg-white/10 rounded">↓</kbd>
+          <span className="mx-2 text-slate-300">|</span>
+          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">↓</kbd>
           {' '}Remove
         </p>
         <p>
-          <kbd className="px-1.5 py-0.5 bg-white/10 rounded">Tab</kbd>
+          <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">Tab</kbd>
           {' '}Switch sections
         </p>
       </div>

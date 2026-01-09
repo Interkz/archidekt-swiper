@@ -47,13 +47,25 @@ export default function CardStack({ cards, onKeep, onRemove }: CardStackProps) {
   if (cards.length === 0) {
     return (
       <div className="flex items-center justify-center h-[500px]">
-        <p className="text-gray-400 text-lg">No more cards to swipe!</p>
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
+            <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <p className="text-slate-500 text-lg font-medium">No more cards to swipe!</p>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="relative w-full max-w-[350px] h-[550px] mx-auto">
+      {/* Subtle table surface glow */}
+      <div className="absolute inset-0 -z-10 blur-3xl opacity-30">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full transform scale-150" />
+      </div>
+
       {/* Render cards in reverse order so first card is on top */}
       {cardsToShow
         .slice()
@@ -65,11 +77,11 @@ export default function CardStack({ cards, onKeep, onRemove }: CardStackProps) {
           return (
             <div
               key={card.id}
-              className="absolute inset-0 transition-transform"
+              className="absolute inset-0 transition-all duration-300"
               style={{
-                transform: `scale(${1 - reverseIndex * 0.05}) translateY(${reverseIndex * 10}px)`,
+                transform: `scale(${1 - reverseIndex * 0.04}) translateY(${reverseIndex * 12}px)`,
                 zIndex: cardsToShow.length - reverseIndex,
-                opacity: isTop ? 1 : 0.7,
+                opacity: isTop ? 1 : 0.6 - reverseIndex * 0.15,
               }}
             >
               {isTop ? (
@@ -79,7 +91,7 @@ export default function CardStack({ cards, onKeep, onRemove }: CardStackProps) {
                   onCardLeftScreen={handleCardLeftScreen}
                 />
               ) : (
-                <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                <div className="bg-white rounded-2xl overflow-hidden card-shadow">
                   <img
                     src={`https://api.scryfall.com/cards/${card.scryfallId}?format=image&version=normal`}
                     alt={card.name}

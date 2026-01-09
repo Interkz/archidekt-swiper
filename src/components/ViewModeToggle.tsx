@@ -7,13 +7,13 @@ interface ViewModeToggleProps {
 
 export default function ViewModeToggle({ mode, onChange }: ViewModeToggleProps) {
   return (
-    <div className="flex bg-white/10 rounded-lg p-1">
+    <div className="flex bg-white rounded-xl p-1 card-shadow">
       <button
         onClick={() => onChange('swipe')}
-        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
+        className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200
           ${mode === 'swipe'
-            ? 'bg-purple-600 text-white'
-            : 'text-gray-400 hover:text-white'
+            ? 'bg-violet-600 text-white shadow-sm'
+            : 'text-slate-500 hover:text-slate-700'
           }
         `}
       >
@@ -21,10 +21,10 @@ export default function ViewModeToggle({ mode, onChange }: ViewModeToggleProps) 
       </button>
       <button
         onClick={() => onChange('category')}
-        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors
+        className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200
           ${mode === 'category'
-            ? 'bg-purple-600 text-white'
-            : 'text-gray-400 hover:text-white'
+            ? 'bg-violet-600 text-white shadow-sm'
+            : 'text-slate-500 hover:text-slate-700'
           }
         `}
       >

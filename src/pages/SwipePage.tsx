@@ -118,7 +118,7 @@ export default function SwipePage() {
       <header className="flex items-center justify-between mb-4">
         <Link
           to="/"
-          className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
+          className="text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1 font-medium"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -130,7 +130,7 @@ export default function SwipePage() {
 
         <button
           onClick={() => setShowKeptModal(true)}
-          className="text-sm text-purple-400 hover:text-purple-300"
+          className="text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors"
         >
           View Kept ({keptCards.length})
         </button>
@@ -140,7 +140,7 @@ export default function SwipePage() {
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
 
       {/* Deck name */}
-      <h1 className="text-lg font-semibold text-white text-center mb-4 truncate">
+      <h1 className="text-lg font-semibold text-slate-800 text-center mb-4 truncate">
         {deckName}
       </h1>
 
@@ -149,20 +149,20 @@ export default function SwipePage() {
         <div className="flex justify-center gap-2 mb-4">
           <button
             onClick={() => setSwipeMode('main')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
               swipeMode === 'main'
-                ? 'bg-purple-600 text-white'
-                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                ? 'bg-violet-600 text-white shadow-md'
+                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
             }`}
           >
             Main Deck ({remainingCards.length}/{allCards.length})
           </button>
           <button
             onClick={() => setSwipeMode('sideboard')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
               swipeMode === 'sideboard'
-                ? 'bg-purple-600 text-white'
-                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                ? 'bg-violet-600 text-white shadow-md'
+                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
             }`}
           >
             Sideboard ({remainingSideboardCards.length}/{allSideboardCards.length})
@@ -174,7 +174,7 @@ export default function SwipePage() {
       <div className="mb-6">
         <ProgressBar current={currentCards.length} total={totalCards} />
         {swipeMode === 'sideboard' && (
-          <p className="text-center text-yellow-400 text-xs mt-2">
+          <p className="text-center text-amber-600 text-xs mt-2 font-medium">
             Swipe right to add sideboard cards to your deck
           </p>
         )}
@@ -190,13 +190,19 @@ export default function SwipePage() {
           />
         ) : (
           <div className="text-center">
-            <p className="text-gray-400 text-lg mb-4">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 flex items-center justify-center">
+              <svg className="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p className="text-slate-600 text-lg font-medium mb-4">
               {swipeMode === 'main' ? 'Main deck complete!' : 'Sideboard complete!'}
             </p>
             {mainDeckDone && sideboardAvailable && remainingSideboardCards.length > 0 && swipeMode === 'main' && (
               <button
                 onClick={() => setSwipeMode('sideboard')}
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold"
+                className="px-6 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-semibold text-white
+                           transition-all duration-200 hover:shadow-lg hover:shadow-violet-200"
               >
                 Swipe Sideboard Cards
               </button>
@@ -204,7 +210,8 @@ export default function SwipePage() {
             {(mainDeckDone && (!sideboardAvailable || remainingSideboardCards.length === 0)) && (
               <button
                 onClick={() => navigate('/results')}
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold"
+                className="px-6 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-semibold text-white
+                           transition-all duration-200 hover:shadow-lg hover:shadow-violet-200"
               >
                 View Results
               </button>
@@ -212,7 +219,8 @@ export default function SwipePage() {
             {swipeMode === 'sideboard' && remainingSideboardCards.length === 0 && (
               <button
                 onClick={() => navigate('/results')}
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold"
+                className="px-6 py-3 bg-violet-600 hover:bg-violet-700 rounded-xl font-semibold text-white
+                           transition-all duration-200 hover:shadow-lg hover:shadow-violet-200"
               >
                 View Results
               </button>
@@ -233,9 +241,9 @@ export default function SwipePage() {
       )}
 
       {/* Keyboard hints */}
-      <div className="text-center text-gray-500 text-xs mt-4">
+      <div className="text-center text-slate-400 text-xs mt-6">
         <span className="hidden sm:inline">
-          Use <kbd className="px-1.5 py-0.5 bg-white/10 rounded">←</kbd> / <kbd className="px-1.5 py-0.5 bg-white/10 rounded">→</kbd> arrow keys or swipe. <kbd className="px-1.5 py-0.5 bg-white/10 rounded">Z</kbd> to undo.
+          Use <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">←</kbd> / <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">→</kbd> arrow keys or swipe. <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 font-mono text-[10px]">Z</kbd> to undo.
         </span>
         <span className="sm:hidden">
           Swipe left to remove, right to keep

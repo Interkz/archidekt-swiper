@@ -62,85 +62,95 @@ export default function ResultsPage() {
       <header className="mb-6">
         <Link
           to="/"
-          className="text-gray-400 hover:text-white transition-colors flex items-center gap-1 mb-4"
+          className="text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1 font-medium mb-4"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Home
         </Link>
-        <h1 className="text-2xl font-bold text-white">Results</h1>
-        <p className="text-gray-400">{deckName}</p>
+        <h1 className="text-2xl font-bold text-slate-800">Results</h1>
+        <p className="text-slate-500">{deckName}</p>
       </header>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4 text-center">
-          <p className="text-3xl font-bold text-green-400">{keptCards.length}</p>
-          <p className="text-green-400/80 text-sm">Cards Kept</p>
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center">
+          <p className="text-3xl font-bold text-emerald-600">{keptCards.length}</p>
+          <p className="text-emerald-600/80 text-sm font-medium">Cards Kept</p>
         </div>
-        <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 text-center">
-          <p className="text-3xl font-bold text-red-400">{removedCards.length}</p>
-          <p className="text-red-400/80 text-sm">Cards Removed</p>
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-center">
+          <p className="text-3xl font-bold text-red-500">{removedCards.length}</p>
+          <p className="text-red-500/80 text-sm font-medium">Cards Removed</p>
         </div>
       </div>
 
       {/* Commander deck check */}
       {keptCards.length === 100 && (
-        <div className="bg-purple-500/20 border border-purple-500/30 rounded-lg p-3 mb-6 text-center">
-          <p className="text-purple-400">
-            Perfect! Your deck is exactly 100 cards (including commander)
-          </p>
+        <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4 mb-6 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <p className="text-violet-700 font-medium">
+              Perfect! Your deck is exactly 100 cards (including commander)
+            </p>
+          </div>
         </div>
       )}
       {keptCards.length !== 100 && (
-        <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 mb-6 text-center">
-          <p className="text-yellow-400">
-            Commander decks need 100 cards. You have {keptCards.length}.
-          </p>
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p className="text-amber-700 font-medium">
+              Commander decks need 100 cards. You have {keptCards.length}.
+            </p>
+          </div>
         </div>
       )}
 
       {/* Export section */}
       <div className="flex-1">
-        <h2 className="text-lg font-semibold text-white mb-3">Export Kept Cards</h2>
+        <h2 className="text-lg font-semibold text-slate-800 mb-3">Export Kept Cards</h2>
 
         {/* Format selector */}
         <div className="flex flex-wrap gap-2 mb-4">
           <button
             onClick={() => setExportFormat('plain')}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
               exportFormat === 'plain'
-                ? 'bg-purple-600 text-white'
-                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                ? 'bg-violet-600 text-white shadow-md'
+                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
             }`}
           >
             Plain
           </button>
           <button
             onClick={() => setExportFormat('grouped')}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
               exportFormat === 'grouped'
-                ? 'bg-purple-600 text-white'
-                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                ? 'bg-violet-600 text-white shadow-md'
+                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
             }`}
           >
             Grouped by Type
           </button>
           <button
             onClick={() => setExportFormat('archidekt')}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
               exportFormat === 'archidekt'
-                ? 'bg-purple-600 text-white'
-                : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                ? 'bg-violet-600 text-white shadow-md'
+                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
             }`}
           >
             With Categories
           </button>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-lg p-4 mb-4 max-h-[300px] overflow-auto">
-          <pre className="text-sm text-gray-300 whitespace-pre-wrap font-mono">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 mb-4 max-h-[300px] overflow-auto card-shadow">
+          <pre className="text-sm text-slate-600 whitespace-pre-wrap font-mono">
             {exportText}
           </pre>
         </div>
@@ -148,8 +158,12 @@ export default function ResultsPage() {
         <div className="flex gap-3">
           <button
             onClick={handleCopy}
-            className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700
-                       rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+            className={`flex-1 px-4 py-3.5 rounded-xl font-semibold transition-all duration-200
+                       flex items-center justify-center gap-2 ${
+                         copied
+                           ? 'bg-emerald-500 text-white'
+                           : 'bg-violet-600 hover:bg-violet-700 text-white hover:shadow-lg hover:shadow-violet-200'
+                       }`}
           >
             {copied ? (
               <>
@@ -169,8 +183,8 @@ export default function ResultsPage() {
           </button>
           <button
             onClick={handleDownload}
-            className="px-4 py-3 bg-white/10 hover:bg-white/20
-                       rounded-lg font-semibold transition-colors flex items-center gap-2"
+            className="px-4 py-3.5 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300
+                       rounded-xl font-semibold text-slate-700 transition-all duration-200 flex items-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -181,9 +195,9 @@ export default function ResultsPage() {
       </div>
 
       {/* Import instructions */}
-      <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-        <h3 className="font-semibold text-white mb-2">How to import into Archidekt:</h3>
-        <ol className="text-sm text-gray-400 space-y-1 list-decimal list-inside">
+      <div className="mt-6 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+        <h3 className="font-semibold text-slate-800 mb-3">How to import into Archidekt:</h3>
+        <ol className="text-sm text-slate-600 space-y-2 list-decimal list-inside">
           <li>Go to your deck on Archidekt</li>
           <li>Click the menu (three dots) → "Clear Deck" to remove all cards</li>
           <li>Click "Add Cards" → "Import"</li>
@@ -195,15 +209,15 @@ export default function ResultsPage() {
       <div className="mt-6 flex gap-3">
         <button
           onClick={handleSwipeAgain}
-          className="flex-1 px-4 py-3 bg-white/10 hover:bg-white/20
-                     rounded-lg font-semibold transition-colors"
+          className="flex-1 px-4 py-3.5 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300
+                     rounded-xl font-semibold text-slate-700 transition-all duration-200"
         >
           Swipe Again
         </button>
         <button
           onClick={handleStartOver}
-          className="flex-1 px-4 py-3 bg-white/10 hover:bg-white/20
-                     rounded-lg font-semibold transition-colors"
+          className="flex-1 px-4 py-3.5 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300
+                     rounded-xl font-semibold text-slate-700 transition-all duration-200"
         >
           New Deck
         </button>

@@ -1,20 +1,21 @@
 interface CategoryLimitBadgeProps {
   current: number
   max: number | null // null means no limit
+  isActive?: boolean
 }
 
-export default function CategoryLimitBadge({ current, max }: CategoryLimitBadgeProps) {
+export default function CategoryLimitBadge({ current, max, isActive }: CategoryLimitBadgeProps) {
   const hasLimit = max !== null && max > 0
   const atLimit = hasLimit && current >= max
   const nearLimit = hasLimit && current >= max * 0.8
 
-  let colorClass = 'text-gray-400'
+  let colorClass = isActive ? 'text-violet-200' : 'text-slate-400'
   if (atLimit) {
-    colorClass = 'text-red-400'
+    colorClass = isActive ? 'text-red-300' : 'text-red-500'
   } else if (nearLimit) {
-    colorClass = 'text-yellow-400'
+    colorClass = isActive ? 'text-amber-300' : 'text-amber-500'
   } else if (current > 0) {
-    colorClass = 'text-green-400'
+    colorClass = isActive ? 'text-emerald-300' : 'text-emerald-500'
   }
 
   return (

@@ -7,13 +7,15 @@ interface CardDetailsProps {
 export default function CardDetails({ card }: CardDetailsProps) {
   return (
     <div className="mt-4 text-center">
-      <h2 className="text-xl font-bold text-white">{card.name}</h2>
+      <h2 className="text-xl font-semibold text-slate-800">{card.name}</h2>
       <div className="flex items-center justify-center gap-2 mt-1">
         {card.manaCost && (
-          <span className="text-gray-300 font-mono">{formatManaCost(card.manaCost)}</span>
+          <span className="text-slate-600 font-mono text-sm bg-slate-100 px-2 py-0.5 rounded-md">
+            {formatManaCost(card.manaCost)}
+          </span>
         )}
       </div>
-      <p className="text-gray-400 text-sm mt-1">{card.typeLine}</p>
+      <p className="text-slate-500 text-sm mt-1">{card.typeLine}</p>
     </div>
   )
 }

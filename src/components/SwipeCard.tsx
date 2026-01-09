@@ -29,25 +29,28 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
       <div className="relative">
         {/* Swipe indicators */}
         <div
-          className={`absolute top-4 left-4 z-10 px-4 py-2 rounded-lg font-bold text-2xl
-                      border-4 border-red-500 text-red-500 rotate-[-20deg]
-                      transition-opacity ${swipeDirection === 'left' ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute top-4 left-4 z-10 px-4 py-2 rounded-xl font-bold text-xl
+                      bg-red-50 border-2 border-red-400 text-red-500 rotate-[-15deg]
+                      transition-all duration-200 ${swipeDirection === 'left' ? 'opacity-100 scale-110' : 'opacity-0 scale-95'}`}
         >
           REMOVE
         </div>
         <div
-          className={`absolute top-4 right-4 z-10 px-4 py-2 rounded-lg font-bold text-2xl
-                      border-4 border-green-500 text-green-500 rotate-[20deg]
-                      transition-opacity ${swipeDirection === 'right' ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute top-4 right-4 z-10 px-4 py-2 rounded-xl font-bold text-xl
+                      bg-emerald-50 border-2 border-emerald-400 text-emerald-500 rotate-[15deg]
+                      transition-all duration-200 ${swipeDirection === 'right' ? 'opacity-100 scale-110' : 'opacity-0 scale-95'}`}
         >
           KEEP
         </div>
 
-        {/* Card image */}
-        <div className="relative bg-gray-800 rounded-xl overflow-hidden shadow-2xl">
+        {/* Card image with table shadow effect */}
+        <div className="relative bg-white rounded-2xl overflow-hidden card-shadow-lg transform transition-transform hover:scale-[1.01]">
+          {/* Subtle top shine effect */}
+          <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white/20 to-transparent pointer-events-none z-10 rounded-t-2xl" />
+
           {!imageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-700 animate-pulse">
-              <svg className="w-16 h-16 text-gray-600" fill="none" viewBox="0 0 24 24">
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-100 animate-pulse">
+              <svg className="w-16 h-16 text-slate-300" fill="none" viewBox="0 0 24 24">
                 <path
                   stroke="currentColor"
                   strokeLinecap="round"
@@ -61,7 +64,7 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
           <img
             src={getCardImageUrl(card.scryfallId, 'normal')}
             alt={card.name}
-            className={`w-full h-auto transition-opacity ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-auto transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             onLoad={() => setImageLoaded(true)}
             draggable={false}
           />

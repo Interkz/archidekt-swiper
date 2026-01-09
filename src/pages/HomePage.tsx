@@ -25,46 +25,58 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-white mb-2">Archidekt Swiper</h1>
-        <p className="text-gray-400 max-w-md">
-          Trim your Commander deck the fun way! Swipe right to keep a card, left to remove it.
+      {/* Decorative background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-violet-100 to-indigo-100 rounded-full blur-3xl opacity-50" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-emerald-100 to-cyan-100 rounded-full blur-3xl opacity-50" />
+      </div>
+
+      <div className="relative z-10 text-center mb-10">
+        <h1 className="text-4xl font-bold text-slate-800 mb-3 tracking-tight">
+          Archidekt Swiper
+        </h1>
+        <p className="text-slate-500 max-w-md text-lg">
+          Trim your Commander deck the fun way! Swipe right to keep, left to remove.
         </p>
       </div>
 
       {hasExistingSession ? (
-        <div className="w-full max-w-md space-y-4">
-          <div className="bg-white/10 rounded-lg p-4 text-center">
-            <p className="text-white mb-2">You have an existing session:</p>
-            <p className="text-gray-400 text-sm">
+        <div className="relative z-10 w-full max-w-md space-y-4">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 card-shadow text-center">
+            <p className="text-slate-700 font-medium mb-1">You have an existing session</p>
+            <p className="text-slate-500 text-sm">
               {remainingCards.length} cards remaining out of {allCards.length}
             </p>
           </div>
 
           <button
             onClick={handleContinueSession}
-            className="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700
-                       rounded-lg font-semibold transition-colors"
+            className="w-full px-6 py-3.5 bg-violet-600 hover:bg-violet-700
+                       rounded-xl font-semibold text-white transition-all duration-200
+                       hover:shadow-lg hover:shadow-violet-200 active:scale-[0.98]"
           >
             Continue Swiping
           </button>
 
           <button
             onClick={handleNewSession}
-            className="w-full px-6 py-3 bg-transparent border border-white/30
-                       hover:bg-white/10 rounded-lg font-semibold transition-colors"
+            className="w-full px-6 py-3.5 bg-white border border-slate-200
+                       hover:bg-slate-50 hover:border-slate-300
+                       rounded-xl font-semibold text-slate-700 transition-all duration-200"
           >
             Start New Deck
           </button>
         </div>
       ) : (
-        <DeckInput />
+        <div className="relative z-10">
+          <DeckInput />
+        </div>
       )}
 
-      <footer className="mt-12 text-center text-gray-500 text-sm">
+      <footer className="relative z-10 mt-12 text-center text-slate-400 text-sm">
         <p>Enter your Archidekt deck URL or ID to get started.</p>
-        <p className="mt-1">
-          Example: <code className="bg-white/10 px-2 py-0.5 rounded">archidekt.com/decks/123456</code>
+        <p className="mt-2">
+          Example: <code className="bg-slate-100 text-slate-600 px-2 py-1 rounded-md text-xs">archidekt.com/decks/123456</code>
         </p>
       </footer>
     </div>
