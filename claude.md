@@ -21,19 +21,27 @@ api/
 └── deck.ts                    # Vercel serverless proxy for Archidekt API
 src/
 ├── components/
-│   ├── CardStack.tsx          # Swipeable card stack
-│   ├── SwipeCard.tsx          # Individual swipe card
-│   ├── SwipeControls.tsx      # Keep/Remove/Undo buttons
+│   ├── CardStack.tsx          # Swipeable card stack (supports up swipe for maybe)
+│   ├── SwipeCard.tsx          # Individual swipe card with stamps
+│   ├── SwipeControls.tsx      # Keep/Remove/Maybe/Undo buttons
 │   ├── ProgressBar.tsx        # Progress indicator
 │   ├── CardDetails.tsx        # Card info display
 │   ├── DeckInput.tsx          # URL input form
 │   ├── ViewModeToggle.tsx     # Swipe/Category mode switch
 │   ├── KeptCardsModal.tsx     # Modal showing all kept cards
-│   └── category/
-│       ├── CategoryCard.tsx       # Small card display with focus ring
-│       ├── CategoryLimitBadge.tsx # "5/12" limit indicator
-│       ├── CategorySection.tsx    # Kept/Available card rows
-│       └── CategoryTabs.tsx       # Horizontal category tabs
+│   ├── QuickActionsDropdown.tsx   # Bulk action dropdown menu
+│   ├── QuickActionConfirmModal.tsx # Confirmation for bulk actions
+│   ├── category/
+│   │   ├── CategoryCard.tsx       # Small card display with focus ring
+│   │   ├── CategoryLimitBadge.tsx # "5/12" limit indicator
+│   │   ├── CategorySection.tsx    # Kept/Available card rows
+│   │   └── CategoryTabs.tsx       # Horizontal category tabs
+│   └── stats/
+│       ├── DeckStatsPanel.tsx     # Collapsible stats sidebar
+│       ├── ManaCurveChart.tsx     # CMC histogram (0-7+)
+│       ├── ColorPips.tsx          # W/U/B/R/G/C distribution
+│       ├── DeckSizeGauge.tsx      # Target counter (053/100)
+│       └── CategoryStats.tsx      # Category breakdown
 ├── pages/
 │   ├── HomePage.tsx           # Deck URL input
 │   ├── SwipePage.tsx          # Main swipe interface
@@ -46,7 +54,8 @@ src/
 │   └── scryfallImages.ts      # Scryfall image URLs
 ├── utils/
 │   ├── urlParser.ts           # Parse Archidekt deck URLs
-│   └── exportFormatter.ts     # Export format functions
+│   ├── exportFormatter.ts     # Export format functions
+│   └── deckStats.ts           # Stats computation utilities
 └── types/
     └── archidekt.ts           # TypeScript interfaces
 ```
@@ -54,10 +63,12 @@ src/
 ## Key Features
 
 ### 1. Swipe Mode (Original)
-- Tinder-style card swiping (left=remove, right=keep)
-- Keyboard support: ←/→ arrow keys, Z to undo
+- Tinder-style card swiping (left=remove, right=keep, up=maybe)
+- Keyboard support: ←/→/↑ arrow keys, Z to undo
 - Sideboard swiping option
 - Progress bar showing cards remaining
+- **Maybe Pile**: Swipe up to defer decisions, review later or skip to results
+- **Quick Actions**: Bulk keep lands or entire categories via dropdown
 
 ### 2. Category Mode (New)
 - Browse cards organized by Archidekt categories
@@ -75,7 +86,15 @@ src/
 - Opens modal showing all kept cards grouped by category
 - Available in both Swipe and Category modes
 
-### 4. Export Formats
+### 4. Live Deck Stats Panel
+- Collapsible sidebar (toggle button on right edge)
+- Real-time mana curve histogram (0-7+ CMC buckets)
+- Color identity distribution (W/U/B/R/G/C)
+- Category breakdown with counts
+- Target counter showing "N TO TARGET" or "N OVER TARGET"
+- Average CMC (excluding lands)
+
+### 5. Export Formats
 Three options in ResultsPage:
 1. **Plain**: `1 Card Name`
 2. **Grouped by Type**: Cards under `// Category (count)` headers
@@ -119,8 +138,9 @@ server: {
 // Core state
 deckName, deckUrl
 allCards, remainingCards, keptCards, removedCards
+maybeCards, isReviewingMaybes  // Maybe pile state
 allSideboardCards, remainingSideboardCards
-swipeHistory: SwipeAction[]
+swipeHistory: SwipeHistoryEntry[]  // Supports single and bulk actions
 swipeMode: 'main' | 'sideboard'
 
 // Category mode state
@@ -131,13 +151,15 @@ activeSection: 'kept' | 'available'
 activeCardIndex: number
 
 // Actions
-loadDeck, keepCard, removeCard, undoLastSwipe
+loadDeck, keepCard, removeCard, maybeCard, undoLastSwipe
 setSwipeMode, setViewMode, setCategoryLimit
 setActiveCategoryIndex, setActiveSection, setActiveCardIndex
 addCardToKept, removeCardFromKept, resetDeck, clearState
+startMaybeReview, bulkKeepCards
 
 // Selectors
 getUniqueCategories, getCategoryKeptCards, getCategoryAvailableCards, canAddToCategory
+getRemainingLands, getRemainingByCategory
 ```
 
 ## Known Issues Fixed
@@ -210,6 +232,14 @@ Clinical, retro-futuristic aesthetic inspired by Lumon Industries from Apple TV'
 .stamp-visible      /* Stamp fade-in */
 ```
 
+### Stamp Classes
+```css
+.stamp              /* Base stamp styling */
+.stamp-accepted     /* Green acceptance stamp */
+.stamp-rejected     /* Black rejection stamp */
+.stamp-deferred     /* Amber/brown deferral stamp (#8b5a2b) */
+```
+
 ### Component Styling Conventions
 - Buttons: Transparent bg with 2px borders, fills with color on hover
 - Inputs: White bg, 2px black border, green focus ring
@@ -224,3 +254,6 @@ Clinical, retro-futuristic aesthetic inspired by Lumon Industries from Apple TV'
 - Multiple deck comparison
 - Commander zone handling
 - Dark mode toggle (design system supports it)
+- Oracle text display (tap to see full card rules text)
+- Redundancy hints ("You have 3 other 2-mana ramp spells")
+- Smart cut suggestions based on CMC/category distribution
