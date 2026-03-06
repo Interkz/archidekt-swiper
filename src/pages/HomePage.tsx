@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DeckInput from '../components/DeckInput'
+import SkeletonLoader from '../components/SkeletonLoader'
 import { useDeckStore } from '../stores/deckStore'
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const { remainingCards, allCards, clearState } = useDeckStore()
+  const { remainingCards, allCards, clearState, isLoading } = useDeckStore()
 
   // Check if there's an existing session
   const hasExistingSession = allCards.length > 0 && remainingCards.length > 0
@@ -57,7 +58,11 @@ export default function HomePage() {
         <div className="w-64 h-0.5 bg-[var(--lumon-black)] mx-auto mt-8" />
       </div>
 
-      {hasExistingSession ? (
+      {isLoading ? (
+        <div className="relative z-10 w-full">
+          <SkeletonLoader />
+        </div>
+      ) : hasExistingSession ? (
         <div className="relative z-10 w-full max-w-md space-y-6">
           {/* Session status box */}
           <div className="border-2 border-[var(--lumon-black)] p-6">
