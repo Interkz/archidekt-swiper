@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useDeckStore } from '../stores/deckStore'
 import { getCardImageUrl } from '../services/scryfallImages'
 import type { NormalizedCard } from '../types/archidekt'
+import CardZoomModal from './CardZoomModal'
 
 interface KeptCardsModalProps {
   isOpen: boolean
@@ -9,6 +11,7 @@ interface KeptCardsModalProps {
 
 export default function KeptCardsModal({ isOpen, onClose }: KeptCardsModalProps) {
   const { keptCards, getUniqueCategories, getCategoryKeptCards } = useDeckStore()
+  const [zoomedCard, setZoomedCard] = useState<NormalizedCard | null>(null)
 
   if (!isOpen) return null
 
@@ -90,7 +93,8 @@ export default function KeptCardsModal({ isOpen, onClose }: KeptCardsModalProps)
                       <div
                         key={card.id}
                         className="flex items-center gap-3 p-2 border border-[var(--grid-line)] bg-[var(--surface-primary)]
-                                   hover:border-[var(--lumon-green)] transition-colors duration-150"
+                                   hover:border-[var(--lumon-green)] transition-colors duration-150 cursor-zoom-in"
+                        onClick={() => setZoomedCard(card)}
                       >
                         <img
                           src={getCardImageUrl(card.scryfallId, 'small')}
@@ -123,6 +127,14 @@ export default function KeptCardsModal({ isOpen, onClose }: KeptCardsModalProps)
           </button>
         </div>
       </div>
+
+      {zoomedCard && (
+        <CardZoomModal
+          scryfallId={zoomedCard.scryfallId}
+          cardName={zoomedCard.name}
+          onClose={() => setZoomedCard(null)}
+        />
+      )}
     </div>
   )
 }

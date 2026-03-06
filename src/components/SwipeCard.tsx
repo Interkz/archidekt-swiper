@@ -3,6 +3,7 @@ import TinderCard from 'react-tinder-card'
 import type { NormalizedCard } from '../types/archidekt'
 import { getCardImageUrl } from '../services/scryfallImages'
 import CardDetails from './CardDetails'
+import CardZoomModal from './CardZoomModal'
 
 interface SwipeCardProps {
   card: NormalizedCard
@@ -13,6 +14,7 @@ interface SwipeCardProps {
 export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
   const [swipeDirection, setSwipeDirection] = useState<string | null>(null)
+  const [showZoom, setShowZoom] = useState(false)
 
   const handleSwipe = (direction: string) => {
     setSwipeDirection(direction)
@@ -90,8 +92,9 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
           <img
             src={getCardImageUrl(card.scryfallId, 'normal')}
             alt={card.name}
-            className={`w-full h-auto transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-auto transition-opacity duration-300 cursor-zoom-in ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             onLoad={() => setImageLoaded(true)}
+            onClick={() => setShowZoom(true)}
             draggable={false}
           />
         </div>
@@ -99,6 +102,14 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
         {/* Card details */}
         <CardDetails card={card} />
       </div>
+
+      {showZoom && (
+        <CardZoomModal
+          scryfallId={card.scryfallId}
+          cardName={card.name}
+          onClose={() => setShowZoom(false)}
+        />
+      )}
     </TinderCard>
   )
 }
