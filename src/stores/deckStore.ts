@@ -112,6 +112,7 @@ function normalizeCards(cards: ArchidektCardEntry[], includeSideboard: boolean =
       manaCost: entry.card.oracleCard.manaCost || '',
       cmc: entry.card.oracleCard.cmc,
       typeLine: entry.card.oracleCard.typeLine,
+      oracleText: entry.card.oracleCard.oracleText || '',
       scryfallId: entry.card.uid,
       quantity: entry.quantity,
       categories: entry.categories,
