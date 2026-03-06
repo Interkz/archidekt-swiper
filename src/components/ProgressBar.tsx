@@ -1,9 +1,12 @@
 interface ProgressBarProps {
   current: number
   total: number
+  keptCount: number
+  removedCount: number
+  maybeCount: number
 }
 
-export default function ProgressBar({ current, total }: ProgressBarProps) {
+export default function ProgressBar({ current, total, keptCount, removedCount, maybeCount }: ProgressBarProps) {
   const swiped = total - current
   const progress = total > 0 ? (swiped / total) * 100 : 0
 
@@ -16,7 +19,7 @@ export default function ProgressBar({ current, total }: ProgressBarProps) {
       <div className="flex justify-between items-baseline mb-3">
         <span className="text-terminal text-[var(--status-neutral)]">DECK PROGRESS</span>
         <span className="font-mono text-sm text-[var(--lumon-black)]">
-          {formatNumber(swiped)} / {formatNumber(total)}
+          {formatNumber(swiped)} / {formatNumber(total)} cards
         </span>
       </div>
 
@@ -28,12 +31,20 @@ export default function ProgressBar({ current, total }: ProgressBarProps) {
         />
       </div>
 
-      {/* Status line */}
+      {/* Decision breakdown */}
       <div className="flex justify-between mt-2">
+        <div className="flex gap-4">
+          <span className="font-mono text-xs text-[var(--lumon-green)]">
+            {formatNumber(keptCount)} YES
+          </span>
+          <span className="font-mono text-xs text-[var(--lumon-black)]">
+            {formatNumber(removedCount)} NO
+          </span>
+          <span className="font-mono text-xs text-[#8b5a2b]">
+            {formatNumber(maybeCount)} MAYBE
+          </span>
+        </div>
         <span className="font-mono text-xs text-[var(--status-neutral)]">
-          {formatNumber(swiped)} PROCESSED
-        </span>
-        <span className="font-mono text-xs text-[var(--lumon-green)]">
           {formatNumber(current)} REMAINING
         </span>
       </div>
