@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, useMemo } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
 import CardStack from '../components/CardStack'
@@ -9,6 +9,8 @@ import KeptCardsModal from '../components/KeptCardsModal'
 import DeckStatsPanel from '../components/stats/DeckStatsPanel'
 import QuickActionsDropdown from '../components/QuickActionsDropdown'
 import QuickActionConfirmModal from '../components/QuickActionConfirmModal'
+import SortSelector from '../components/SortSelector'
+import { sortCards } from '../utils/cardSort'
 import type { ViewMode, QuickAction } from '../types/archidekt'
 
 export default function SwipePage() {
@@ -40,10 +42,13 @@ export default function SwipePage() {
     getRemainingByCategory,
     getUniqueCategories,
     bulkKeepCards,
+    sortOption,
+    setSortOption,
   } = useDeckStore()
 
-  // Current cards based on mode
-  const currentCards = swipeMode === 'sideboard' ? remainingSideboardCards : remainingCards
+  // Current cards based on mode, sorted by user preference
+  const rawCards = swipeMode === 'sideboard' ? remainingSideboardCards : remainingCards
+  const currentCards = useMemo(() => sortCards(rawCards, sortOption), [rawCards, sortOption])
   const totalCards = swipeMode === 'sideboard' ? allSideboardCards.length : allCards.length
 
   // Format numbers with leading zeros
@@ -227,6 +232,7 @@ export default function SwipePage() {
               </h1>
             </div>
             <div className="flex items-center gap-4">
+              <SortSelector value={sortOption} onChange={setSortOption} />
               <QuickActionsDropdown
                 getRemainingLands={getRemainingLands}
                 getRemainingByCategory={getRemainingByCategory}

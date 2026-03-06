@@ -93,3 +93,12 @@ export interface QuickAction {
   cards: NormalizedCard[]
   label: string
 }
+
+// Sort options for card lists
+export type SortOption =
+  | 'name-asc'
+  | 'name-desc'
+  | 'cmc-asc'
+  | 'cmc-desc'
+  | 'color'
+  | 'type'

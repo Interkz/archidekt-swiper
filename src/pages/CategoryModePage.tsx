@@ -1,10 +1,12 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, useMemo } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
 import CategoryTabs from '../components/category/CategoryTabs'
 import CategorySection from '../components/category/CategorySection'
 import ViewModeToggle from '../components/ViewModeToggle'
 import KeptCardsModal from '../components/KeptCardsModal'
+import SortSelector from '../components/SortSelector'
+import { sortCards } from '../utils/cardSort'
 import type { NormalizedCard, ViewMode } from '../types/archidekt'
 
 export default function CategoryModePage() {
@@ -33,12 +35,16 @@ export default function CategoryModePage() {
     getCategoryKeptCards,
     getCategoryAvailableCards,
     canAddToCategory,
+    sortOption,
+    setSortOption,
   } = useDeckStore()
 
   const categories = getUniqueCategories()
   const activeCategory = categories[activeCategoryIndex] || ''
-  const keptInCategory = activeCategory ? getCategoryKeptCards(activeCategory) : []
-  const availableInCategory = activeCategory ? getCategoryAvailableCards(activeCategory) : []
+  const rawKeptInCategory = activeCategory ? getCategoryKeptCards(activeCategory) : []
+  const rawAvailableInCategory = activeCategory ? getCategoryAvailableCards(activeCategory) : []
+  const keptInCategory = useMemo(() => sortCards(rawKeptInCategory, sortOption), [rawKeptInCategory, sortOption])
+  const availableInCategory = useMemo(() => sortCards(rawAvailableInCategory, sortOption), [rawAvailableInCategory, sortOption])
   const currentLimit = categoryLimits[activeCategory] || null
 
   // Current section's cards
@@ -209,11 +215,14 @@ export default function CategoryModePage() {
 
       {/* Deck info */}
       <div className="border-b border-[var(--grid-line)] py-3 px-4">
-        <div className="max-w-4xl mx-auto">
-          <span className="text-terminal text-[var(--status-neutral)]">ACTIVE DECK:</span>
-          <h1 className="font-mono text-lg font-bold text-[var(--lumon-black)] truncate">
-            {deckName}
-          </h1>
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div>
+            <span className="text-terminal text-[var(--status-neutral)]">ACTIVE DECK:</span>
+            <h1 className="font-mono text-lg font-bold text-[var(--lumon-black)] truncate">
+              {deckName}
+            </h1>
+          </div>
+          <SortSelector value={sortOption} onChange={setSortOption} />
         </div>
       </div>
 

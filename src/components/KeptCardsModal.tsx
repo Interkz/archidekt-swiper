@@ -1,5 +1,6 @@
 import { useDeckStore } from '../stores/deckStore'
 import { getCardImageUrl } from '../services/scryfallImages'
+import { sortCards } from '../utils/cardSort'
 import type { NormalizedCard } from '../types/archidekt'
 
 interface KeptCardsModalProps {
@@ -8,16 +9,16 @@ interface KeptCardsModalProps {
 }
 
 export default function KeptCardsModal({ isOpen, onClose }: KeptCardsModalProps) {
-  const { keptCards, getUniqueCategories, getCategoryKeptCards } = useDeckStore()
+  const { keptCards, getUniqueCategories, getCategoryKeptCards, sortOption } = useDeckStore()
 
   if (!isOpen) return null
 
   const categories = getUniqueCategories()
 
-  // Group kept cards by category
+  // Group kept cards by category, sorted by user preference
   const cardsByCategory: Record<string, NormalizedCard[]> = {}
   categories.forEach((category) => {
-    const cards = getCategoryKeptCards(category)
+    const cards = sortCards(getCategoryKeptCards(category), sortOption)
     if (cards.length > 0) {
       cardsByCategory[category] = cards
     }

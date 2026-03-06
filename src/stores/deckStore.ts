@@ -10,6 +10,7 @@ import type {
   BulkActionType,
   ViewMode,
   CategorySection,
+  SortOption,
 } from '../types/archidekt'
 
 type SwipeMode = 'main' | 'sideboard'
@@ -51,6 +52,9 @@ interface DeckState {
   activeSection: CategorySection
   activeCardIndex: number
 
+  // Sort preference
+  sortOption: SortOption
+
   // Actions
   setDeck: (deck: ArchidektDeckResponse) => void
   setLoading: (loading: boolean) => void
@@ -73,6 +77,9 @@ interface DeckState {
 
   // View mode actions
   setViewMode: (mode: ViewMode) => void
+
+  // Sort actions
+  setSortOption: (option: SortOption) => void
 
   // Category mode actions
   setCategoryLimit: (category: string, limit: number) => void
@@ -149,6 +156,9 @@ export const useDeckStore = create<DeckState>()(
         // View mode state
         viewMode: 'swipe' as ViewMode,
 
+        // Sort preference
+        sortOption: 'cmc-asc' as SortOption,
+
         // Category mode state
         categoryLimits: {} as Record<string, number>,
         activeCategoryIndex: 0,
@@ -189,6 +199,9 @@ export const useDeckStore = create<DeckState>()(
 
         // View mode actions
         setViewMode: (mode) => set({ viewMode: mode }),
+
+        // Sort actions
+        setSortOption: (option) => set({ sortOption: option }),
 
         // Category mode actions
         setCategoryLimit: (category, limit) => {
@@ -527,6 +540,7 @@ export const useDeckStore = create<DeckState>()(
           swipeHistory: state.swipeHistory,
           swipeMode: state.swipeMode,
           viewMode: state.viewMode,
+          sortOption: state.sortOption,
           categoryLimits: state.categoryLimits,
         }),
       }
