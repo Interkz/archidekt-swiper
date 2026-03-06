@@ -309,6 +309,25 @@ body {
   animation: cardSlideUp 300ms ease-out;
 }
 
+/* Undo slide-back animation - card returns from below */
+@keyframes cardSlideBack {
+  0% {
+    transform: translateY(40px) scale(0.92);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.card-slide-back {
+  animation: cardSlideBack 350ms ease-out;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    STAMP INDICATORS - Clinical approval/rejection
    ═══════════════════════════════════════════════════════════════════════════ */

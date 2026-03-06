@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
 import CardStack from '../components/CardStack'
@@ -16,6 +16,8 @@ export default function SwipePage() {
   const [showKeptModal, setShowKeptModal] = useState(false)
   const [showStatsPanel, setShowStatsPanel] = useState(false)
   const [pendingQuickAction, setPendingQuickAction] = useState<QuickAction | null>(null)
+  const [isUndoing, setIsUndoing] = useState(false)
+  const undoTimerRef = useRef<ReturnType<typeof setTimeout>>()
 
   const {
     deckName,
@@ -80,6 +82,15 @@ export default function SwipePage() {
     }
   }, [remainingCards, allCards, swipeMode, allSideboardCards, remainingSideboardCards, maybeCards, isReviewingMaybes, navigate])
 
+  const handleUndo = useCallback(() => {
+    const card = undoLastSwipe()
+    if (card) {
+      clearTimeout(undoTimerRef.current)
+      setIsUndoing(true)
+      undoTimerRef.current = setTimeout(() => setIsUndoing(false), 400)
+    }
+  }, [undoLastSwipe])
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -104,7 +115,7 @@ export default function SwipePage() {
         case 'Z':
           if (swipeHistory.length > 0) {
             e.preventDefault()
-            undoLastSwipe()
+            handleUndo()
           }
           break
       }
@@ -112,7 +123,7 @@ export default function SwipePage() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentCards, swipeHistory, keepCard, removeCard, maybeCard, undoLastSwipe])
+  }, [currentCards, swipeHistory, keepCard, removeCard, maybeCard, handleUndo])
 
   const handleKeep = useCallback(() => {
     if (currentCards.length > 0) {
@@ -131,10 +142,6 @@ export default function SwipePage() {
       maybeCard(currentCards[0])
     }
   }, [currentCards, maybeCard])
-
-  const handleUndo = useCallback(() => {
-    undoLastSwipe()
-  }, [undoLastSwipe])
 
   const handleQuickActionSelect = (action: QuickAction) => {
     if (action.cards.length > 0) {
@@ -292,6 +299,7 @@ export default function SwipePage() {
             onKeep={keepCard}
             onRemove={removeCard}
             onMaybe={maybeCard}
+            isUndoing={isUndoing}
           />
         ) : (
           <div className="text-center">

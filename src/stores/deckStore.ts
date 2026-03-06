@@ -14,6 +14,8 @@ import type {
 
 type SwipeMode = 'main' | 'sideboard'
 
+const MAX_UNDO_HISTORY = 10
+
 interface DeckState {
   // Deck metadata
   deckId: string | null
@@ -277,73 +279,59 @@ export const useDeckStore = create<DeckState>()(
 
         keepCard: (card) => {
           const { remainingCards, remainingSideboardCards, keptCards, swipeHistory, swipeMode } = get()
+          const entry: SwipeAction = { card, action: 'keep', timestamp: Date.now(), fromSideboard: swipeMode === 'sideboard' }
+          const newHistory = [...swipeHistory, entry].slice(-MAX_UNDO_HISTORY)
 
           if (swipeMode === 'sideboard') {
-            // Swiping right on sideboard card adds it to kept (mainboard)
             set({
               remainingSideboardCards: remainingSideboardCards.filter((c) => c.id !== card.id),
               keptCards: [...keptCards, card],
-              swipeHistory: [
-                ...swipeHistory,
-                { card, action: 'keep', timestamp: Date.now(), fromSideboard: true },
-              ],
+              swipeHistory: newHistory,
             })
           } else {
             set({
               remainingCards: remainingCards.filter((c) => c.id !== card.id),
               keptCards: [...keptCards, card],
-              swipeHistory: [
-                ...swipeHistory,
-                { card, action: 'keep', timestamp: Date.now(), fromSideboard: false },
-              ],
+              swipeHistory: newHistory,
             })
           }
         },
 
         removeCard: (card) => {
           const { remainingCards, remainingSideboardCards, removedCards, swipeHistory, swipeMode } = get()
+          const entry: SwipeAction = { card, action: 'remove', timestamp: Date.now(), fromSideboard: swipeMode === 'sideboard' }
+          const newHistory = [...swipeHistory, entry].slice(-MAX_UNDO_HISTORY)
 
           if (swipeMode === 'sideboard') {
-            // Swiping left on sideboard card just skips it (doesn't add to mainboard)
             set({
               remainingSideboardCards: remainingSideboardCards.filter((c) => c.id !== card.id),
-              swipeHistory: [
-                ...swipeHistory,
-                { card, action: 'remove', timestamp: Date.now(), fromSideboard: true },
-              ],
+              swipeHistory: newHistory,
             })
           } else {
             set({
               remainingCards: remainingCards.filter((c) => c.id !== card.id),
               removedCards: [...removedCards, card],
-              swipeHistory: [
-                ...swipeHistory,
-                { card, action: 'remove', timestamp: Date.now(), fromSideboard: false },
-              ],
+              swipeHistory: newHistory,
             })
           }
         },
 
         maybeCard: (card) => {
           const { remainingCards, remainingSideboardCards, maybeCards, swipeHistory, swipeMode } = get()
+          const entry: SwipeAction = { card, action: 'maybe', timestamp: Date.now(), fromSideboard: swipeMode === 'sideboard' }
+          const newHistory = [...swipeHistory, entry].slice(-MAX_UNDO_HISTORY)
 
           if (swipeMode === 'sideboard') {
             set({
               remainingSideboardCards: remainingSideboardCards.filter((c) => c.id !== card.id),
               maybeCards: [...maybeCards, card],
-              swipeHistory: [
-                ...swipeHistory,
-                { card, action: 'maybe', timestamp: Date.now(), fromSideboard: true },
-              ],
+              swipeHistory: newHistory,
             })
           } else {
             set({
               remainingCards: remainingCards.filter((c) => c.id !== card.id),
               maybeCards: [...maybeCards, card],
-              swipeHistory: [
-                ...swipeHistory,
-                { card, action: 'maybe', timestamp: Date.now(), fromSideboard: false },
-              ],
+              swipeHistory: newHistory,
             })
           }
         },
@@ -379,19 +367,18 @@ export const useDeckStore = create<DeckState>()(
           const { remainingCards, keptCards, swipeHistory } = get()
           const cardIds = new Set(cards.map((c) => c.id))
 
+          const newHistory = [...swipeHistory, {
+            type: 'bulk',
+            actionType,
+            cards,
+            timestamp: Date.now(),
+            label,
+          } as BulkSwipeAction].slice(-MAX_UNDO_HISTORY)
+
           set({
             remainingCards: remainingCards.filter((c) => !cardIds.has(c.id)),
             keptCards: [...keptCards, ...cards],
-            swipeHistory: [
-              ...swipeHistory,
-              {
-                type: 'bulk',
-                actionType,
-                cards,
-                timestamp: Date.now(),
-                label,
-              } as BulkSwipeAction,
-            ],
+            swipeHistory: newHistory,
           })
         },
 

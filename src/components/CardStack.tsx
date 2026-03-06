@@ -8,9 +8,10 @@ interface CardStackProps {
   onKeep: (card: NormalizedCard) => void
   onRemove: (card: NormalizedCard) => void
   onMaybe?: (card: NormalizedCard) => void
+  isUndoing?: boolean
 }
 
-export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStackProps) {
+export default function CardStack({ cards, onKeep, onRemove, onMaybe, isUndoing }: CardStackProps) {
   const cardsToShow = cards.slice(0, 3) // Show top 3 cards in stack
   const currentCard = cards[0]
   const preloadedRef = useRef<Set<string>>(new Set())
@@ -89,7 +90,7 @@ export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStac
           return (
             <div
               key={card.id}
-              className={`absolute inset-0 transition-all duration-300 ${isTop ? 'card-enter' : ''}`}
+              className={`absolute inset-0 transition-all duration-300 ${isTop ? (isUndoing ? 'card-slide-back' : 'card-enter') : ''}`}
               style={{
                 // Physical deck stacking - cards slightly offset
                 transform: `translateY(${reverseIndex * 4}px) translateX(${reverseIndex * 2}px)`,
