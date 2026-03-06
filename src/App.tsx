@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage'
 import SwipePage from './pages/SwipePage'
 import CategoryModePage from './pages/CategoryModePage'
 import ResultsPage from './pages/ResultsPage'
+import FavoritesPage from './pages/FavoritesPage'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/swipe" element={<SwipePage />} />
         <Route path="/category" element={<CategoryModePage />} />
         <Route path="/results" element={<ResultsPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
       </Routes>
     </BrowserRouter>
   )

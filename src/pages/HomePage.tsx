@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import DeckInput from '../components/DeckInput'
 import { useDeckStore } from '../stores/deckStore'
+import { useFavoritesStore } from '../stores/favoritesStore'
 
 export default function HomePage() {
   const navigate = useNavigate()
   const { remainingCards, allCards, clearState } = useDeckStore()
+  const favoritesCount = useFavoritesStore((s) => s.favorites.length)
 
   // Check if there's an existing session
   const hasExistingSession = allCards.length > 0 && remainingCards.length > 0
@@ -55,6 +57,25 @@ export default function HomePage() {
 
         {/* Horizontal rule below */}
         <div className="w-64 h-0.5 bg-[var(--lumon-black)] mx-auto mt-8" />
+
+        {/* Favorites link */}
+        <Link
+          to="/favorites"
+          className="inline-flex items-center gap-2 mt-6 px-5 py-2 border-2 border-[var(--lumon-black)]
+                     font-mono text-xs font-semibold uppercase tracking-wider
+                     hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-all duration-150"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth={1}>
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+          Favorites
+          {favoritesCount > 0 && (
+            <span className="min-w-[20px] h-5 px-1.5 flex items-center justify-center
+                             bg-[var(--lumon-green)] text-[var(--lumon-white)] font-mono text-[10px] font-bold">
+              {favoritesCount}
+            </span>
+          )}
+        </Link>
       </div>
 
       {hasExistingSession ? (

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import TinderCard from 'react-tinder-card'
 import type { NormalizedCard } from '../types/archidekt'
 import { getCardImageUrl } from '../services/scryfallImages'
+import { useFavoritesStore } from '../stores/favoritesStore'
 import CardDetails from './CardDetails'
 
 interface SwipeCardProps {
@@ -13,6 +14,8 @@ interface SwipeCardProps {
 export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
   const [swipeDirection, setSwipeDirection] = useState<string | null>(null)
+  const { toggleFavorite, isFavorite } = useFavoritesStore()
+  const favorited = isFavorite(card.id)
 
   const handleSwipe = (direction: string) => {
     setSwipeDirection(direction)
@@ -78,6 +81,29 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
 
           {/* Card border - thin black line */}
           <div className="absolute inset-0 border border-[var(--lumon-black)]/10 pointer-events-none z-10" />
+
+          {/* Favorite heart button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleFavorite(card)
+            }}
+            className="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center
+                       border-2 border-[var(--lumon-black)] bg-[var(--lumon-white)]/90
+                       hover:bg-[var(--lumon-white)] transition-all duration-150"
+            aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            <svg
+              className={`w-4 h-4 transition-colors duration-150 ${
+                favorited ? 'text-[var(--lumon-green)] fill-[var(--lumon-green)]' : 'text-[var(--lumon-black)] fill-transparent'
+              }`}
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+          </button>
 
           {/* Loading state - clinical placeholder */}
           {!imageLoaded && (
