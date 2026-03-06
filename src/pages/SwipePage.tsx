@@ -36,6 +36,7 @@ export default function SwipePage() {
     setSwipeMode,
     setViewMode,
     startMaybeReview,
+    endMaybeReview,
     getRemainingLands,
     getRemainingByCategory,
     getUniqueCategories,
@@ -71,6 +72,11 @@ export default function SwipePage() {
       if (maybeCards.length > 0 && !isReviewingMaybes) {
         return
       }
+      // End maybe review and restore saved remaining cards
+      if (isReviewingMaybes) {
+        endMaybeReview()
+        return
+      }
       // If there are sideboard cards, offer to switch; otherwise go to results
       if (allSideboardCards.length > 0 && remainingSideboardCards.length > 0) {
         // Stay on page, user can switch to sideboard
@@ -78,7 +84,7 @@ export default function SwipePage() {
         navigate('/results')
       }
     }
-  }, [remainingCards, allCards, swipeMode, allSideboardCards, remainingSideboardCards, maybeCards, isReviewingMaybes, navigate])
+  }, [remainingCards, allCards, swipeMode, allSideboardCards, remainingSideboardCards, maybeCards, isReviewingMaybes, endMaybeReview, navigate])
 
   // Keyboard shortcuts
   useEffect(() => {
