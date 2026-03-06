@@ -7,15 +7,18 @@ import {
   formatWithArchidektCategories,
   copyToClipboard,
   downloadAsFile,
+  formatDecisionsAsJson,
+  formatDecisionsAsText,
 } from '../utils/exportFormatter'
 
 type ExportFormat = 'plain' | 'grouped' | 'archidekt'
 
 export default function ResultsPage() {
   const navigate = useNavigate()
-  const { deckName, keptCards, removedCards, allCards, clearState, resetDeck } = useDeckStore()
+  const { deckName, keptCards, removedCards, maybeCards, allCards, clearState, resetDeck } = useDeckStore()
   const [exportFormat, setExportFormat] = useState<ExportFormat>('archidekt')
   const [copied, setCopied] = useState(false)
+  const [decisionsCopied, setDecisionsCopied] = useState(false)
 
   // Format numbers with leading zeros
   const formatNumber = (n: number) => n.toString().padStart(3, '0')
@@ -93,25 +96,35 @@ export default function ResultsPage() {
           <div className="text-terminal text-[var(--status-neutral)] mb-3">INVENTORY REPORT</div>
           <div className="border-2 border-[var(--lumon-black)]">
             {/* Header row */}
-            <div className="grid grid-cols-3 border-b-2 border-[var(--lumon-black)] bg-[var(--lumon-cream)]">
+            <div className={`grid ${maybeCards.length > 0 ? 'grid-cols-4' : 'grid-cols-3'} border-b-2 border-[var(--lumon-black)] bg-[var(--lumon-cream)]`}>
               <div className="p-3 font-mono text-xs font-bold uppercase tracking-wider text-center border-r border-[var(--grid-line)]">
                 Accepted
               </div>
               <div className="p-3 font-mono text-xs font-bold uppercase tracking-wider text-center border-r border-[var(--grid-line)]">
                 Rejected
               </div>
+              {maybeCards.length > 0 && (
+                <div className="p-3 font-mono text-xs font-bold uppercase tracking-wider text-center border-r border-[var(--grid-line)]">
+                  Deferred
+                </div>
+              )}
               <div className="p-3 font-mono text-xs font-bold uppercase tracking-wider text-center">
                 Total
               </div>
             </div>
             {/* Data row */}
-            <div className="grid grid-cols-3">
+            <div className={`grid ${maybeCards.length > 0 ? 'grid-cols-4' : 'grid-cols-3'}`}>
               <div className="p-4 font-mono text-2xl font-bold text-center text-[var(--lumon-green)] border-r border-[var(--grid-line)]">
                 {formatNumber(keptCards.length)}
               </div>
               <div className="p-4 font-mono text-2xl font-bold text-center text-[var(--lumon-black)] border-r border-[var(--grid-line)]">
                 {formatNumber(removedCards.length)}
               </div>
+              {maybeCards.length > 0 && (
+                <div className="p-4 font-mono text-2xl font-bold text-center text-[#8b5a2b] border-r border-[var(--grid-line)]">
+                  {formatNumber(maybeCards.length)}
+                </div>
+              )}
               <div className="p-4 font-mono text-2xl font-bold text-center text-[var(--status-neutral)]">
                 {formatNumber(allCards.length)}
               </div>
@@ -214,6 +227,62 @@ export default function ResultsPage() {
                 <path strokeLinecap="square" strokeLinejoin="miter" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               Download
+            </button>
+          </div>
+        </div>
+
+        {/* Decision export */}
+        <div className="mb-6">
+          <div className="text-terminal text-[var(--status-neutral)] mb-3">EXPORT DECISIONS</div>
+          <p className="font-mono text-xs text-[var(--status-neutral)] mb-4">
+            Save a record of all card decisions (accepted, rejected{maybeCards.length > 0 ? ', deferred' : ''}).
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                const text = formatDecisionsAsText(deckName, keptCards, removedCards, maybeCards)
+                copyToClipboard(text)
+                setDecisionsCopied(true)
+                setTimeout(() => setDecisionsCopied(false), 2000)
+              }}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3
+                         font-mono font-semibold uppercase tracking-wider transition-all duration-150
+                         border-2 border-[var(--lumon-black)]
+                         ${decisionsCopied
+                           ? 'bg-[var(--lumon-green)] border-[var(--lumon-green)] text-[var(--lumon-white)]'
+                           : 'hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)]'
+                         }`}
+            >
+              {decisionsCopied ? (
+                <>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="square" strokeLinejoin="miter" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Copied
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="square" strokeLinejoin="miter" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  Copy Decisions
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => {
+                const json = formatDecisionsAsJson(deckName, keptCards, removedCards, maybeCards)
+                const safeName = deckName.replace(/[^a-z0-9]/gi, '_').toLowerCase()
+                downloadAsFile(json, `${safeName}_decisions.json`, 'application/json')
+              }}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-[var(--lumon-black)]
+                         font-mono font-semibold uppercase tracking-wider
+                         hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-all duration-150"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Export JSON
             </button>
           </div>
         </div>

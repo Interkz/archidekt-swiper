@@ -91,8 +91,8 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 /**
  * Download text as a file
  */
-export function downloadAsFile(text: string, filename: string): void {
-  const blob = new Blob([text], { type: 'text/plain' })
+export function downloadAsFile(text: string, filename: string, type: string = 'text/plain'): void {
+  const blob = new Blob([text], { type })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
@@ -101,4 +101,59 @@ export function downloadAsFile(text: string, filename: string): void {
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
+}
+
+/**
+ * Format all card decisions as a JSON export
+ */
+export function formatDecisionsAsJson(
+  deckName: string,
+  kept: NormalizedCard[],
+  removed: NormalizedCard[],
+  maybe: NormalizedCard[],
+): string {
+  const data = {
+    deckName,
+    date: new Date().toISOString().split('T')[0],
+    summary: {
+      kept: kept.length,
+      removed: removed.length,
+      maybe: maybe.length,
+      total: kept.length + removed.length + maybe.length,
+    },
+    kept: kept.map((c) => c.name),
+    removed: removed.map((c) => c.name),
+    maybe: maybe.map((c) => c.name),
+  }
+  return JSON.stringify(data, null, 2)
+}
+
+/**
+ * Format all card decisions as readable text for clipboard
+ */
+export function formatDecisionsAsText(
+  deckName: string,
+  kept: NormalizedCard[],
+  removed: NormalizedCard[],
+  maybe: NormalizedCard[],
+): string {
+  const total = kept.length + removed.length + maybe.length
+  const date = new Date().toISOString().split('T')[0]
+
+  let output = `DECK DECISIONS: ${deckName}\n`
+  output += `Date: ${date}\n`
+  output += `Total: ${total} cards\n\n`
+
+  output += `KEPT (${kept.length}):\n`
+  kept.forEach((c) => { output += `  ${c.quantity} ${c.name}\n` })
+
+  output += `\nREMOVED (${removed.length}):\n`
+  removed.forEach((c) => { output += `  ${c.quantity} ${c.name}\n` })
+
+  if (maybe.length > 0) {
+    output += `\nMAYBE (${maybe.length}):\n`
+    maybe.forEach((c) => { output += `  ${c.quantity} ${c.name}\n` })
+  }
+
+  return output.trimEnd()
 }
