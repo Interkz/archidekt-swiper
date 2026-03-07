@@ -254,43 +254,81 @@ body {
   backface-visibility: hidden;
 }
 
-/* Card flip animation keyframes */
-@keyframes cardFlipRight {
+/* ─── Swipe exit animations with spring bounce ─── */
+
+@keyframes swipeExitRight {
   0% {
-    transform: rotateY(0deg) translateX(0);
-    opacity: 1;
+    transform: rotate(0deg) scale(1);
   }
-  50% {
-    transform: rotateY(45deg) translateX(50px);
-    opacity: 0.8;
+  30% {
+    transform: rotate(-3deg) scale(1.04);
   }
   100% {
-    transform: rotateY(90deg) translateX(150px);
-    opacity: 0;
+    transform: rotate(12deg) scale(0.97);
   }
 }
 
-@keyframes cardFlipLeft {
+@keyframes swipeExitLeft {
   0% {
-    transform: rotateY(0deg) translateX(0);
-    opacity: 1;
+    transform: rotate(0deg) scale(1);
   }
-  50% {
-    transform: rotateY(-45deg) translateX(-50px);
-    opacity: 0.8;
+  30% {
+    transform: rotate(3deg) scale(1.04);
   }
   100% {
-    transform: rotateY(-90deg) translateX(-150px);
-    opacity: 0;
+    transform: rotate(-12deg) scale(0.97);
   }
 }
 
-.card-flip-right {
-  animation: cardFlipRight 400ms ease-out forwards;
+@keyframes swipeExitUp {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(6px) scale(1.04);
+  }
+  100% {
+    transform: translateY(-16px) scale(0.96);
+  }
 }
 
-.card-flip-left {
-  animation: cardFlipLeft 400ms ease-out forwards;
+/* Spring bounce timing: cubic-bezier with overshoot */
+.swipe-exit-right {
+  animation: swipeExitRight 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.swipe-exit-left {
+  animation: swipeExitLeft 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.swipe-exit-up {
+  animation: swipeExitUp 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* ─── Swipe tint overlays ─── */
+
+.swipe-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.swipe-tint-right {
+  background: rgba(34, 139, 34, 0.25);
+  opacity: 1;
+}
+
+.swipe-tint-left {
+  background: rgba(180, 40, 40, 0.22);
+  opacity: 1;
+}
+
+.swipe-tint-up {
+  background: rgba(200, 160, 40, 0.22);
+  opacity: 1;
 }
 
 /* Card stack entrance animation */
