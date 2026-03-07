@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
+import PileManaCurveChart from '../components/stats/PileManaCurveChart'
 import {
   formatForArchidektImport,
   formatWithCategories,
@@ -13,7 +14,7 @@ type ExportFormat = 'plain' | 'grouped' | 'archidekt'
 
 export default function ResultsPage() {
   const navigate = useNavigate()
-  const { deckName, keptCards, removedCards, allCards, clearState, resetDeck } = useDeckStore()
+  const { deckName, keptCards, removedCards, maybeCards, allCards, clearState, resetDeck } = useDeckStore()
   const [exportFormat, setExportFormat] = useState<ExportFormat>('archidekt')
   const [copied, setCopied] = useState(false)
 
@@ -118,6 +119,9 @@ export default function ResultsPage() {
             </div>
           </div>
         </div>
+
+        {/* Mana curve by pile */}
+        <PileManaCurveChart keptCards={keptCards} removedCards={removedCards} maybeCards={maybeCards} />
 
         {/* Commander deck check */}
         <div className={`mb-6 border-2 p-4 ${deckComplete ? 'border-[var(--lumon-green)]' : 'border-[var(--lumon-black)]'}`}>
