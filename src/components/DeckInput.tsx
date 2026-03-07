@@ -1,35 +1,25 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
-import { fetchDeck } from '../services/archidektApi'
+import { loadDeckById } from '../services/loadDeck'
 import { parseDeckUrl } from '../utils/parseDeckUrl'
 
 export default function DeckInput() {
   const [input, setInput] = useState('')
   const navigate = useNavigate()
-  const { setDeck, setLoading, setError, isLoading, error } = useDeckStore()
+  const { isLoading, error } = useDeckStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const deckId = parseDeckUrl(input)
     if (!deckId) {
-      setError('Please enter a valid Archidekt deck URL or ID')
+      useDeckStore.getState().setError('Please enter a valid Archidekt deck URL or ID')
       return
     }
 
-    setLoading(true)
-    setError(null)
-
-    try {
-      const deck = await fetchDeck(deckId)
-      setDeck(deck)
-      navigate('/swipe')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load deck')
-    } finally {
-      setLoading(false)
-    }
+    const success = await loadDeckById(deckId)
+    if (success) navigate('/swipe')
   }
 
   return (

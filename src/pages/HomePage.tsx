@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DeckInput from '../components/DeckInput'
+import RecentDecks from '../components/RecentDecks'
 import { useDeckStore } from '../stores/deckStore'
+import { loadDeckById } from '../services/loadDeck'
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const { remainingCards, allCards, clearState } = useDeckStore()
+  const { remainingCards, allCards, isLoading, clearState } = useDeckStore()
 
   // Check if there's an existing session
   const hasExistingSession = allCards.length > 0 && remainingCards.length > 0
@@ -21,6 +23,12 @@ export default function HomePage() {
 
   const handleNewSession = () => {
     clearState()
+  }
+
+  const handleSelectRecentDeck = async (deckId: string) => {
+    clearState()
+    const success = await loadDeckById(deckId)
+    if (success) navigate('/swipe')
   }
 
   // Format numbers with leading zeros
@@ -105,6 +113,7 @@ export default function HomePage() {
       ) : (
         <div className="relative z-10 w-full max-w-md">
           <DeckInput />
+          <RecentDecks onSelectDeck={handleSelectRecentDeck} disabled={isLoading} />
         </div>
       )}
 
