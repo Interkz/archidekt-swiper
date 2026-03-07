@@ -50,6 +50,9 @@ export default function KeptCardsModal({ isOpen, onClose }: KeptCardsModalProps)
             <span className="text-terminal text-[var(--status-neutral)]">RETAINED INVENTORY</span>
             <h2 className="font-mono text-lg font-bold text-[var(--lumon-black)] mt-1">
               {formatCount(keptCards.length)} CARDS
+              <span className="ml-3 text-sm font-bold">
+                ${keptCards.reduce((sum, c) => sum + (c.price ?? 0), 0).toFixed(2)}
+              </span>
             </h2>
           </div>
           <button
@@ -99,9 +102,19 @@ export default function KeptCardsModal({ isOpen, onClose }: KeptCardsModalProps)
                         />
                         <div className="flex-1 min-w-0">
                           <p className="font-mono text-xs text-[var(--lumon-black)] truncate">{card.name}</p>
-                          {card.quantity > 1 && (
-                            <p className="font-mono text-xs text-[var(--status-neutral)]">x{card.quantity}</p>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {card.quantity > 1 && (
+                              <span className="font-mono text-xs text-[var(--status-neutral)]">x{card.quantity}</span>
+                            )}
+                            <span
+                              className="font-mono text-[10px] font-bold"
+                              style={{
+                                color: card.price == null ? 'var(--status-neutral)' : card.price < 1 ? 'var(--lumon-green)' : card.price <= 5 ? '#b8860b' : '#8b0000',
+                              }}
+                            >
+                              {card.price != null ? `$${card.price.toFixed(2)}` : 'N/A'}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
