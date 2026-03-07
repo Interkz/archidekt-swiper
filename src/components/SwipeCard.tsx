@@ -26,7 +26,11 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
       onCardLeftScreen={onCardLeftScreen}
       preventSwipe={['down']}
     >
-      <div className="relative preserve-3d">
+      <div className={`relative preserve-3d ${
+          swipeDirection === 'right' ? 'swipe-exit-right' :
+          swipeDirection === 'left' ? 'swipe-exit-left' :
+          swipeDirection === 'up' ? 'swipe-exit-up' : ''
+        }`}>
         {/* ACCEPTED stamp - clinical approval */}
         <div
           className={`absolute top-8 left-4 z-10 stamp stamp-accepted
@@ -78,6 +82,13 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
 
           {/* Card border - thin black line */}
           <div className="absolute inset-0 border border-[var(--lumon-black)]/10 pointer-events-none z-10" />
+
+          {/* Swipe direction tint overlay */}
+          <div className={`swipe-tint ${
+            swipeDirection === 'right' ? 'swipe-tint-right' :
+            swipeDirection === 'left' ? 'swipe-tint-left' :
+            swipeDirection === 'up' ? 'swipe-tint-up' : ''
+          }`} />
 
           {/* Loading state - clinical placeholder */}
           {!imageLoaded && (
