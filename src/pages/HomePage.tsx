@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import DeckInput from '../components/DeckInput'
 import { useDeckStore } from '../stores/deckStore'
+import { useHistoryStore } from '../stores/historyStore'
 
 export default function HomePage() {
   const navigate = useNavigate()
   const { remainingCards, allCards, clearState } = useDeckStore()
+  const historyCount = useHistoryStore((s) => s.reviews.length)
 
   // Check if there's an existing session
   const hasExistingSession = allCards.length > 0 && remainingCards.length > 0
@@ -105,6 +107,21 @@ export default function HomePage() {
       ) : (
         <div className="relative z-10 w-full max-w-md">
           <DeckInput />
+        </div>
+      )}
+
+      {/* History link */}
+      {historyCount > 0 && (
+        <div className="relative z-10 mt-8 w-full max-w-md">
+          <Link
+            to="/history"
+            className="flex items-center justify-between w-full px-6 py-3 border-2 border-[var(--grid-line)]
+                       font-mono text-sm uppercase tracking-wider text-[var(--status-neutral)]
+                       hover:border-[var(--lumon-black)] hover:text-[var(--lumon-black)] transition-all duration-150"
+          >
+            <span>Review History</span>
+            <span className="text-xs">{historyCount} {historyCount === 1 ? 'entry' : 'entries'}</span>
+          </Link>
         </div>
       )}
 

@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
+import { useHistoryStore, buildDecisions } from '../stores/historyStore'
 import {
   formatForArchidektImport,
   formatWithCategories,
@@ -13,9 +14,28 @@ type ExportFormat = 'plain' | 'grouped' | 'archidekt'
 
 export default function ResultsPage() {
   const navigate = useNavigate()
-  const { deckName, keptCards, removedCards, allCards, clearState, resetDeck } = useDeckStore()
+  const { deckId, deckName, deckOwner, keptCards, removedCards, maybeCards, allCards, clearState, resetDeck } = useDeckStore()
+  const addReview = useHistoryStore((s) => s.addReview)
   const [exportFormat, setExportFormat] = useState<ExportFormat>('archidekt')
   const [copied, setCopied] = useState(false)
+  const savedRef = useRef(false)
+
+  // Save review to history once when results are first shown
+  useEffect(() => {
+    if (savedRef.current || allCards.length === 0) return
+    savedRef.current = true
+
+    addReview({
+      deckId: deckId || '',
+      deckName,
+      deckOwner,
+      totalCards: allCards.length,
+      keptCount: keptCards.length,
+      removedCount: removedCards.length,
+      maybeCount: maybeCards.length,
+      decisions: buildDecisions(keptCards, removedCards, maybeCards),
+    })
+  }, [])
 
   // Format numbers with leading zeros
   const formatNumber = (n: number) => n.toString().padStart(3, '0')
@@ -246,6 +266,16 @@ export default function ResultsPage() {
             New Deck
           </button>
         </div>
+
+        {/* History link */}
+        <Link
+          to="/history"
+          className="block mt-4 text-center px-4 py-3 border-2 border-[var(--grid-line)]
+                     font-mono text-sm uppercase tracking-wider text-[var(--status-neutral)]
+                     hover:border-[var(--lumon-black)] hover:text-[var(--lumon-black)] transition-all duration-150"
+        >
+          View Review History
+        </Link>
       </div>
     </div>
   )
