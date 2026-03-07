@@ -82,6 +82,9 @@ interface DeckState {
   addCardToKept: (card: NormalizedCard) => void
   removeCardFromKept: (card: NormalizedCard) => void
 
+  // Search / jump
+  jumpToCard: (card: NormalizedCard) => void
+
   // Category mode selectors (computed)
   getUniqueCategories: () => string[]
   getCategoryKeptCards: (category: string) => NormalizedCard[]
@@ -225,6 +228,18 @@ export const useDeckStore = create<DeckState>()(
               keptCards: keptCards.filter((c) => c.id !== card.id),
               remainingCards: isMainDeckCard ? [...remainingCards, card] : remainingCards,
             })
+          }
+        },
+
+        // Search / jump - move a card to the front of the remaining queue
+        jumpToCard: (card) => {
+          const { remainingCards, remainingSideboardCards, swipeMode } = get()
+          if (swipeMode === 'sideboard') {
+            const filtered = remainingSideboardCards.filter((c) => c.id !== card.id)
+            set({ remainingSideboardCards: [card, ...filtered] })
+          } else {
+            const filtered = remainingCards.filter((c) => c.id !== card.id)
+            set({ remainingCards: [card, ...filtered] })
           }
         },
 
