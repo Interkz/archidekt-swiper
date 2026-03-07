@@ -158,6 +158,8 @@ export default function SwipePage() {
   const hasMaybes = maybeCards.length > 0
   const categories = getUniqueCategories()
 
+  const keptTotal = keptCards.reduce((sum, card) => sum + (card.price ?? 0), 0)
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header - clinical top bar */}
@@ -177,6 +179,9 @@ export default function SwipePage() {
           <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
 
           <div className="flex items-center gap-4">
+            <span className="font-mono text-sm font-bold text-[var(--lumon-black)]">
+              ${keptTotal.toFixed(2)}
+            </span>
             {hasMaybes && (
               <span className="font-mono text-xs uppercase tracking-wider text-[#8b5a2b]">
                 Pending ({formatNumber(maybeCards.length)})

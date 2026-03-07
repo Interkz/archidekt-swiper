@@ -37,6 +37,7 @@ export default function CategoryModePage() {
 
   const categories = getUniqueCategories()
   const activeCategory = categories[activeCategoryIndex] || ''
+  const keptTotal = keptCards.reduce((sum, card) => sum + (card.price ?? 0), 0)
   const keptInCategory = activeCategory ? getCategoryKeptCards(activeCategory) : []
   const availableInCategory = activeCategory ? getCategoryAvailableCards(activeCategory) : []
   const currentLimit = categoryLimits[activeCategory] || null
@@ -194,13 +195,18 @@ export default function CategoryModePage() {
 
           <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
 
-          <button
-            onClick={() => setShowKeptModal(true)}
-            className="font-mono text-sm uppercase tracking-wider text-[var(--lumon-green)]
-                       hover:text-[var(--lumon-green-light)] transition-colors"
-          >
-            Inventory ({formatNumber(keptCards.length)})
-          </button>
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-sm font-bold text-[var(--lumon-black)]">
+              ${keptTotal.toFixed(2)}
+            </span>
+            <button
+              onClick={() => setShowKeptModal(true)}
+              className="font-mono text-sm uppercase tracking-wider text-[var(--lumon-green)]
+                         hover:text-[var(--lumon-green-light)] transition-colors"
+            >
+              Inventory ({formatNumber(keptCards.length)})
+            </button>
+          </div>
         </div>
       </header>
 

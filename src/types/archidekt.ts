@@ -35,6 +35,12 @@ export interface ArchidektCard {
     editioncode: string
     editionname: string
   }
+  prices?: {
+    tcg?: number | null
+    tcgfoil?: number | null
+    ck?: number | null
+    ckfoil?: number | null
+  }
 }
 
 export interface ArchidektCategory {
@@ -56,6 +62,7 @@ export interface NormalizedCard {
   categories: string[]
   setCode: string
   colorIdentity: string[] // W, U, B, R, G
+  price: number | null // USD price from TCGPlayer
 }
 
 // Swipe action for undo history

@@ -117,6 +117,7 @@ function normalizeCards(cards: ArchidektCardEntry[], includeSideboard: boolean =
       categories: entry.categories,
       setCode: entry.card.edition.editioncode,
       colorIdentity: entry.card.oracleCard.colorIdentity || [],
+      price: entry.card.prices?.tcg ?? null,
     }))
     .sort((a, b) => {
       // Sort by CMC, then alphabetically

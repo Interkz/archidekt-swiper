@@ -94,6 +94,20 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
             onLoad={() => setImageLoaded(true)}
             draggable={false}
           />
+
+          {/* Price tag */}
+          <div className="absolute bottom-2 right-2 z-10">
+            <span
+              className="font-mono text-xs font-bold px-2 py-0.5 border"
+              style={{
+                backgroundColor: 'rgba(244, 244, 240, 0.92)',
+                borderColor: card.price == null ? 'var(--status-neutral)' : card.price < 1 ? 'var(--lumon-green)' : card.price <= 5 ? '#b8860b' : '#8b0000',
+                color: card.price == null ? 'var(--status-neutral)' : card.price < 1 ? 'var(--lumon-green)' : card.price <= 5 ? '#b8860b' : '#8b0000',
+              }}
+            >
+              {card.price != null ? `$${card.price.toFixed(2)}` : 'N/A'}
+            </span>
+          </div>
         </div>
 
         {/* Card details */}

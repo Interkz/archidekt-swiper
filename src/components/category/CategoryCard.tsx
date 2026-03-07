@@ -35,9 +35,19 @@ export default function CategoryCard({
         className="w-full h-auto"
         draggable={false}
       />
-      <p className="font-mono text-[10px] text-center text-[var(--lumon-black)] truncate px-1.5 py-1.5 bg-[var(--surface-primary)] border-t border-[var(--grid-line)]">
-        {card.name}
-      </p>
+      <div className="px-1.5 py-1 bg-[var(--surface-primary)] border-t border-[var(--grid-line)]">
+        <p className="font-mono text-[10px] text-center text-[var(--lumon-black)] truncate">
+          {card.name}
+        </p>
+        <p
+          className="font-mono text-[9px] text-center font-bold"
+          style={{
+            color: card.price == null ? 'var(--status-neutral)' : card.price < 1 ? 'var(--lumon-green)' : card.price <= 5 ? '#b8860b' : '#8b0000',
+          }}
+        >
+          {card.price != null ? `$${card.price.toFixed(2)}` : 'N/A'}
+        </p>
+      </div>
     </button>
   )
 }
