@@ -15,6 +15,8 @@ export default function CategoryModePage() {
 
   const {
     deckName,
+    deckOwner,
+    deckFormat,
     allCards,
     keptCards,
     viewMode,
@@ -207,13 +209,33 @@ export default function CategoryModePage() {
       {/* Kept cards modal */}
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
 
-      {/* Deck info */}
-      <div className="border-b border-[var(--grid-line)] py-3 px-4">
+      {/* Deck info header */}
+      <div className="border-b border-[var(--grid-line)] py-5 px-4"
+           style={{ background: 'linear-gradient(180deg, var(--lumon-green-pale) 0%, var(--lumon-white) 100%)' }}>
         <div className="max-w-4xl mx-auto">
-          <span className="text-terminal text-[var(--status-neutral)]">ACTIVE DECK:</span>
-          <h1 className="font-mono text-lg font-bold text-[var(--lumon-black)] truncate">
+          <h1 className="font-bold text-2xl sm:text-3xl text-[var(--lumon-black)] truncate leading-tight tracking-tight"
+              style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
             {deckName}
           </h1>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">
+            {deckFormat && (
+              <span className="font-mono text-xs uppercase tracking-wider text-[var(--lumon-green)] font-semibold">
+                {deckFormat}
+              </span>
+            )}
+            {deckFormat && <span className="text-[var(--grid-line)]">/</span>}
+            <span className="font-mono text-xs uppercase tracking-wider text-[var(--status-neutral)]">
+              {allCards.length} cards
+            </span>
+            {deckOwner && (
+              <>
+                <span className="text-[var(--grid-line)]">/</span>
+                <span className="font-mono text-xs uppercase tracking-wider text-[var(--status-neutral)]">
+                  by {deckOwner}
+                </span>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
