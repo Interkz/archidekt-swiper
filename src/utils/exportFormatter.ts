@@ -3,14 +3,18 @@ import type { NormalizedCard } from '../types/archidekt'
 /**
  * Format cards for Archidekt import (plain text, one card per line)
  */
-export function formatForArchidektImport(cards: NormalizedCard[]): string {
-  return cards.map((card) => `${card.quantity} ${card.name}`).join('\n')
+export function formatForArchidektImport(cards: NormalizedCard[], cardNotes?: Record<string, string>): string {
+  return cards.map((card) => {
+    const line = `${card.quantity} ${card.name}`
+    const note = cardNotes?.[card.id]
+    return note ? `${line} // ${note}` : line
+  }).join('\n')
 }
 
 /**
  * Format cards grouped by their Archidekt categories
  */
-export function formatWithCategories(cards: NormalizedCard[]): string {
+export function formatWithCategories(cards: NormalizedCard[], cardNotes?: Record<string, string>): string {
   const grouped = groupByArchidektCategory(cards)
   let output = ''
 
@@ -26,7 +30,9 @@ export function formatWithCategories(cards: NormalizedCard[]): string {
     if (categoryCards && categoryCards.length > 0) {
       output += `// ${category} (${categoryCards.length})\n`
       categoryCards.forEach((card) => {
-        output += `${card.quantity} ${card.name}\n`
+        const line = `${card.quantity} ${card.name}`
+        const note = cardNotes?.[card.id]
+        output += note ? `${line} // ${note}\n` : `${line}\n`
       })
       output += '\n'
     }
@@ -39,16 +45,20 @@ export function formatWithCategories(cards: NormalizedCard[]): string {
  * Format cards with Archidekt inline category syntax: `1 Card Name \`Category\``
  * This format allows re-importing with categories preserved
  */
-export function formatWithArchidektCategories(cards: NormalizedCard[]): string {
+export function formatWithArchidektCategories(cards: NormalizedCard[], cardNotes?: Record<string, string>): string {
   return cards.map((card) => {
     // Find the primary category (exclude sideboard/maybeboard/commander)
     const category = card.categories.find(c =>
       !['sideboard', 'maybeboard', 'commander'].includes(c.toLowerCase())
     )
 
-    return category
+    let line = category
       ? `${card.quantity} ${card.name} \`${category}\``
       : `${card.quantity} ${card.name}`
+
+    const note = cardNotes?.[card.id]
+    if (note) line += ` // ${note}`
+    return line
   }).join('\n')
 }
 

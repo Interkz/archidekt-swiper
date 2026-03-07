@@ -6,11 +6,13 @@ import CardDetails from './CardDetails'
 
 interface SwipeCardProps {
   card: NormalizedCard
+  note?: string
   onSwipe: (direction: string) => void
   onCardLeftScreen: () => void
+  onNoteClick?: () => void
 }
 
-export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCardProps) {
+export default function SwipeCard({ card, note, onSwipe, onCardLeftScreen, onNoteClick }: SwipeCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
   const [swipeDirection, setSwipeDirection] = useState<string | null>(null)
 
@@ -94,6 +96,34 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
             onLoad={() => setImageLoaded(true)}
             draggable={false}
           />
+
+          {/* Note icon button */}
+          {onNoteClick && (
+            <button
+              onClick={(e) => { e.stopPropagation(); e.preventDefault(); onNoteClick() }}
+              onPointerDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              className={`absolute bottom-2 right-2 z-20 w-8 h-8 flex items-center justify-center
+                         border-2 transition-all duration-150
+                         ${note
+                           ? 'bg-[var(--lumon-green)] border-[var(--lumon-green)] text-[var(--lumon-white)]'
+                           : 'bg-[var(--surface-primary)]/90 border-[var(--lumon-black)]/50 text-[var(--lumon-black)] hover:border-[var(--lumon-black)]'
+                         }`}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+          )}
+
+          {/* Note label */}
+          {note && (
+            <div className="absolute bottom-0 left-0 right-0 z-20 px-2 py-1.5 bg-[var(--lumon-black)]/85">
+              <p className="font-mono text-[10px] text-[var(--lumon-white)] truncate">
+                {note}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Card details */}

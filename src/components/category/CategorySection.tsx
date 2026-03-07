@@ -5,18 +5,22 @@ import CategoryCard from './CategoryCard'
 interface CategorySectionProps {
   title: 'Kept' | 'Available'
   cards: NormalizedCard[]
+  cardNotes?: Record<string, string>
   isActiveSection: boolean
   activeCardIndex: number
   onCardClick: (card: NormalizedCard, index: number) => void
+  onNoteClick?: (card: NormalizedCard) => void
   limitReached?: boolean
 }
 
 export default function CategorySection({
   title,
   cards,
+  cardNotes,
   isActiveSection,
   activeCardIndex,
   onCardClick,
+  onNoteClick,
   limitReached,
 }: CategorySectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -86,9 +90,11 @@ export default function CategorySection({
             >
               <CategoryCard
                 card={card}
+                note={cardNotes?.[card.id]}
                 isFocused={isActiveSection && index === activeCardIndex}
                 isDisabled={!isKept && limitReached}
                 onClick={() => onCardClick(card, index)}
+                onNoteClick={onNoteClick ? () => onNoteClick(card) : undefined}
               />
             </div>
           ))}

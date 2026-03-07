@@ -82,6 +82,10 @@ interface DeckState {
   addCardToKept: (card: NormalizedCard) => void
   removeCardFromKept: (card: NormalizedCard) => void
 
+  // Card notes
+  cardNotes: Record<string, string>
+  setCardNote: (cardId: string, note: string) => void
+
   // Category mode selectors (computed)
   getUniqueCategories: () => string[]
   getCategoryKeptCards: (category: string) => NormalizedCard[]
@@ -149,6 +153,9 @@ export const useDeckStore = create<DeckState>()(
         // View mode state
         viewMode: 'swipe' as ViewMode,
 
+        // Card notes
+        cardNotes: {} as Record<string, string>,
+
         // Category mode state
         categoryLimits: {} as Record<string, number>,
         activeCategoryIndex: 0,
@@ -175,6 +182,7 @@ export const useDeckStore = create<DeckState>()(
             swipeMode: 'main',
             viewMode: 'swipe',
             categoryLimits: {},
+            cardNotes: {},
             activeCategoryIndex: 0,
             activeSection: 'available',
             activeCardIndex: 0,
@@ -203,6 +211,16 @@ export const useDeckStore = create<DeckState>()(
         setActiveSection: (section) => set({ activeSection: section, activeCardIndex: 0 }),
 
         setActiveCardIndex: (index) => set({ activeCardIndex: index }),
+
+        setCardNote: (cardId, note) => {
+          const { cardNotes } = get()
+          if (note.trim() === '') {
+            const { [cardId]: _, ...rest } = cardNotes
+            set({ cardNotes: rest })
+          } else {
+            set({ cardNotes: { ...cardNotes, [cardId]: note } })
+          }
+        },
 
         addCardToKept: (card) => {
           const { keptCards, remainingCards } = get()
@@ -479,6 +497,7 @@ export const useDeckStore = create<DeckState>()(
             swipeMode: 'main',
             viewMode: 'swipe',
             categoryLimits: {},
+            cardNotes: {},
             activeCategoryIndex: 0,
             activeSection: 'available',
             activeCardIndex: 0,
@@ -504,6 +523,7 @@ export const useDeckStore = create<DeckState>()(
             swipeMode: 'main',
             viewMode: 'swipe',
             categoryLimits: {},
+            cardNotes: {},
             activeCategoryIndex: 0,
             activeSection: 'available',
             activeCardIndex: 0,
@@ -528,6 +548,7 @@ export const useDeckStore = create<DeckState>()(
           swipeMode: state.swipeMode,
           viewMode: state.viewMode,
           categoryLimits: state.categoryLimits,
+          cardNotes: state.cardNotes,
         }),
       }
     )

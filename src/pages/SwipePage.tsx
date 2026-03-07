@@ -6,16 +6,18 @@ import SwipeControls from '../components/SwipeControls'
 import ProgressBar from '../components/ProgressBar'
 import ViewModeToggle from '../components/ViewModeToggle'
 import KeptCardsModal from '../components/KeptCardsModal'
+import CardNoteOverlay from '../components/CardNoteOverlay'
 import DeckStatsPanel from '../components/stats/DeckStatsPanel'
 import QuickActionsDropdown from '../components/QuickActionsDropdown'
 import QuickActionConfirmModal from '../components/QuickActionConfirmModal'
-import type { ViewMode, QuickAction } from '../types/archidekt'
+import type { ViewMode, QuickAction, NormalizedCard } from '../types/archidekt'
 
 export default function SwipePage() {
   const navigate = useNavigate()
   const [showKeptModal, setShowKeptModal] = useState(false)
   const [showStatsPanel, setShowStatsPanel] = useState(false)
   const [pendingQuickAction, setPendingQuickAction] = useState<QuickAction | null>(null)
+  const [noteCard, setNoteCard] = useState<NormalizedCard | null>(null)
 
   const {
     deckName,
@@ -40,6 +42,8 @@ export default function SwipePage() {
     getRemainingByCategory,
     getUniqueCategories,
     bulkKeepCards,
+    cardNotes,
+    setCardNote,
   } = useDeckStore()
 
   // Current cards based on mode
@@ -106,6 +110,11 @@ export default function SwipePage() {
             e.preventDefault()
             undoLastSwipe()
           }
+          break
+        case 'n':
+        case 'N':
+          e.preventDefault()
+          setNoteCard(currentCard)
           break
       }
     }
@@ -195,6 +204,16 @@ export default function SwipePage() {
 
       {/* Kept cards modal */}
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
+
+      {/* Card note overlay */}
+      {noteCard && (
+        <CardNoteOverlay
+          cardName={noteCard.name}
+          initialNote={cardNotes[noteCard.id] || ''}
+          onSave={(note) => setCardNote(noteCard.id, note)}
+          onClose={() => setNoteCard(null)}
+        />
+      )}
 
       {/* Stats panel */}
       <DeckStatsPanel isOpen={showStatsPanel} onToggle={() => setShowStatsPanel(!showStatsPanel)} />
@@ -289,9 +308,11 @@ export default function SwipePage() {
         {currentCards.length > 0 ? (
           <CardStack
             cards={currentCards}
+            cardNotes={cardNotes}
             onKeep={keepCard}
             onRemove={removeCard}
             onMaybe={maybeCard}
+            onNoteClick={setNoteCard}
           />
         ) : (
           <div className="text-center">
@@ -400,6 +421,8 @@ export default function SwipePage() {
             <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">→</kbd> ACCEPT
             <span className="mx-2">|</span>
             <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">Z</kbd> UNDO
+            <span className="mx-2">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">N</kbd> NOTE
           </span>
           <span className="sm:hidden text-terminal text-[var(--status-neutral)]">
             SWIPE: LEFT REJECT, UP DEFER, RIGHT ACCEPT
