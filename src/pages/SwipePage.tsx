@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
 import CardStack from '../components/CardStack'
+import CardSearch from '../components/CardSearch'
 import SwipeControls from '../components/SwipeControls'
 import ProgressBar from '../components/ProgressBar'
 import ViewModeToggle from '../components/ViewModeToggle'
@@ -40,6 +41,7 @@ export default function SwipePage() {
     getRemainingByCategory,
     getUniqueCategories,
     bulkKeepCards,
+    jumpToCard,
   } = useDeckStore()
 
   // Current cards based on mode
@@ -83,6 +85,8 @@ export default function SwipePage() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't intercept when user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
       if (currentCards.length === 0) return
 
       const currentCard = currentCards[0]
@@ -283,6 +287,13 @@ export default function SwipePage() {
           </p>
         )}
       </div>
+
+      {/* Card search */}
+      {currentCards.length > 0 && (
+        <div className="px-4 pt-2">
+          <CardSearch cards={currentCards} onSelect={jumpToCard} />
+        </div>
+      )}
 
       {/* Card stack or completion message */}
       <div className="flex-1 flex items-center justify-center px-4 pb-4">
