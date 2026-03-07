@@ -93,3 +93,13 @@ export interface QuickAction {
   cards: NormalizedCard[]
   label: string
 }
+
+// Completed deck session for comparison
+export interface CompletedSession {
+  id: string
+  deckId: string
+  deckName: string
+  deckOwner: string
+  keptCards: NormalizedCard[]
+  completedAt: number
+}

@@ -1,11 +1,17 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import DeckInput from '../components/DeckInput'
 import { useDeckStore } from '../stores/deckStore'
+import { getSavedSessions } from '../services/sessionStorage'
 
 export default function HomePage() {
   const navigate = useNavigate()
   const { remainingCards, allCards, clearState } = useDeckStore()
+  const [sessionCount, setSessionCount] = useState(0)
+
+  useEffect(() => {
+    setSessionCount(getSavedSessions().length)
+  }, [])
 
   // Check if there's an existing session
   const hasExistingSession = allCards.length > 0 && remainingCards.length > 0
@@ -105,6 +111,24 @@ export default function HomePage() {
       ) : (
         <div className="relative z-10 w-full max-w-md">
           <DeckInput />
+        </div>
+      )}
+
+      {/* Compare button */}
+      {sessionCount >= 2 && (
+        <div className="relative z-10 mt-8 w-full max-w-md">
+          <Link
+            to="/compare"
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 border-2 border-[var(--lumon-green)]
+                       font-mono font-semibold uppercase tracking-wider text-[var(--lumon-green)]
+                       hover:bg-[var(--lumon-green)] hover:text-[var(--lumon-white)]
+                       transition-all duration-150 active:scale-[0.98]"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="square" strokeLinejoin="miter" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+            </svg>
+            Compare Decks ({sessionCount} sessions)
+          </Link>
         </div>
       )}
 

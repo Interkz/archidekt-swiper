@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
 import {
@@ -8,14 +8,24 @@ import {
   copyToClipboard,
   downloadAsFile,
 } from '../utils/exportFormatter'
+import { saveSession } from '../services/sessionStorage'
 
 type ExportFormat = 'plain' | 'grouped' | 'archidekt'
 
 export default function ResultsPage() {
   const navigate = useNavigate()
-  const { deckName, keptCards, removedCards, allCards, clearState, resetDeck } = useDeckStore()
+  const { deckId, deckName, deckOwner, keptCards, removedCards, allCards, clearState, resetDeck } = useDeckStore()
   const [exportFormat, setExportFormat] = useState<ExportFormat>('archidekt')
   const [copied, setCopied] = useState(false)
+  const savedRef = useRef(false)
+
+  // Auto-save session for comparison when results are shown
+  useEffect(() => {
+    if (deckId && keptCards.length > 0 && !savedRef.current) {
+      saveSession(deckId, deckName, deckOwner, keptCards)
+      savedRef.current = true
+    }
+  }, [deckId, deckName, deckOwner, keptCards])
 
   // Format numbers with leading zeros
   const formatNumber = (n: number) => n.toString().padStart(3, '0')
