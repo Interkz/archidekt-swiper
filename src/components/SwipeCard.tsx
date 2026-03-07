@@ -3,6 +3,7 @@ import TinderCard from 'react-tinder-card'
 import type { NormalizedCard } from '../types/archidekt'
 import { getCardImageUrl } from '../services/scryfallImages'
 import CardDetails from './CardDetails'
+import CardTypeBadge from './CardTypeBadge'
 
 interface SwipeCardProps {
   card: NormalizedCard
@@ -78,6 +79,9 @@ export default function SwipeCard({ card, onSwipe, onCardLeftScreen }: SwipeCard
 
           {/* Card border - thin black line */}
           <div className="absolute inset-0 border border-[var(--lumon-black)]/10 pointer-events-none z-10" />
+
+          {/* Card type badge */}
+          <CardTypeBadge typeLine={card.typeLine} />
 
           {/* Loading state - clinical placeholder */}
           {!imageLoaded && (
