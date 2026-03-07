@@ -71,11 +71,11 @@ export default function SwipePage() {
       if (maybeCards.length > 0 && !isReviewingMaybes) {
         return
       }
-      // If there are sideboard cards, offer to switch; otherwise go to results
+      // If there are sideboard cards, offer to switch; otherwise go to stats
       if (allSideboardCards.length > 0 && remainingSideboardCards.length > 0) {
         // Stay on page, user can switch to sideboard
       } else if (maybeCards.length === 0) {
-        navigate('/results')
+        navigate('/stats')
       }
     }
   }, [remainingCards, allCards, swipeMode, allSideboardCards, remainingSideboardCards, maybeCards, isReviewingMaybes, navigate])
@@ -317,7 +317,7 @@ export default function SwipePage() {
                     Review Maybes
                   </button>
                   <button
-                    onClick={() => navigate('/results')}
+                    onClick={() => navigate('/stats')}
                     className="px-6 py-3 border-2 border-[var(--lumon-black)]
                                font-mono font-semibold uppercase tracking-wider
                                hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-all duration-150"
@@ -351,7 +351,7 @@ export default function SwipePage() {
                 )}
                 {(mainDeckDone && (!sideboardAvailable || remainingSideboardCards.length === 0)) && (
                   <button
-                    onClick={() => navigate('/results')}
+                    onClick={() => navigate('/stats')}
                     className="px-6 py-3 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
                                font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
                                hover:bg-[var(--lumon-green-light)] transition-all duration-150"
@@ -361,7 +361,7 @@ export default function SwipePage() {
                 )}
                 {swipeMode === 'sideboard' && remainingSideboardCards.length === 0 && (
                   <button
-                    onClick={() => navigate('/results')}
+                    onClick={() => navigate('/stats')}
                     className="px-6 py-3 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
                                font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
                                hover:bg-[var(--lumon-green-light)] transition-all duration-150"

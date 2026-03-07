@@ -37,6 +37,9 @@ interface DeckState {
   // Swipe history for undo (supports single and bulk actions)
   swipeHistory: SwipeHistoryEntry[]
 
+  // Session timing
+  sessionStartTime: number | null
+
   // UI State
   isLoading: boolean
   error: string | null
@@ -142,6 +145,7 @@ export const useDeckStore = create<DeckState>()(
         allSideboardCards: [],
         remainingSideboardCards: [],
         swipeHistory: [],
+        sessionStartTime: null,
         isLoading: false,
         error: null,
         swipeMode: 'main' as SwipeMode,
@@ -171,6 +175,7 @@ export const useDeckStore = create<DeckState>()(
             allSideboardCards: sideboard,
             remainingSideboardCards: [...sideboard],
             swipeHistory: [],
+            sessionStartTime: Date.now(),
             error: null,
             swipeMode: 'main',
             viewMode: 'swipe',
@@ -476,6 +481,7 @@ export const useDeckStore = create<DeckState>()(
             maybeCards: [],
             isReviewingMaybes: false,
             swipeHistory: [],
+            sessionStartTime: Date.now(),
             swipeMode: 'main',
             viewMode: 'swipe',
             categoryLimits: {},
@@ -499,6 +505,7 @@ export const useDeckStore = create<DeckState>()(
             allSideboardCards: [],
             remainingSideboardCards: [],
             swipeHistory: [],
+            sessionStartTime: null,
             isLoading: false,
             error: null,
             swipeMode: 'main',
@@ -525,6 +532,7 @@ export const useDeckStore = create<DeckState>()(
           allSideboardCards: state.allSideboardCards,
           remainingSideboardCards: state.remainingSideboardCards,
           swipeHistory: state.swipeHistory,
+          sessionStartTime: state.sessionStartTime,
           swipeMode: state.swipeMode,
           viewMode: state.viewMode,
           categoryLimits: state.categoryLimits,
