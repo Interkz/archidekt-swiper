@@ -8,7 +8,7 @@ interface KeptCardsModalProps {
 }
 
 export default function KeptCardsModal({ isOpen, onClose }: KeptCardsModalProps) {
-  const { keptCards, getUniqueCategories, getCategoryKeptCards } = useDeckStore()
+  const { keptCards, cardNotes, getUniqueCategories, getCategoryKeptCards } = useDeckStore()
 
   if (!isOpen) return null
 
@@ -101,6 +101,11 @@ export default function KeptCardsModal({ isOpen, onClose }: KeptCardsModalProps)
                           <p className="font-mono text-xs text-[var(--lumon-black)] truncate">{card.name}</p>
                           {card.quantity > 1 && (
                             <p className="font-mono text-xs text-[var(--status-neutral)]">x{card.quantity}</p>
+                          )}
+                          {cardNotes[card.id] && (
+                            <p className="font-mono text-[10px] text-[var(--lumon-green)] truncate">
+                              {cardNotes[card.id]}
+                            </p>
                           )}
                         </div>
                       </div>

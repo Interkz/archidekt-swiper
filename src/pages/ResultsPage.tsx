@@ -13,21 +13,23 @@ type ExportFormat = 'plain' | 'grouped' | 'archidekt'
 
 export default function ResultsPage() {
   const navigate = useNavigate()
-  const { deckName, keptCards, removedCards, allCards, clearState, resetDeck } = useDeckStore()
+  const { deckName, keptCards, removedCards, allCards, cardNotes, clearState, resetDeck } = useDeckStore()
   const [exportFormat, setExportFormat] = useState<ExportFormat>('archidekt')
   const [copied, setCopied] = useState(false)
 
   // Format numbers with leading zeros
   const formatNumber = (n: number) => n.toString().padStart(3, '0')
 
+  const hasNotes = Object.keys(cardNotes).length > 0
+
   const getExportText = () => {
     switch (exportFormat) {
       case 'grouped':
-        return formatWithCategories(keptCards)
+        return formatWithCategories(keptCards, hasNotes ? cardNotes : undefined)
       case 'archidekt':
-        return formatWithArchidektCategories(keptCards)
+        return formatWithArchidektCategories(keptCards, hasNotes ? cardNotes : undefined)
       default:
-        return formatForArchidektImport(keptCards)
+        return formatForArchidektImport(keptCards, hasNotes ? cardNotes : undefined)
     }
   }
 

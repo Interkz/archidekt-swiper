@@ -5,6 +5,7 @@ import CategoryTabs from '../components/category/CategoryTabs'
 import CategorySection from '../components/category/CategorySection'
 import ViewModeToggle from '../components/ViewModeToggle'
 import KeptCardsModal from '../components/KeptCardsModal'
+import CardNoteOverlay from '../components/CardNoteOverlay'
 import type { NormalizedCard, ViewMode } from '../types/archidekt'
 
 export default function CategoryModePage() {
@@ -12,6 +13,7 @@ export default function CategoryModePage() {
   const [showLimitInput, setShowLimitInput] = useState(false)
   const [limitValue, setLimitValue] = useState('')
   const [showKeptModal, setShowKeptModal] = useState(false)
+  const [noteCard, setNoteCard] = useState<NormalizedCard | null>(null)
 
   const {
     deckName,
@@ -33,6 +35,8 @@ export default function CategoryModePage() {
     getCategoryKeptCards,
     getCategoryAvailableCards,
     canAddToCategory,
+    cardNotes,
+    setCardNote,
   } = useDeckStore()
 
   const categories = getUniqueCategories()
@@ -207,6 +211,16 @@ export default function CategoryModePage() {
       {/* Kept cards modal */}
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
 
+      {/* Card note overlay */}
+      {noteCard && (
+        <CardNoteOverlay
+          cardName={noteCard.name}
+          initialNote={cardNotes[noteCard.id] || ''}
+          onSave={(note) => setCardNote(noteCard.id, note)}
+          onClose={() => setNoteCard(null)}
+        />
+      )}
+
       {/* Deck info */}
       <div className="border-b border-[var(--grid-line)] py-3 px-4">
         <div className="max-w-4xl mx-auto">
@@ -281,17 +295,21 @@ export default function CategoryModePage() {
           <CategorySection
             title="Kept"
             cards={keptInCategory}
+            cardNotes={cardNotes}
             isActiveSection={activeSection === 'kept'}
             activeCardIndex={activeCardIndex}
             onCardClick={(card, index) => handleCardClick(card, index, 'kept')}
+            onNoteClick={setNoteCard}
           />
 
           <CategorySection
             title="Available"
             cards={availableInCategory}
+            cardNotes={cardNotes}
             isActiveSection={activeSection === 'available'}
             activeCardIndex={activeCardIndex}
             onCardClick={(card, index) => handleCardClick(card, index, 'available')}
+            onNoteClick={setNoteCard}
             limitReached={!canAddToCategory(activeCategory)}
           />
         </div>

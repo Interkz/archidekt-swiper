@@ -5,12 +5,14 @@ import SwipeCard from './SwipeCard'
 
 interface CardStackProps {
   cards: NormalizedCard[]
+  cardNotes?: Record<string, string>
   onKeep: (card: NormalizedCard) => void
   onRemove: (card: NormalizedCard) => void
   onMaybe?: (card: NormalizedCard) => void
+  onNoteClick?: (card: NormalizedCard) => void
 }
 
-export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStackProps) {
+export default function CardStack({ cards, cardNotes, onKeep, onRemove, onMaybe, onNoteClick }: CardStackProps) {
   const cardsToShow = cards.slice(0, 3) // Show top 3 cards in stack
   const currentCard = cards[0]
   const preloadedRef = useRef<Set<string>>(new Set())
@@ -103,8 +105,10 @@ export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStac
               {isTop ? (
                 <SwipeCard
                   card={card}
+                  note={cardNotes?.[card.id]}
                   onSwipe={handleSwipe}
                   onCardLeftScreen={handleCardLeftScreen}
+                  onNoteClick={onNoteClick ? () => onNoteClick(card) : undefined}
                 />
               ) : (
                 // Background cards - just show edge
