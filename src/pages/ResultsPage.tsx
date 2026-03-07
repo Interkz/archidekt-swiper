@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
+import ColorIdentityBreakdown from '../components/stats/ColorIdentityBreakdown'
 import {
   formatForArchidektImport,
   formatWithCategories,
@@ -13,7 +14,7 @@ type ExportFormat = 'plain' | 'grouped' | 'archidekt'
 
 export default function ResultsPage() {
   const navigate = useNavigate()
-  const { deckName, keptCards, removedCards, allCards, clearState, resetDeck } = useDeckStore()
+  const { deckName, keptCards, removedCards, maybeCards, allCards, clearState, resetDeck } = useDeckStore()
   const [exportFormat, setExportFormat] = useState<ExportFormat>('archidekt')
   const [copied, setCopied] = useState(false)
 
@@ -146,6 +147,15 @@ export default function ResultsPage() {
               </>
             )}
           </div>
+        </div>
+
+        {/* Color identity breakdown */}
+        <div className="mb-6">
+          <ColorIdentityBreakdown
+            keptCards={keptCards}
+            removedCards={removedCards}
+            maybeCards={maybeCards}
+          />
         </div>
 
         {/* Export section */}
