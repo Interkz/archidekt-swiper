@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, useMemo } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
 import CardStack from '../components/CardStack'
@@ -9,6 +9,7 @@ import KeptCardsModal from '../components/KeptCardsModal'
 import DeckStatsPanel from '../components/stats/DeckStatsPanel'
 import QuickActionsDropdown from '../components/QuickActionsDropdown'
 import QuickActionConfirmModal from '../components/QuickActionConfirmModal'
+import ManaFilter from '../components/ManaFilter'
 import type { ViewMode, QuickAction } from '../types/archidekt'
 
 export default function SwipePage() {
@@ -16,6 +17,7 @@ export default function SwipePage() {
   const [showKeptModal, setShowKeptModal] = useState(false)
   const [showStatsPanel, setShowStatsPanel] = useState(false)
   const [pendingQuickAction, setPendingQuickAction] = useState<QuickAction | null>(null)
+  const [activeCmcValues, setActiveCmcValues] = useState<Set<number>>(new Set())
 
   const {
     deckName,
@@ -45,6 +47,33 @@ export default function SwipePage() {
   // Current cards based on mode
   const currentCards = swipeMode === 'sideboard' ? remainingSideboardCards : remainingCards
   const totalCards = swipeMode === 'sideboard' ? allSideboardCards.length : allCards.length
+
+  // Mana cost filtering
+  const isFiltering = activeCmcValues.size > 0
+
+  const filteredCards = useMemo(() => {
+    if (!isFiltering) return currentCards
+    return currentCards.filter((card) => {
+      const bucket = Math.min(card.cmc, 7)
+      return activeCmcValues.has(bucket)
+    })
+  }, [currentCards, activeCmcValues, isFiltering])
+
+  const handleCmcToggle = useCallback((cmc: number) => {
+    setActiveCmcValues((prev) => {
+      const next = new Set(prev)
+      if (next.has(cmc)) {
+        next.delete(cmc)
+      } else {
+        next.add(cmc)
+      }
+      return next
+    })
+  }, [])
+
+  const handleCmcReset = useCallback(() => {
+    setActiveCmcValues(new Set())
+  }, [])
 
   // Format numbers with leading zeros
   const formatNumber = (n: number) => n.toString().padStart(3, '0')
@@ -83,22 +112,22 @@ export default function SwipePage() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (currentCards.length === 0) return
+      if (filteredCards.length === 0) return
 
-      const currentCard = currentCards[0]
+      const topCard = filteredCards[0]
 
       switch (e.key) {
         case 'ArrowRight':
           e.preventDefault()
-          keepCard(currentCard)
+          keepCard(topCard)
           break
         case 'ArrowLeft':
           e.preventDefault()
-          removeCard(currentCard)
+          removeCard(topCard)
           break
         case 'ArrowUp':
           e.preventDefault()
-          maybeCard(currentCard)
+          maybeCard(topCard)
           break
         case 'z':
         case 'Z':
@@ -112,25 +141,25 @@ export default function SwipePage() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentCards, swipeHistory, keepCard, removeCard, maybeCard, undoLastSwipe])
+  }, [filteredCards, swipeHistory, keepCard, removeCard, maybeCard, undoLastSwipe])
 
   const handleKeep = useCallback(() => {
-    if (currentCards.length > 0) {
-      keepCard(currentCards[0])
+    if (filteredCards.length > 0) {
+      keepCard(filteredCards[0])
     }
-  }, [currentCards, keepCard])
+  }, [filteredCards, keepCard])
 
   const handleRemove = useCallback(() => {
-    if (currentCards.length > 0) {
-      removeCard(currentCards[0])
+    if (filteredCards.length > 0) {
+      removeCard(filteredCards[0])
     }
-  }, [currentCards, removeCard])
+  }, [filteredCards, removeCard])
 
   const handleMaybe = useCallback(() => {
-    if (currentCards.length > 0) {
-      maybeCard(currentCards[0])
+    if (filteredCards.length > 0) {
+      maybeCard(filteredCards[0])
     }
-  }, [currentCards, maybeCard])
+  }, [filteredCards, maybeCard])
 
   const handleUndo = useCallback(() => {
     undoLastSwipe()
@@ -284,15 +313,48 @@ export default function SwipePage() {
         )}
       </div>
 
+      {/* Mana cost filter */}
+      {currentCards.length > 0 && (
+        <div className="border-b border-[var(--grid-line)] py-3 px-4">
+          <ManaFilter
+            activeCmcValues={activeCmcValues}
+            onToggle={handleCmcToggle}
+            onReset={handleCmcReset}
+            matchCount={filteredCards.length}
+            totalCount={currentCards.length}
+            isFiltering={isFiltering}
+          />
+        </div>
+      )}
+
       {/* Card stack or completion message */}
       <div className="flex-1 flex items-center justify-center px-4 pb-4">
-        {currentCards.length > 0 ? (
+        {filteredCards.length > 0 ? (
           <CardStack
-            cards={currentCards}
+            cards={filteredCards}
             onKeep={keepCard}
             onRemove={removeCard}
             onMaybe={maybeCard}
           />
+        ) : isFiltering && currentCards.length > 0 ? (
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-6 border-2 border-[var(--grid-line)] flex items-center justify-center">
+              <span className="font-mono text-2xl text-[var(--status-neutral)]">0</span>
+            </div>
+            <p className="text-terminal text-[var(--status-neutral)] tracking-widest mb-2">
+              NO MATCHING CARDS
+            </p>
+            <p className="font-mono text-sm text-[var(--status-neutral)] mb-4">
+              No remaining cards at selected mana values
+            </p>
+            <button
+              onClick={handleCmcReset}
+              className="px-6 py-2 border-2 border-[var(--lumon-black)] font-mono text-xs font-semibold uppercase tracking-wider
+                         hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-all duration-150"
+            >
+              Clear Filter
+            </button>
+          </div>
         ) : (
           <div className="text-center">
             {/* Main deck done with maybes - show review prompt */}
@@ -376,7 +438,7 @@ export default function SwipePage() {
       </div>
 
       {/* Controls */}
-      {currentCards.length > 0 && (
+      {filteredCards.length > 0 && (
         <div className="px-4 pb-6">
           <SwipeControls
             onKeep={handleKeep}
@@ -384,7 +446,7 @@ export default function SwipePage() {
             onMaybe={handleMaybe}
             onUndo={handleUndo}
             canUndo={swipeHistory.length > 0}
-            disabled={currentCards.length === 0}
+            disabled={filteredCards.length === 0}
           />
         </div>
       )}
