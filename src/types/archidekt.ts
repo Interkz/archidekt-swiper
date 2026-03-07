@@ -93,3 +93,24 @@ export interface QuickAction {
   cards: NormalizedCard[]
   label: string
 }
+
+// Card decision for history tracking
+export interface CardDecision {
+  cardName: string
+  action: 'keep' | 'remove' | 'maybe'
+  category: string
+}
+
+// A completed deck review stored in history
+export interface ReviewHistoryEntry {
+  id: string
+  deckId: string
+  deckName: string
+  deckOwner: string
+  date: string // ISO string
+  totalCards: number
+  keptCount: number
+  removedCount: number
+  maybeCount: number
+  decisions: CardDecision[]
+}
