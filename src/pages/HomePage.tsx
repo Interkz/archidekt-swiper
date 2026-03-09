@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DeckInput from '../components/DeckInput'
+import ColorblindToggle from '../components/ColorblindToggle'
 import { useDeckStore } from '../stores/deckStore'
 
 export default function HomePage() {
@@ -111,6 +112,12 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="relative z-10 mt-16 text-center">
         <div className="h-px bg-[var(--grid-line)] w-64 mx-auto mb-6" />
+
+        {/* Accessibility toggle */}
+        <div className="flex justify-center mb-6">
+          <ColorblindToggle />
+        </div>
+
         <p className="text-terminal text-[var(--status-neutral)]">
           ACCEPTABLE INPUT FORMATS
         </p>
