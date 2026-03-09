@@ -5,6 +5,7 @@ import CategoryTabs from '../components/category/CategoryTabs'
 import CategorySection from '../components/category/CategorySection'
 import ViewModeToggle from '../components/ViewModeToggle'
 import KeptCardsModal from '../components/KeptCardsModal'
+import ColorblindToggle from '../components/ColorblindToggle'
 import type { NormalizedCard, ViewMode } from '../types/archidekt'
 
 export default function CategoryModePage() {
@@ -181,16 +182,19 @@ export default function CategoryModePage() {
       {/* Header */}
       <header className="border-b-2 border-[var(--lumon-black)] p-4">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <Link
-            to="/"
-            className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-[var(--status-neutral)]
-                       hover:text-[var(--lumon-black)] transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="square" strokeLinejoin="miter" d="M15 19l-7-7 7-7" />
-            </svg>
-            Exit
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/"
+              className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-[var(--status-neutral)]
+                         hover:text-[var(--lumon-black)] transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M15 19l-7-7 7-7" />
+              </svg>
+              Exit
+            </Link>
+            <ColorblindToggle compact />
+          </div>
 
           <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
 
