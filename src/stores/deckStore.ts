@@ -29,6 +29,7 @@ interface DeckState {
   // Maybe pile for deferred decisions
   maybeCards: NormalizedCard[]
   isReviewingMaybes: boolean
+  savedRemainingCards: NormalizedCard[]
 
   // Sideboard card lists
   allSideboardCards: NormalizedCard[]
@@ -65,6 +66,7 @@ interface DeckState {
 
   // Maybe pile actions
   startMaybeReview: () => void
+  endMaybeReview: () => void
 
   // Quick actions
   getRemainingLands: () => NormalizedCard[]
@@ -140,6 +142,7 @@ export const useDeckStore = create<DeckState>()(
         removedCards: [],
         maybeCards: [],
         isReviewingMaybes: false,
+        savedRemainingCards: [],
         allSideboardCards: [],
         remainingSideboardCards: [],
         swipeHistory: [],
@@ -169,6 +172,7 @@ export const useDeckStore = create<DeckState>()(
             removedCards: [],
             maybeCards: [],
             isReviewingMaybes: false,
+            savedRemainingCards: [],
             allSideboardCards: sideboard,
             remainingSideboardCards: [...sideboard],
             swipeHistory: [],
@@ -350,12 +354,23 @@ export const useDeckStore = create<DeckState>()(
         },
 
         startMaybeReview: () => {
-          const { maybeCards } = get()
-          // Move all maybe cards back to remaining for review
+          const { maybeCards, remainingCards } = get()
+          // Save original remaining cards before replacing with maybe pile
           set({
+            savedRemainingCards: [...remainingCards],
             remainingCards: [...maybeCards],
             maybeCards: [],
             isReviewingMaybes: true,
+          })
+        },
+
+        endMaybeReview: () => {
+          const { savedRemainingCards, remainingCards } = get()
+          // Restore original remaining cards and append any unreviewed maybe cards
+          set({
+            remainingCards: [...savedRemainingCards, ...remainingCards],
+            savedRemainingCards: [],
+            isReviewingMaybes: false,
           })
         },
 
@@ -476,6 +491,7 @@ export const useDeckStore = create<DeckState>()(
             removedCards: [],
             maybeCards: [],
             isReviewingMaybes: false,
+            savedRemainingCards: [],
             swipeHistory: [],
             swipeMode: 'main',
             viewMode: 'swipe',
@@ -497,6 +513,7 @@ export const useDeckStore = create<DeckState>()(
             removedCards: [],
             maybeCards: [],
             isReviewingMaybes: false,
+            savedRemainingCards: [],
             allSideboardCards: [],
             remainingSideboardCards: [],
             swipeHistory: [],
@@ -521,6 +538,7 @@ export const useDeckStore = create<DeckState>()(
           removedCards: state.removedCards,
           maybeCards: state.maybeCards,
           isReviewingMaybes: state.isReviewingMaybes,
+          savedRemainingCards: state.savedRemainingCards,
           remainingCards: state.remainingCards,
           allCards: state.allCards,
           allSideboardCards: state.allSideboardCards,
