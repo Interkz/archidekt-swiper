@@ -1,7 +1,8 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import type { NormalizedCard } from '../types/archidekt'
 import { preloadImages } from '../services/scryfallImages'
 import SwipeCard from './SwipeCard'
+import CardStatsOverlay from './stats/CardStatsOverlay'
 
 interface CardStackProps {
   cards: NormalizedCard[]
@@ -11,6 +12,7 @@ interface CardStackProps {
 }
 
 export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStackProps) {
+  const [showStats, setShowStats] = useState(false)
   const cardsToShow = cards.slice(0, 3) // Show top 3 cards in stack
   const currentCard = cards[0]
   const preloadedRef = useRef<Set<string>>(new Set())
@@ -66,7 +68,7 @@ export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStac
   }
 
   return (
-    <div className="relative w-full max-w-[350px] h-[550px] mx-auto perspective-1000">
+    <div className="relative w-full max-w-[350px] h-[550px] mx-auto perspective-1000 overflow-hidden">
       {/* Table surface indicator - subtle grid line beneath cards */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-px bg-[var(--grid-line)]" />
 
@@ -120,6 +122,9 @@ export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStac
             </div>
           )
         })}
+
+      {/* Stats overlay - slides up from bottom */}
+      <CardStatsOverlay isOpen={showStats} onToggle={() => setShowStats(!showStats)} />
     </div>
   )
 }
