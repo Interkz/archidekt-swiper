@@ -8,6 +8,7 @@ import SwipeControls from '../components/SwipeControls'
 import ProgressBar from '../components/ProgressBar'
 import ViewModeToggle from '../components/ViewModeToggle'
 import KeptCardsModal from '../components/KeptCardsModal'
+import CardDetailsOverlay from '../components/CardDetailsOverlay'
 import DeckStatsPanel from '../components/stats/DeckStatsPanel'
 import QuickActionsDropdown from '../components/QuickActionsDropdown'
 import QuickActionConfirmModal from '../components/QuickActionConfirmModal'
@@ -18,6 +19,7 @@ export default function SwipePage() {
   const navigate = useNavigate()
   const [showKeptModal, setShowKeptModal] = useState(false)
   const [showStatsPanel, setShowStatsPanel] = useState(false)
+  const [showCardDetails, setShowCardDetails] = useState(false)
   const [pendingQuickAction, setPendingQuickAction] = useState<QuickAction | null>(null)
   const favoritesCount = useFavoritesStore((s) => s.favorites.length)
 
@@ -86,25 +88,42 @@ export default function SwipePage() {
     }
   }, [remainingCards, allCards, swipeMode, allSideboardCards, remainingSideboardCards, maybeCards, isReviewingMaybes, navigate])
 
+  // Close details when card changes
+  useEffect(() => {
+    setShowCardDetails(false)
+  }, [currentCards.length])
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (currentCards.length === 0) return
+      // Close details with Escape or Down arrow
+      if (showCardDetails) {
+        if (e.key === 'Escape' || e.key === 'ArrowDown') {
+          e.preventDefault()
+          setShowCardDetails(false)
+          return
+        }
+      }
 
-      const currentCard = currentCards[0]
+      if (currentCards.length === 0) return
 
       switch (e.key) {
         case 'ArrowRight':
           e.preventDefault()
-          keepCard(currentCard)
+          keepCard(currentCards[0])
           break
         case 'ArrowLeft':
           e.preventDefault()
-          removeCard(currentCard)
+          removeCard(currentCards[0])
           break
         case 'ArrowUp':
           e.preventDefault()
-          maybeCard(currentCard)
+          setShowCardDetails(true)
+          break
+        case 'ArrowDown':
+        case 'Escape':
+          e.preventDefault()
+          setShowCardDetails(false)
           break
         case 'z':
         case 'Z':
@@ -118,7 +137,7 @@ export default function SwipePage() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentCards, swipeHistory, keepCard, removeCard, maybeCard, undoLastSwipe])
+  }, [currentCards, showCardDetails, swipeHistory, keepCard, removeCard, undoLastSwipe])
 
   const handleKeep = useCallback(() => {
     if (currentCards.length > 0) {
@@ -219,6 +238,14 @@ export default function SwipePage() {
 
       {/* Kept cards modal */}
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
+
+      {/* Card details overlay */}
+      {showCardDetails && currentCards.length > 0 && (
+        <CardDetailsOverlay
+          card={currentCards[0]}
+          onClose={() => setShowCardDetails(false)}
+        />
+      )}
 
       {/* Stats panel */}
       <DeckStatsPanel isOpen={showStatsPanel} onToggle={() => setShowStatsPanel(!showStatsPanel)} />
@@ -448,14 +475,16 @@ export default function SwipePage() {
           <span className="hidden sm:inline text-terminal text-[var(--status-neutral)]">
             CONTROLS: <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">←</kbd> REJECT
             <span className="mx-2">|</span>
-            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">↑</kbd> DEFER
-            <span className="mx-2">|</span>
             <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">→</kbd> ACCEPT
+            <span className="mx-2">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">↑</kbd> DETAILS
+            <span className="mx-2">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">ESC</kbd> CLOSE
             <span className="mx-2">|</span>
             <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">Z</kbd> UNDO
           </span>
           <span className="sm:hidden text-terminal text-[var(--status-neutral)]">
-            SWIPE: LEFT REJECT, UP DEFER, RIGHT ACCEPT
+            SWIPE: LEFT REJECT, RIGHT ACCEPT, UP DEFER
           </span>
         </div>
       </div>
