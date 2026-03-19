@@ -30,6 +30,7 @@ export default function SwipePage() {
     remainingSideboardCards,
     allSideboardCards,
     keptCards,
+    removedCards,
     maybeCards,
     isReviewingMaybes,
     swipeHistory,
@@ -333,7 +334,13 @@ export default function SwipePage() {
 
       {/* Progress */}
       <div className="py-6 px-4">
-        <ProgressBar current={currentCards.length} total={totalCards} />
+        <ProgressBar
+          current={currentCards.length}
+          total={totalCards}
+          keptCount={keptCards.length}
+          removedCount={removedCards.length}
+          maybeCount={maybeCards.length}
+        />
         {swipeMode === 'sideboard' && (
           <p className="text-center font-mono text-xs text-[var(--status-warning)] mt-3 uppercase tracking-wider">
             Accept sideboard cards to add to deck
