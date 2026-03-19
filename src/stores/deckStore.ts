@@ -14,11 +14,39 @@ import type {
 
 type SwipeMode = 'main' | 'sideboard'
 
+const FORMAT_MAP: Record<number, string> = {
+  1: 'Standard',
+  2: 'Modern',
+  3: 'Commander',
+  4: 'Legacy',
+  5: 'Vintage',
+  6: 'Pauper',
+  7: 'Custom',
+  8: 'Frontier',
+  9: 'Future Standard',
+  10: 'Penny Dreadful',
+  11: '1v1 Commander',
+  12: 'Duel Commander',
+  13: 'Brawl',
+  14: 'Oathbreaker',
+  15: 'Pioneer',
+  16: 'Historic',
+  17: 'Pauper EDH',
+  18: 'Alchemy',
+  19: 'Explorer',
+  20: 'Historic Brawl',
+  21: 'Gladiator',
+  22: 'Premodern',
+  23: 'PreDH',
+  24: 'Timeless',
+}
+
 interface DeckState {
   // Deck metadata
   deckId: string | null
   deckName: string
   deckOwner: string
+  deckFormat: string
 
   // Main deck card lists
   allCards: NormalizedCard[]
@@ -136,6 +164,7 @@ export const useDeckStore = create<DeckState>()(
         deckId: null,
         deckName: '',
         deckOwner: '',
+        deckFormat: '',
         allCards: [],
         remainingCards: [],
         keptCards: [],
@@ -166,6 +195,7 @@ export const useDeckStore = create<DeckState>()(
             deckId: String(deck.id),
             deckName: deck.name,
             deckOwner: deck.owner.username,
+            deckFormat: FORMAT_MAP[deck.format] || '',
             allCards: mainDeck,
             remainingCards: [...mainDeck],
             keptCards: [],
@@ -507,6 +537,7 @@ export const useDeckStore = create<DeckState>()(
             deckId: null,
             deckName: '',
             deckOwner: '',
+            deckFormat: '',
             allCards: [],
             remainingCards: [],
             keptCards: [],
@@ -534,6 +565,7 @@ export const useDeckStore = create<DeckState>()(
           deckId: state.deckId,
           deckName: state.deckName,
           deckOwner: state.deckOwner,
+          deckFormat: state.deckFormat,
           keptCards: state.keptCards,
           removedCards: state.removedCards,
           maybeCards: state.maybeCards,
