@@ -30,3 +30,13 @@ dist-ssr
 nul
 
 .vercel
+
+# Test artifacts
+test-*.py
+test-*.png
+e2e-*.png
+filter-*.png
+tavern-*.png
+cube-preview.html
+cube-v*.png
+cube-hover-test.png
