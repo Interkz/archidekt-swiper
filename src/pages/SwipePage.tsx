@@ -161,17 +161,17 @@ export default function SwipePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header - clinical top bar */}
-      <header className="border-b-2 border-[var(--lumon-black)] p-4">
+      {/* Header - warm wood bar */}
+      <header className="border-b-2 border-[var(--border-wood)] wood-surface p-4">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <div className="flex items-center gap-3">
             <Link
               to="/"
-              className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-[var(--status-neutral)]
-                         hover:text-[var(--lumon-black)] transition-colors"
+              className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-[var(--text-muted)]
+                         hover:text-[var(--amber)] transition-colors"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="square" strokeLinejoin="miter" d="M15 19l-7-7 7-7" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
               Exit
             </Link>
@@ -182,14 +182,14 @@ export default function SwipePage() {
 
           <div className="flex items-center gap-4">
             {hasMaybes && (
-              <span className="font-mono text-xs uppercase tracking-wider text-[#8b5a2b]">
+              <span className="font-mono text-xs uppercase tracking-wider text-[var(--deferred)]">
                 Pending ({formatNumber(maybeCards.length)})
               </span>
             )}
             <button
               onClick={() => setShowKeptModal(true)}
-              className="font-mono text-sm uppercase tracking-wider text-[var(--lumon-green)]
-                         hover:text-[var(--lumon-green-light)] transition-colors"
+              className="font-mono text-sm uppercase tracking-wider text-[var(--amber)]
+                         hover:text-[var(--amber-light)] transition-colors"
             >
               Inventory ({formatNumber(keptCards.length)})
             </button>
@@ -213,20 +213,20 @@ export default function SwipePage() {
 
       {/* Reviewing maybes banner */}
       {isReviewingMaybes && (
-        <div className="bg-[#8b5a2b]/10 border-y border-[#8b5a2b] py-2 px-4">
-          <p className="text-center text-terminal text-[#8b5a2b]">
+        <div className="bg-[var(--deferred)]/10 border-y border-[var(--deferred)] py-2 px-4">
+          <p className="text-center text-terminal text-[var(--deferred)]">
             REVIEWING DEFERRED CARDS
           </p>
         </div>
       )}
 
       {/* Deck info bar */}
-      <div className="border-b border-[var(--grid-line)] py-3 px-4">
+      <div className="border-b border-[var(--border-wood)] py-3 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-terminal text-[var(--status-neutral)]">ACTIVE DECK:</span>
-              <h1 className="font-mono text-lg font-bold text-[var(--lumon-black)] truncate max-w-[200px] sm:max-w-none">
+              <span className="text-terminal text-[var(--text-muted)]">ACTIVE DECK:</span>
+              <h1 className="font-display text-lg text-[var(--tavern-card)] truncate max-w-[200px] sm:max-w-none">
                 {deckName}
               </h1>
             </div>
@@ -302,10 +302,10 @@ export default function SwipePage() {
             {/* Main deck done with maybes - show review prompt */}
             {mainDeckDone && hasMaybes && !isReviewingMaybes && swipeMode === 'main' && (
               <>
-                <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#8b5a2b] flex items-center justify-center">
-                  <span className="font-mono text-2xl text-[#8b5a2b]">?</span>
+                <div className="w-16 h-16 mx-auto mb-6 border-2 border-[var(--deferred)] flex items-center justify-center">
+                  <span className="font-mono text-2xl text-[var(--deferred)]">?</span>
                 </div>
-                <p className="text-terminal text-[#8b5a2b] tracking-widest mb-2">
+                <p className="text-terminal text-[var(--deferred)] tracking-widest mb-2">
                   {formatNumber(maybeCards.length)} CARDS DEFERRED
                 </p>
                 <p className="font-mono text-sm text-[var(--status-neutral)] mb-6">
@@ -314,7 +314,7 @@ export default function SwipePage() {
                 <div className="flex flex-col gap-3">
                   <button
                     onClick={startMaybeReview}
-                    className="px-6 py-3 bg-[#8b5a2b] border-2 border-[#8b5a2b]
+                    className="px-6 py-3 bg-[var(--deferred)] border-2 border-[var(--deferred)]
                                font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
                                hover:opacity-90 transition-all duration-150"
                   >

@@ -15,22 +15,26 @@ export default function ManaCurveChart({ data }: ManaCurveChartProps) {
 
         return (
           <div key={bucket.cmc} className="flex-1 flex flex-col items-center">
-            {/* Bar */}
+            {/* Bar — amber gradient on dark surface */}
             <div className="w-full flex flex-col justify-end h-16">
               <div
-                className="w-full bg-[var(--lumon-green)] border border-[var(--lumon-black)] transition-all duration-300"
+                className="w-full rounded-t border border-[var(--border-brass)] transition-all duration-300"
                 style={{
                   height: `${heightPercent}%`,
                   minHeight: bucket.count > 0 ? '4px' : '0',
+                  background: bucket.count > 0
+                    ? 'linear-gradient(180deg, var(--amber-light) 0%, var(--amber) 100%)'
+                    : 'transparent',
+                  borderColor: bucket.count > 0 ? 'var(--border-brass)' : 'transparent',
                 }}
               />
             </div>
             {/* Count label */}
-            <span className="font-mono text-[10px] text-[var(--lumon-black)] mt-1">
+            <span className="font-mono text-[10px] text-[var(--text-light)] mt-1">
               {bucket.count > 0 ? bucket.count : ''}
             </span>
             {/* CMC label */}
-            <span className="font-mono text-[10px] text-[var(--status-neutral)]">
+            <span className="font-mono text-[10px] text-[var(--text-muted)]">
               {label}
             </span>
           </div>

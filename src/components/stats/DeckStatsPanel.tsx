@@ -36,43 +36,43 @@ export default function DeckStatsPanel({ isOpen, onToggle }: DeckStatsPanelProps
 
   return (
     <>
-      {/* Toggle button - always visible */}
+      {/* Toggle button — brass accent tab */}
       <button
         onClick={onToggle}
         className="fixed right-0 top-1/2 -translate-y-1/2 z-40
-                   w-8 h-16 border-2 border-r-0 border-[var(--lumon-black)]
-                   bg-[var(--surface-primary)] flex items-center justify-center
-                   hover:bg-[var(--lumon-cream)] transition-colors"
+                   w-8 h-16 border-2 border-r-0 border-[var(--border-wood)]
+                   wood-surface flex items-center justify-center rounded-l
+                   hover:border-[var(--amber)] transition-colors"
         aria-label={isOpen ? 'Close stats panel' : 'Open stats panel'}
         style={{ right: isOpen ? '288px' : '0' }}
       >
         <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-[var(--text-light)] transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
           strokeWidth={2}
         >
-          <path strokeLinecap="square" d="M15 19l-7-7 7-7" />
+          <path strokeLinecap="round" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
 
-      {/* Stats Panel Drawer */}
+      {/* Stats Panel Drawer — dark wood surface */}
       <aside
         className={`fixed top-0 right-0 h-full w-72 z-30
-                    border-l-2 border-[var(--lumon-black)]
-                    bg-[var(--surface-primary)]
+                    border-l-2 border-[var(--border-wood)]
+                    wood-surface
                     transform transition-transform duration-300 ease-out
                     overflow-y-auto
                     ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {/* Panel Header */}
-        <div className="border-b-2 border-[var(--lumon-black)] p-4">
-          <span className="text-terminal text-[var(--status-neutral)]">
+        <div className="border-b-2 border-[var(--border-wood)] p-4">
+          <span className="text-terminal text-[var(--text-muted)]">
             DECK ANALYSIS
           </span>
-          <h2 className="font-mono text-lg font-bold text-[var(--lumon-black)] mt-1">
-            LIVE STATISTICS
+          <h2 className="font-display text-lg text-[var(--tavern-card)] mt-1">
+            Live Statistics
           </h2>
         </div>
 
@@ -82,18 +82,18 @@ export default function DeckStatsPanel({ isOpen, onToggle }: DeckStatsPanelProps
 
           {/* Mana Curve */}
           <section>
-            <h3 className="text-terminal text-[var(--status-neutral)] mb-3">
+            <h3 className="text-terminal text-[var(--text-muted)] mb-3">
               MANA CURVE
             </h3>
             <ManaCurveChart data={stats.manaCurve} />
-            <p className="font-mono text-xs text-[var(--status-neutral)] mt-2">
+            <p className="font-mono text-xs text-[var(--text-muted)] mt-2">
               AVG CMC: {stats.averageCmc.toFixed(2)}
             </p>
           </section>
 
           {/* Color Distribution */}
           <section>
-            <h3 className="text-terminal text-[var(--status-neutral)] mb-3">
+            <h3 className="text-terminal text-[var(--text-muted)] mb-3">
               COLOR IDENTITY
             </h3>
             <ColorPips distribution={stats.colorDistribution} />
@@ -101,7 +101,7 @@ export default function DeckStatsPanel({ isOpen, onToggle }: DeckStatsPanelProps
 
           {/* Category Breakdown */}
           <section>
-            <h3 className="text-terminal text-[var(--status-neutral)] mb-3">
+            <h3 className="text-terminal text-[var(--text-muted)] mb-3">
               BY CATEGORY
             </h3>
             <CategoryStats categories={stats.categoryBreakdown} />

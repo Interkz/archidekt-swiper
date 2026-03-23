@@ -51,14 +51,14 @@ export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStac
     return (
       <div className="flex items-center justify-center h-[500px]">
         <div className="text-center">
-          {/* Clinical completion indicator */}
-          <div className="w-16 h-16 mx-auto mb-6 border-2 border-[var(--lumon-green)] flex items-center justify-center">
-            <svg className="w-8 h-8 text-[var(--lumon-green)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="square" strokeLinejoin="miter" d="M5 13l4 4L19 7" />
+          {/* Completion indicator — golden check */}
+          <div className="w-16 h-16 mx-auto mb-6 border-2 border-[var(--amber)] rounded flex items-center justify-center">
+            <svg className="w-8 h-8 text-[var(--amber)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <p className="text-terminal text-[var(--lumon-green)] tracking-widest">
-            SORTING COMPLETE
+          <p className="font-display text-sm text-[var(--amber)] tracking-widest uppercase">
+            Sorting Complete
           </p>
         </div>
       </div>
@@ -67,13 +67,14 @@ export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStac
 
   return (
     <div className="relative w-full max-w-[350px] h-[550px] mx-auto perspective-1000">
-      {/* Table surface indicator - subtle grid line beneath cards */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-px bg-[var(--grid-line)]" />
+      {/* Table surface indicator — brass line beneath cards */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-px"
+           style={{ background: 'linear-gradient(90deg, transparent, var(--border-brass), transparent)' }} />
 
-      {/* Contact shadow on table */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[70%] h-8 opacity-20"
+      {/* Contact shadow on table — warm */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[70%] h-8 opacity-30"
            style={{
-             background: 'radial-gradient(ellipse at center, var(--lumon-black) 0%, transparent 70%)',
+             background: 'radial-gradient(ellipse at center, rgba(26,15,10,0.8) 0%, transparent 70%)',
              filter: 'blur(8px)'
            }}
       />
@@ -91,12 +92,9 @@ export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStac
               key={card.id}
               className={`absolute inset-0 transition-all duration-300 ${isTop ? 'card-enter' : ''}`}
               style={{
-                // Physical deck stacking - cards slightly offset
                 transform: `translateY(${reverseIndex * 4}px) translateX(${reverseIndex * 2}px)`,
                 zIndex: cardsToShow.length - reverseIndex,
-                // Cards behind are slightly visible (deck edge effect)
                 opacity: isTop ? 1 : 0.4,
-                // Slight rotation for natural stack look
                 rotate: `${reverseIndex * 0.5}deg`,
               }}
             >
@@ -107,8 +105,8 @@ export default function CardStack({ cards, onKeep, onRemove, onMaybe }: CardStac
                   onCardLeftScreen={handleCardLeftScreen}
                 />
               ) : (
-                // Background cards - just show edge
-                <div className="bg-surface overflow-hidden card-shadow border border-[var(--grid-line)]">
+                // Background cards — parchment edge with warm shadow
+                <div className="parchment overflow-hidden card-shadow rounded border border-[var(--border-wood)]">
                   <img
                     src={`https://api.scryfall.com/cards/${card.scryfallId}?format=image&version=normal`}
                     alt={card.name}

@@ -1,60 +1,95 @@
-/* Google Fonts - JetBrains Mono for terminal aesthetic */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   ARCHIDEKT SWIPER - LUMON INDUSTRIES DESIGN SYSTEM
-   Severance + Swiss International Style
+   ARCHIDEKT SWIPER - "THE GATHERING TABLE" DESIGN SYSTEM
+   Balatro card feel + Hearthstone tavern warmth + MTG art-forward
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
   /* ─────────────────────────────────────────────────────────────────────────
-     COLOR PALETTE: "The Lumon Void"
+     COLOR PALETTE: Warm & Earthy Tavern
      ───────────────────────────────────────────────────────────────────────── */
 
-  /* Core Colors */
-  --lumon-white: #f4f4f0;           /* Cool paper white, fluorescent-lit */
-  --lumon-cream: #e8e8e4;           /* Slightly darker for contrast */
-  --lumon-black: #080f0d;           /* Deep almost-green black */
-  --lumon-green: #1f4234;           /* Severance forest green accent */
-  --lumon-green-light: #2d5a47;     /* Lighter green for hover states */
-  --lumon-green-pale: #d4e5dc;      /* Very pale green for backgrounds */
+  /* Base surfaces */
+  --tavern-bg:          #2c1e14;  /* dark leather — page background */
+  --tavern-surface:     #3d2b1e;  /* warm oak — panels, drawers */
+  --tavern-surface-alt: #4a3728;  /* lighter oak — hover/elevated */
+  --tavern-sunken:      #241811;  /* deep shadow — recessed areas */
+  --tavern-card:        #f0e4cc;  /* aged parchment — card faces, inputs */
+  --tavern-card-alt:    #e6d7b8;  /* darker parchment — card hover */
 
-  /* Grid & Structure */
-  --grid-line: #c8c8c4;             /* Visible ledger lines */
-  --grid-line-heavy: #1f4234;       /* Thick dividers (green-tinted) */
+  /* Text */
+  --ink-primary:        #1a0f0a;  /* dark walnut ink — headings on light bg */
+  --ink-secondary:      #5c4a3a;  /* faded ink — secondary text on light bg */
+  --text-light:         #e8d5b5;  /* warm cream — text on dark bg */
+  --text-muted:         #9c8570;  /* dusty tan — muted text on dark bg */
 
-  /* Status (NO traffic lights - clinical approach) */
-  --status-positive: #1f4234;       /* Forest green = keep/success */
-  --status-negative: #080f0d;       /* Black = remove/loss */
-  --status-neutral: #6b6b68;        /* Muted gray */
-  --status-warning: #8b7355;        /* Muted amber/brown */
+  /* Accents */
+  --amber:              #d4943a;  /* primary accent — buttons, highlights */
+  --amber-light:        #e8b058;  /* hover amber */
+  --amber-glow:         rgba(212, 148, 58, 0.25);  /* glow effect */
+  --gold:               #c9a227;  /* special highlights — votes */
+  --gold-shimmer:       #f5d76e;  /* holographic shimmer */
 
-  /* Surfaces */
-  --surface-primary: #ffffff;       /* Pure white cards */
-  --surface-elevated: #fafaf8;      /* Slight elevation */
-  --surface-sunken: #ececea;        /* Recessed areas */
+  /* Semantic */
+  --positive:           #2d6a4f;  /* forest jade — approve, keep */
+  --positive-light:     #40916c;  /* lighter for hover */
+  --negative:           #9b2226;  /* muted crimson — reject, cut */
+  --negative-light:     #c1292e;  /* lighter for hover */
+  --deferred:           #8b6914;  /* warm ochre — maybe pile */
+
+  /* MTG Colors (warmed up, gem-like) */
+  --mana-W:             #f9f3e3;  /* warm white — plains */
+  --mana-U:             #1a6fb5;  /* deep sea blue — island */
+  --mana-B:             #2a1f2d;  /* dark plum — swamp */
+  --mana-R:             #c44536;  /* brick red — mountain */
+  --mana-G:             #2d6a4f;  /* forest jade — forest */
+  --mana-C:             #8c7e72;  /* warm stone — colorless */
+
+  /* Effects */
+  --border-wood:        #5c4a3a;  /* warm brown border */
+  --border-brass:       #b8860b;  /* brass accent border */
+  --shadow-warm:        rgba(26, 15, 10, 0.5);  /* warm black shadow */
 
   /* ─────────────────────────────────────────────────────────────────────────
-     TYPOGRAPHY: "Rational vs. Human"
+     COMPATIBILITY ALIASES — old Lumon names → tavern equivalents
+     Allows un-updated components to render in warm tones immediately.
+     ───────────────────────────────────────────────────────────────────────── */
+  --lumon-white:        var(--tavern-card);
+  --lumon-cream:        var(--tavern-card-alt);
+  --lumon-black:        var(--ink-primary);
+  --lumon-green:        var(--positive);
+  --lumon-green-light:  var(--positive-light);
+  --lumon-green-pale:   var(--tavern-card);
+  --grid-line:          var(--border-wood);
+  --grid-line-heavy:    var(--border-brass);
+  --status-positive:    var(--positive);
+  --status-negative:    var(--negative);
+  --status-neutral:     var(--text-muted);
+  --status-warning:     var(--deferred);
+  --surface-primary:    var(--tavern-card);
+  --surface-elevated:   var(--tavern-card-alt);
+  --surface-sunken:     var(--tavern-sunken);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     TYPOGRAPHY: "Tavern Library"
      ───────────────────────────────────────────────────────────────────────── */
 
-  /* Display - Tight, massive Helvetica */
-  --font-display: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  /* Display - chiseled medieval capitals (MTG gravitas) */
+  --font-display: 'Cinzel', 'Garamond', serif;
 
-  /* Monospace - Mainframe terminal */
-  --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', monospace;
+  /* Body - warm old-style serif (book in a tavern) */
+  --font-body: 'Crimson Pro', 'Georgia', serif;
 
-  /* Body - Clean geometric sans */
-  --font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  /* Mono - terminal data (warm tones applied via color) */
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
 
   /* Base settings */
   font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
-  color: var(--lumon-black);
-  background-color: var(--lumon-white);
+  color: var(--text-light);
+  background-color: var(--tavern-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -64,12 +99,12 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: var(--lumon-white);
-  /* Subtle paper texture effect */
+  background-color: var(--tavern-bg);
   background-image:
-    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.8) 0%, transparent 50%),
-    linear-gradient(180deg, var(--lumon-white) 0%, var(--lumon-cream) 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(60, 40, 25, 0.4) 0%, transparent 60%),
+    linear-gradient(180deg, var(--tavern-bg) 0%, #1e1410 100%);
   background-attachment: fixed;
+  color: var(--text-light);
 }
 
 #root {
@@ -79,83 +114,144 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SCROLLBAR - Clinical, minimal
+   SCROLLBAR - Warm wood
    ═══════════════════════════════════════════════════════════════════════════ */
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--lumon-cream);
+  background: var(--tavern-sunken);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--grid-line);
-  border: 1px solid var(--lumon-cream);
+  background: var(--tavern-surface-alt);
+  border: 2px solid var(--tavern-sunken);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--lumon-green);
+  background: var(--amber);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SHADOW UTILITIES - Physical card presence
+   SHADOW UTILITIES - Warm, deep shadows
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Card resting on table - subtle contact shadow */
 .card-shadow {
   box-shadow:
-    0 1px 2px rgba(8, 15, 13, 0.08),
-    0 4px 8px rgba(8, 15, 13, 0.04),
-    0 0 0 1px rgba(8, 15, 13, 0.03);
+    0 2px 4px var(--shadow-warm),
+    0 0 0 1px rgba(92, 74, 58, 0.2);
 }
 
-/* Elevated card - being picked up */
 .card-shadow-lg {
   box-shadow:
-    0 4px 8px rgba(8, 15, 13, 0.12),
-    0 12px 24px rgba(8, 15, 13, 0.08),
-    0 0 0 1px rgba(8, 15, 13, 0.05);
+    0 4px 8px var(--shadow-warm),
+    0 12px 24px rgba(26, 15, 10, 0.3),
+    0 0 0 1px rgba(92, 74, 58, 0.2);
 }
 
-/* Hover state - card lifting */
 .card-shadow-hover {
   box-shadow:
-    0 8px 16px rgba(8, 15, 13, 0.15),
-    0 24px 48px rgba(8, 15, 13, 0.1),
-    0 0 0 1px rgba(8, 15, 13, 0.05);
+    0 12px 36px var(--shadow-warm),
+    0 0 12px var(--amber-glow),
+    0 0 0 1px rgba(184, 134, 11, 0.3);
 }
 
-/* Table contact shadow - where card meets surface */
+.shadow-table {
+  box-shadow: 0 2px 4px var(--shadow-warm);
+}
+
+.shadow-lifted {
+  box-shadow: 0 8px 24px var(--shadow-warm);
+}
+
+.shadow-hover {
+  box-shadow: 0 12px 36px var(--shadow-warm), 0 0 12px var(--amber-glow);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 20px var(--amber-glow);
+}
+
 .table-contact-shadow {
   box-shadow:
-    0 2px 4px rgba(8, 15, 13, 0.1),
-    0 0 20px rgba(8, 15, 13, 0.05);
+    0 2px 4px var(--shadow-warm),
+    0 0 20px rgba(26, 15, 10, 0.2);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   BORDER UTILITIES - Swiss grid lines
+   SURFACE TEXTURES - CSS-only atmosphere
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Wood grain — subtle repeating lines */
+.wood-surface {
+  background-color: var(--tavern-surface);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(0, 0, 0, 0.03) 40px,
+      rgba(0, 0, 0, 0.03) 41px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 120px,
+      rgba(0, 0, 0, 0.02) 120px,
+      rgba(0, 0, 0, 0.02) 121px
+    );
+}
+
+/* Leather — for nav/header areas */
+.leather-surface {
+  background-color: var(--tavern-bg);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(60, 40, 25, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(60, 40, 25, 0.2) 0%, transparent 40%);
+}
+
+/* Parchment — card faces, inputs */
+.parchment {
+  background-color: var(--tavern-card);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+}
+
+/* Film grain overlay — global atmosphere */
+.grain-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='.04'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BORDER UTILITIES
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .border-grid {
-  border-color: var(--grid-line);
+  border-color: var(--border-wood);
 }
 
 .border-grid-heavy {
-  border-color: var(--grid-line-heavy);
+  border-color: var(--border-brass);
   border-width: 2px;
 }
 
 .divider-line {
   height: 1px;
-  background-color: var(--grid-line);
+  background-color: var(--border-wood);
 }
 
 .divider-heavy {
   height: 2px;
-  background-color: var(--grid-line-heavy);
+  background-color: var(--border-brass);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -165,26 +261,18 @@ body {
 .font-display {
   font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.04em;
 }
 
 .font-mono {
   font-family: var(--font-mono);
 }
 
-.text-lumon-black {
-  color: var(--lumon-black);
+.font-body {
+  font-family: var(--font-body);
 }
 
-.text-lumon-green {
-  color: var(--lumon-green);
-}
-
-.text-lumon-neutral {
-  color: var(--status-neutral);
-}
-
-/* Terminal-style uppercase */
+/* Terminal-style label (used for section headers) */
 .text-terminal {
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -192,31 +280,133 @@ body {
   font-size: 0.75rem;
 }
 
+/* Legacy color utilities (map to tavern colors) */
+.text-lumon-black { color: var(--ink-primary); }
+.text-lumon-green { color: var(--positive); }
+.text-lumon-neutral { color: var(--text-muted); }
+
 /* ═══════════════════════════════════════════════════════════════════════════
-   BUTTON UTILITIES - Brutalist style
+   BUTTON STYLES - Tavern aesthetic
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.btn-brutalist {
-  font-family: var(--font-mono);
-  font-weight: 600;
+/* Primary: warm amber, brass-feel */
+.btn-tavern {
+  background: linear-gradient(180deg, var(--amber) 0%, #b87d2f 100%);
+  color: var(--ink-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border: 2px solid var(--lumon-black);
-  background-color: transparent;
-  color: var(--lumon-black);
+  letter-spacing: 0.08em;
+  border: 2px solid var(--border-brass);
   padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px var(--shadow-warm), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.btn-tavern:hover {
+  background: linear-gradient(180deg, var(--amber-light) 0%, var(--amber) 100%);
+  box-shadow: 0 4px 12px var(--amber-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-tavern:active { transform: scale(0.97); }
+
+.btn-tavern:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-tavern:disabled:hover {
+  background: linear-gradient(180deg, var(--amber) 0%, #b87d2f 100%);
+  box-shadow: 0 2px 4px var(--shadow-warm), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Secondary: wood/leather feel */
+.btn-wood {
+  background: var(--tavern-surface);
+  color: var(--text-light);
+  font-family: var(--font-body);
+  font-weight: 600;
+  border: 2px solid var(--border-wood);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px var(--shadow-warm);
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.btn-wood:hover {
+  background: var(--tavern-surface-alt);
+  border-color: var(--amber);
+}
+
+.btn-wood:active { transform: scale(0.97); }
+
+.btn-wood:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Vote buttons */
+.btn-approve {
+  background: var(--positive);
+  color: var(--tavern-card);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 2px solid var(--positive-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.btn-approve:hover {
+  background: var(--positive-light);
+}
+
+.btn-reject {
+  background: var(--negative);
+  color: var(--tavern-card);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 2px solid var(--negative-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.btn-reject:hover {
+  background: var(--negative-light);
+}
+
+/* Legacy brutalist buttons (compatibility) */
+.btn-brutalist {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 2px solid var(--border-wood);
+  background-color: transparent;
+  color: var(--text-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
   transition: all 150ms ease-out;
   cursor: pointer;
 }
 
 .btn-brutalist:hover {
-  background-color: var(--lumon-black);
-  color: var(--lumon-white);
+  background-color: var(--tavern-surface-alt);
+  border-color: var(--amber);
+  color: var(--text-light);
 }
 
-.btn-brutalist:active {
-  transform: scale(0.98);
-}
+.btn-brutalist:active { transform: scale(0.98); }
 
 .btn-brutalist:disabled {
   opacity: 0.3;
@@ -225,21 +415,22 @@ body {
 
 .btn-brutalist:disabled:hover {
   background-color: transparent;
-  color: var(--lumon-black);
+  border-color: var(--border-wood);
+  color: var(--text-light);
 }
 
 .btn-brutalist-green {
-  border-color: var(--lumon-green);
-  color: var(--lumon-green);
+  border-color: var(--positive);
+  color: var(--positive);
 }
 
 .btn-brutalist-green:hover {
-  background-color: var(--lumon-green);
-  color: var(--lumon-white);
+  background-color: var(--positive);
+  color: var(--tavern-card);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   3D CARD FLIP ANIMATIONS
+   3D CARD EFFECTS & ANIMATIONS
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .perspective-1000 {
@@ -254,94 +445,121 @@ body {
   backface-visibility: hidden;
 }
 
-/* Card flip animation keyframes */
+/* Balatro-style 3D tilt on hover — JS sets --mx, --my, --angle */
+.card-tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+  transform:
+    perspective(800px)
+    rotateX(calc(var(--my, 0) * 10deg))
+    rotateY(calc(var(--mx, 0) * 10deg));
+}
+
+/* Holographic shimmer overlay */
+.card-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    calc(var(--angle, 135) * 1deg),
+    transparent 0%,
+    rgba(249, 243, 227, 0.08) 40%,
+    rgba(201, 162, 39, 0.12) 50%,
+    rgba(249, 243, 227, 0.08) 60%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 15;
+}
+
+.card-shimmer:hover::before {
+  opacity: 1;
+}
+
+/* Card flip animations */
 @keyframes cardFlipRight {
-  0% {
-    transform: rotateY(0deg) translateX(0);
-    opacity: 1;
-  }
-  50% {
-    transform: rotateY(45deg) translateX(50px);
-    opacity: 0.8;
-  }
-  100% {
-    transform: rotateY(90deg) translateX(150px);
-    opacity: 0;
-  }
+  0% { transform: rotateY(0deg) translateX(0); opacity: 1; }
+  50% { transform: rotateY(45deg) translateX(50px); opacity: 0.8; }
+  100% { transform: rotateY(90deg) translateX(150px); opacity: 0; }
 }
 
 @keyframes cardFlipLeft {
-  0% {
-    transform: rotateY(0deg) translateX(0);
-    opacity: 1;
-  }
-  50% {
-    transform: rotateY(-45deg) translateX(-50px);
-    opacity: 0.8;
-  }
-  100% {
-    transform: rotateY(-90deg) translateX(-150px);
-    opacity: 0;
-  }
+  0% { transform: rotateY(0deg) translateX(0); opacity: 1; }
+  50% { transform: rotateY(-45deg) translateX(-50px); opacity: 0.8; }
+  100% { transform: rotateY(-90deg) translateX(-150px); opacity: 0; }
 }
 
-.card-flip-right {
-  animation: cardFlipRight 400ms ease-out forwards;
-}
+.card-flip-right { animation: cardFlipRight 400ms ease-out forwards; }
+.card-flip-left { animation: cardFlipLeft 400ms ease-out forwards; }
 
-.card-flip-left {
-  animation: cardFlipLeft 400ms ease-out forwards;
-}
-
-/* Card stack entrance animation */
+/* Card stack entrance */
 @keyframes cardSlideUp {
-  from {
-    transform: translateY(20px) scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
+  from { transform: translateY(20px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-.card-enter {
-  animation: cardSlideUp 300ms ease-out;
+.card-enter { animation: cardSlideUp 300ms ease-out; }
+
+/* Card resolve (flip celebration) */
+@keyframes cardResolve {
+  0%   { transform: scale(1) rotateY(0); }
+  40%  { transform: scale(1.05) rotateY(90deg); }
+  60%  { transform: scale(1.05) rotateY(180deg); }
+  80%  { transform: scale(1.02) rotateY(360deg); }
+  100% { transform: scale(1) rotateY(360deg); }
 }
+
+/* Vote approval golden pulse */
+@keyframes voteGlow {
+  0%   { box-shadow: 0 0 0 0 var(--amber-glow); }
+  50%  { box-shadow: 0 0 20px 8px var(--amber-glow); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.vote-glow { animation: voteGlow 0.8s ease-out; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   STAMP INDICATORS - Clinical approval/rejection
+   STAMP INDICATORS - Warm tavern feel
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .stamp {
-  font-family: var(--font-mono);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   padding: 0.5rem 1rem;
   border: 3px solid currentColor;
   transform: rotate(-12deg);
   opacity: 0;
   transition: opacity 200ms ease-out;
+  border-radius: 4px;
 }
 
 .stamp-accepted {
-  color: var(--lumon-green);
-  border-color: var(--lumon-green);
-  background-color: rgba(31, 66, 52, 0.1);
+  color: var(--positive);
+  border-color: var(--positive);
+  background-color: rgba(45, 106, 79, 0.15);
 }
 
 .stamp-rejected {
-  color: var(--lumon-black);
-  border-color: var(--lumon-black);
-  background-color: rgba(8, 15, 13, 0.05);
+  color: var(--negative);
+  border-color: var(--negative);
+  background-color: rgba(155, 34, 38, 0.15);
   transform: rotate(12deg);
 }
 
 .stamp-deferred {
-  color: #8b5a2b;
-  border-color: #8b5a2b;
-  background-color: rgba(139, 90, 43, 0.1);
+  color: var(--deferred);
+  border-color: var(--deferred);
+  background-color: rgba(139, 105, 20, 0.15);
   transform: rotate(0deg);
 }
 
@@ -350,48 +568,50 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   INPUT UTILITIES - Terminal style
+   INPUT - Parchment style
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .input-terminal {
   font-family: var(--font-mono);
-  background-color: var(--surface-primary);
-  border: 2px solid var(--lumon-black);
-  color: var(--lumon-black);
+  background-color: var(--tavern-card);
+  border: 2px solid var(--border-wood);
+  color: var(--ink-primary);
   padding: 1rem 1.25rem;
+  border-radius: 4px;
   outline: none;
   transition: all 150ms ease-out;
 }
 
 .input-terminal:focus {
-  border-color: var(--lumon-green);
-  box-shadow: 0 0 0 3px rgba(31, 66, 52, 0.15);
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px var(--amber-glow);
 }
 
 .input-terminal::placeholder {
-  color: var(--status-neutral);
+  color: var(--ink-secondary);
   opacity: 1;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   PROGRESS BAR - Ledger style
+   PROGRESS BAR
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .progress-ledger {
   height: 8px;
-  background-color: var(--lumon-cream);
-  border: 1px solid var(--grid-line);
+  background-color: var(--tavern-sunken);
+  border: 1px solid var(--border-wood);
+  border-radius: 4px;
   position: relative;
   overflow: hidden;
 }
 
 .progress-ledger-fill {
   height: 100%;
-  background-color: var(--lumon-green);
+  background: linear-gradient(90deg, var(--amber) 0%, var(--gold) 100%);
   transition: width 300ms ease-out;
+  border-radius: 3px;
 }
 
-/* Segmented progress style */
 .progress-segments {
   display: flex;
   gap: 2px;
@@ -400,28 +620,31 @@ body {
 
 .progress-segment {
   flex: 1;
-  background-color: var(--lumon-cream);
-  border: 1px solid var(--grid-line);
+  background-color: var(--tavern-sunken);
+  border: 1px solid var(--border-wood);
+  border-radius: 2px;
   transition: background-color 200ms ease-out;
 }
 
 .progress-segment-filled {
-  background-color: var(--lumon-green);
-  border-color: var(--lumon-green);
+  background-color: var(--amber);
+  border-color: var(--border-brass);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MODAL UTILITIES - Sharp overlay
+   MODAL
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .modal-backdrop {
-  background-color: rgba(8, 15, 13, 0.6);
-  backdrop-filter: blur(2px);
+  background-color: rgba(26, 15, 10, 0.75);
+  backdrop-filter: blur(4px);
 }
 
 .modal-content {
-  background-color: var(--surface-primary);
-  border: 2px solid var(--lumon-black);
+  background-color: var(--tavern-surface);
+  border: 2px solid var(--border-wood);
+  border-radius: 4px;
+  color: var(--text-light);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -429,9 +652,20 @@ body {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .table-surface {
-  background:
-    radial-gradient(ellipse at center bottom, rgba(31, 66, 52, 0.03) 0%, transparent 60%),
-    linear-gradient(180deg, var(--lumon-white) 0%, var(--lumon-cream) 100%);
+  background-color: var(--tavern-surface);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(0, 0, 0, 0.03) 40px,
+      rgba(0, 0, 0, 0.03) 41px
+    );
+  border: 2px solid var(--border-wood);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.3),
+    0 4px 16px var(--shadow-warm);
   position: relative;
 }
 
@@ -443,47 +677,40 @@ body {
   transform: translateX(-50%);
   width: 60%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--grid-line), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-brass), transparent);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    UTILITY CLASSES
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Lumon colors as Tailwind-style utilities */
-.bg-lumon-white { background-color: var(--lumon-white); }
-.bg-lumon-cream { background-color: var(--lumon-cream); }
-.bg-lumon-black { background-color: var(--lumon-black); }
-.bg-lumon-green { background-color: var(--lumon-green); }
-.bg-lumon-green-pale { background-color: var(--lumon-green-pale); }
-.bg-surface { background-color: var(--surface-primary); }
-.bg-surface-elevated { background-color: var(--surface-elevated); }
-.bg-surface-sunken { background-color: var(--surface-sunken); }
+/* Background utilities */
+.bg-lumon-white { background-color: var(--tavern-card); }
+.bg-lumon-cream { background-color: var(--tavern-card-alt); }
+.bg-lumon-black { background-color: var(--ink-primary); }
+.bg-lumon-green { background-color: var(--positive); }
+.bg-lumon-green-pale { background-color: var(--tavern-card); }
+.bg-surface { background-color: var(--tavern-card); }
+.bg-surface-elevated { background-color: var(--tavern-card-alt); }
+.bg-surface-sunken { background-color: var(--tavern-sunken); }
 
-/* Border colors */
-.border-lumon-black { border-color: var(--lumon-black); }
-.border-lumon-green { border-color: var(--lumon-green); }
-.border-grid { border-color: var(--grid-line); }
+/* Border utilities */
+.border-lumon-black { border-color: var(--ink-primary); }
+.border-lumon-green { border-color: var(--positive); }
 
-/* Spacing consistency - 8px baseline */
-.space-grid-1 { margin: 8px; }
-.space-grid-2 { margin: 16px; }
-.space-grid-3 { margin: 24px; }
-.space-grid-4 { margin: 32px; }
-
-/* Selection styling */
+/* Selection */
 ::selection {
-  background-color: var(--lumon-green);
-  color: var(--lumon-white);
+  background-color: var(--amber);
+  color: var(--ink-primary);
 }
 
-/* Focus visible for accessibility */
+/* Focus */
 :focus-visible {
-  outline: 2px solid var(--lumon-green);
+  outline: 2px solid var(--amber);
   outline-offset: 2px;
 }
 
-/* Reduce motion for accessibility */
+/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

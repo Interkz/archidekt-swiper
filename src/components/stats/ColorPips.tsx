@@ -5,62 +5,61 @@ interface ColorPipsProps {
   distribution: ColorDistribution
 }
 
-// Standard MTG color config with colorblind-friendly patterns
+// MTG color config — warmed up gem-like tones
 const COLOR_CONFIG = {
   W: {
     name: 'White',
     symbol: 'W',
-    bg: '#f9faf4',
-    border: '#a8a8a0',
-    // Colorblind: sun/light symbol
-    cbBg: '#f9faf4',
-    cbBorder: '#666',
-    pattern: 'radial', // Circle/dot pattern
+    bg: '#f9f3e3',
+    border: '#c4b99a',
+    cbBg: '#f9f3e3',
+    cbBorder: '#8c7e72',
+    pattern: 'radial',
   },
   U: {
     name: 'Blue',
     symbol: 'U',
-    bg: '#0e67ab',
-    border: '#0e67ab',
-    cbBg: '#0e67ab',
-    cbBorder: '#0e67ab',
-    pattern: 'horizontal', // Horizontal lines (water)
+    bg: '#1a6fb5',
+    border: '#1a6fb5',
+    cbBg: '#1a6fb5',
+    cbBorder: '#1a6fb5',
+    pattern: 'horizontal',
   },
   B: {
     name: 'Black',
     symbol: 'B',
-    bg: '#170b13',
-    border: '#170b13',
-    cbBg: '#170b13',
-    cbBorder: '#170b13',
-    pattern: 'solid', // Solid fill (darkness)
+    bg: '#2a1f2d',
+    border: '#2a1f2d',
+    cbBg: '#2a1f2d',
+    cbBorder: '#2a1f2d',
+    pattern: 'solid',
   },
   R: {
     name: 'Red',
     symbol: 'R',
-    bg: '#d3202a',
-    border: '#d3202a',
-    cbBg: '#d3202a',
-    cbBorder: '#d3202a',
-    pattern: 'diagonal', // Diagonal lines (fire/lightning)
+    bg: '#c44536',
+    border: '#c44536',
+    cbBg: '#c44536',
+    cbBorder: '#c44536',
+    pattern: 'diagonal',
   },
   G: {
     name: 'Green',
     symbol: 'G',
-    bg: '#00743f',
-    border: '#00743f',
-    cbBg: '#00743f',
-    cbBorder: '#00743f',
-    pattern: 'crosshatch', // Crosshatch (forest/nature)
+    bg: '#2d6a4f',
+    border: '#2d6a4f',
+    cbBg: '#2d6a4f',
+    cbBorder: '#2d6a4f',
+    pattern: 'crosshatch',
   },
   C: {
     name: 'Colorless',
     symbol: 'C',
-    bg: '#ccc2c0',
-    border: '#999',
-    cbBg: '#ccc2c0',
-    cbBorder: '#999',
-    pattern: 'empty', // Empty/outline only
+    bg: '#8c7e72',
+    border: '#6b5e52',
+    cbBg: '#8c7e72',
+    cbBorder: '#6b5e52',
+    pattern: 'empty',
   },
 }
 
@@ -72,58 +71,58 @@ function ColorblindPatterns() {
         {/* Horizontal lines pattern (Blue) */}
         <pattern id="cb-horizontal" width="6" height="6" patternUnits="userSpaceOnUse">
           <rect width="6" height="6" fill="white" />
-          <line x1="0" y1="1" x2="6" y2="1" stroke="#0e67ab" strokeWidth="2" />
-          <line x1="0" y1="4" x2="6" y2="4" stroke="#0e67ab" strokeWidth="2" />
+          <line x1="0" y1="1" x2="6" y2="1" stroke="#1a6fb5" strokeWidth="2" />
+          <line x1="0" y1="4" x2="6" y2="4" stroke="#1a6fb5" strokeWidth="2" />
         </pattern>
         {/* Diagonal lines pattern (Red) */}
         <pattern id="cb-diagonal" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <rect width="6" height="6" fill="white" />
-          <line x1="0" y1="0" x2="6" y2="0" stroke="#d3202a" strokeWidth="2" />
+          <line x1="0" y1="0" x2="6" y2="0" stroke="#c44536" strokeWidth="2" />
         </pattern>
         {/* Crosshatch pattern (Green) */}
         <pattern id="cb-crosshatch" width="6" height="6" patternUnits="userSpaceOnUse">
           <rect width="6" height="6" fill="white" />
-          <line x1="0" y1="3" x2="6" y2="3" stroke="#00743f" strokeWidth="1.5" />
-          <line x1="3" y1="0" x2="3" y2="6" stroke="#00743f" strokeWidth="1.5" />
+          <line x1="0" y1="3" x2="6" y2="3" stroke="#2d6a4f" strokeWidth="1.5" />
+          <line x1="3" y1="0" x2="3" y2="6" stroke="#2d6a4f" strokeWidth="1.5" />
         </pattern>
         {/* Dot pattern (White) */}
         <pattern id="cb-radial" width="6" height="6" patternUnits="userSpaceOnUse">
-          <rect width="6" height="6" fill="#f9faf4" />
-          <circle cx="3" cy="3" r="1.5" fill="#666" />
+          <rect width="6" height="6" fill="#f9f3e3" />
+          <circle cx="3" cy="3" r="1.5" fill="#8c7e72" />
         </pattern>
         {/* Solid pattern (Black) */}
         <pattern id="cb-solid" width="4" height="4" patternUnits="userSpaceOnUse">
-          <rect width="4" height="4" fill="#170b13" />
+          <rect width="4" height="4" fill="#2a1f2d" />
         </pattern>
         {/* Empty / outline pattern (Colorless) */}
         <pattern id="cb-empty" width="4" height="4" patternUnits="userSpaceOnUse">
-          <rect width="4" height="4" fill="#e8e8e4" />
+          <rect width="4" height="4" fill="#3d2b1e" />
         </pattern>
 
         {/* Bar fill patterns */}
         <pattern id="cb-bar-horizontal" width="6" height="6" patternUnits="userSpaceOnUse">
-          <rect width="6" height="6" fill="#0e67ab" fillOpacity="0.15" />
-          <line x1="0" y1="1" x2="6" y2="1" stroke="#0e67ab" strokeWidth="1.5" />
-          <line x1="0" y1="4" x2="6" y2="4" stroke="#0e67ab" strokeWidth="1.5" />
+          <rect width="6" height="6" fill="#1a6fb5" fillOpacity="0.15" />
+          <line x1="0" y1="1" x2="6" y2="1" stroke="#1a6fb5" strokeWidth="1.5" />
+          <line x1="0" y1="4" x2="6" y2="4" stroke="#1a6fb5" strokeWidth="1.5" />
         </pattern>
         <pattern id="cb-bar-diagonal" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="6" height="6" fill="#d3202a" fillOpacity="0.15" />
-          <line x1="0" y1="0" x2="6" y2="0" stroke="#d3202a" strokeWidth="1.5" />
+          <rect width="6" height="6" fill="#c44536" fillOpacity="0.15" />
+          <line x1="0" y1="0" x2="6" y2="0" stroke="#c44536" strokeWidth="1.5" />
         </pattern>
         <pattern id="cb-bar-crosshatch" width="6" height="6" patternUnits="userSpaceOnUse">
-          <rect width="6" height="6" fill="#00743f" fillOpacity="0.15" />
-          <line x1="0" y1="3" x2="6" y2="3" stroke="#00743f" strokeWidth="1" />
-          <line x1="3" y1="0" x2="3" y2="6" stroke="#00743f" strokeWidth="1" />
+          <rect width="6" height="6" fill="#2d6a4f" fillOpacity="0.15" />
+          <line x1="0" y1="3" x2="6" y2="3" stroke="#2d6a4f" strokeWidth="1" />
+          <line x1="3" y1="0" x2="3" y2="6" stroke="#2d6a4f" strokeWidth="1" />
         </pattern>
         <pattern id="cb-bar-radial" width="6" height="6" patternUnits="userSpaceOnUse">
-          <rect width="6" height="6" fill="#a8a8a0" fillOpacity="0.3" />
-          <circle cx="3" cy="3" r="1.5" fill="#666" fillOpacity="0.5" />
+          <rect width="6" height="6" fill="#c4b99a" fillOpacity="0.3" />
+          <circle cx="3" cy="3" r="1.5" fill="#8c7e72" fillOpacity="0.5" />
         </pattern>
         <pattern id="cb-bar-solid" width="4" height="4" patternUnits="userSpaceOnUse">
-          <rect width="4" height="4" fill="#170b13" fillOpacity="0.7" />
+          <rect width="4" height="4" fill="#2a1f2d" fillOpacity="0.7" />
         </pattern>
         <pattern id="cb-bar-empty" width="4" height="4" patternUnits="userSpaceOnUse">
-          <rect width="4" height="4" fill="#ccc2c0" fillOpacity="0.5" />
+          <rect width="4" height="4" fill="#8c7e72" fillOpacity="0.5" />
         </pattern>
       </defs>
     </svg>
@@ -159,7 +158,7 @@ export default function ColorPips({ distribution }: ColorPipsProps) {
                     strokeWidth="2"
                   />
                 </svg>
-                <span className="font-mono text-[10px] font-bold text-[var(--lumon-black)] w-3">
+                <span className="font-mono text-[10px] font-bold text-[var(--text-light)] w-3">
                   {config.symbol}
                 </span>
               </div>
@@ -172,7 +171,7 @@ export default function ColorPips({ distribution }: ColorPipsProps) {
             )}
             {/* Bar */}
             {colorblindMode ? (
-              <div className="flex-1 h-3 bg-[var(--lumon-cream)] border border-[var(--grid-line)] overflow-hidden">
+              <div className="flex-1 h-3 bg-[var(--tavern-sunken)] border border-[var(--border-wood)] rounded overflow-hidden">
                 <svg width="100%" height="100%" preserveAspectRatio="none">
                   <rect
                     width={`${percent}%`}
@@ -183,24 +182,24 @@ export default function ColorPips({ distribution }: ColorPipsProps) {
                 </svg>
               </div>
             ) : (
-              <div className="flex-1 h-3 bg-[var(--lumon-cream)] border border-[var(--grid-line)]">
+              <div className="flex-1 h-3 bg-[var(--tavern-sunken)] border border-[var(--border-wood)] rounded">
                 <div
-                  className="h-full transition-all duration-300"
+                  className="h-full rounded transition-all duration-300"
                   style={{
                     width: `${percent}%`,
                     backgroundColor: config.border,
-                    opacity: 0.7,
+                    opacity: 0.8,
                   }}
                 />
               </div>
             )}
-            {/* Count + name */}
+            {/* Count */}
             {colorblindMode ? (
-              <span className="font-mono text-xs text-[var(--lumon-black)] w-14 text-right">
-                {count} <span className="text-[var(--status-neutral)] text-[10px]">{config.name.substring(0, 2).toUpperCase()}</span>
+              <span className="font-mono text-xs text-[var(--text-light)] w-14 text-right">
+                {count} <span className="text-[var(--text-muted)] text-[10px]">{config.name.substring(0, 2).toUpperCase()}</span>
               </span>
             ) : (
-              <span className="font-mono text-xs text-[var(--lumon-black)] w-6 text-right">
+              <span className="font-mono text-xs text-[var(--text-light)] w-6 text-right">
                 {count}
               </span>
             )}

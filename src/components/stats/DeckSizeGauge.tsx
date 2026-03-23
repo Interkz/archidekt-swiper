@@ -9,34 +9,37 @@ export default function DeckSizeGauge({ current, target }: DeckSizeGaugeProps) {
   const formatNum = (n: number) => n.toString().padStart(3, '0')
 
   return (
-    <div className="border-2 border-[var(--lumon-black)] p-4">
+    <div className="border-2 border-[var(--border-wood)] rounded p-4">
       {/* Big numbers display */}
       <div className="flex items-baseline justify-center gap-1 mb-3">
         <span
           className={`font-mono text-3xl font-bold ${
-            isOver ? 'text-[#8b5a2b]' : 'text-[var(--lumon-green)]'
+            isOver ? 'text-[var(--deferred)]' : 'text-[var(--amber)]'
           }`}
         >
           {formatNum(current)}
         </span>
-        <span className="font-mono text-lg text-[var(--status-neutral)]">/</span>
-        <span className="font-mono text-lg text-[var(--lumon-black)]">
+        <span className="font-mono text-lg text-[var(--text-muted)]">/</span>
+        <span className="font-mono text-lg text-[var(--text-light)]">
           {formatNum(target)}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div className="h-3 bg-[var(--lumon-cream)] border border-[var(--grid-line)]">
+      <div className="h-3 bg-[var(--tavern-sunken)] border border-[var(--border-wood)] rounded">
         <div
-          className={`h-full transition-all duration-300 ${
-            isOver ? 'bg-[#8b5a2b]' : 'bg-[var(--lumon-green)]'
+          className={`h-full rounded transition-all duration-300 ${
+            isOver ? 'bg-[var(--deferred)]' : ''
           }`}
-          style={{ width: `${percent}%` }}
+          style={{
+            width: `${percent}%`,
+            background: isOver ? undefined : 'linear-gradient(90deg, var(--amber) 0%, var(--gold) 100%)',
+          }}
         />
       </div>
 
       {/* Status */}
-      <p className="font-mono text-xs text-center mt-2 text-[var(--status-neutral)]">
+      <p className="font-mono text-xs text-center mt-2 text-[var(--text-muted)]">
         {isOver
           ? `${current - target} OVER TARGET`
           : current === target

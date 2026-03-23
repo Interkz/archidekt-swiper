@@ -28,54 +28,43 @@ export default function HomePage() {
   const formatNumber = (n: number) => n.toString().padStart(3, '0')
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6">
-      {/* Subtle grid background */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03]"
-           style={{
-             backgroundImage: `
-               linear-gradient(var(--lumon-black) 1px, transparent 1px),
-               linear-gradient(90deg, var(--lumon-black) 1px, transparent 1px)
-             `,
-             backgroundSize: '40px 40px'
-           }}
-      />
-
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 grain-overlay">
       {/* Header section */}
       <div className="relative z-10 text-center mb-12">
-        {/* Horizontal rule above */}
-        <div className="w-64 h-0.5 bg-[var(--lumon-black)] mx-auto mb-8" />
+        {/* Brass rule above */}
+        <div className="w-64 h-0.5 mx-auto mb-8" style={{ background: 'linear-gradient(90deg, transparent, var(--border-brass), transparent)' }} />
 
-        <h1 className="font-display text-4xl md:text-5xl tracking-tight text-[var(--lumon-black)] mb-2">
+        <h1 className="font-display text-4xl md:text-5xl tracking-wide text-[var(--tavern-card)]">
           ARCHIDEKT SWIPER
         </h1>
-        <div className="h-px bg-[var(--grid-line)] w-48 mx-auto my-4" />
-        <p className="text-terminal text-[var(--status-neutral)] tracking-widest">
+        <div className="h-px w-48 mx-auto my-4" style={{ background: 'linear-gradient(90deg, transparent, var(--border-wood), transparent)' }} />
+        <p className="text-terminal text-[var(--text-muted)] tracking-widest">
           DECK SORTING INTERFACE
         </p>
-        <p className="font-mono text-xs text-[var(--status-neutral)] mt-2">v2.0.0</p>
+        <p className="font-mono text-xs text-[var(--text-muted)] mt-2">v2.0.0</p>
 
-        {/* Horizontal rule below */}
-        <div className="w-64 h-0.5 bg-[var(--lumon-black)] mx-auto mt-8" />
+        {/* Brass rule below */}
+        <div className="w-64 h-0.5 mx-auto mt-8" style={{ background: 'linear-gradient(90deg, transparent, var(--border-brass), transparent)' }} />
       </div>
 
       {hasExistingSession ? (
         <div className="relative z-10 w-full max-w-md space-y-6">
-          {/* Session status box */}
-          <div className="border-2 border-[var(--lumon-black)] p-6">
-            <span className="text-terminal text-[var(--status-neutral)]">ACTIVE SESSION DETECTED</span>
+          {/* Session status box — parchment card on dark background */}
+          <div className="parchment border-2 border-[var(--border-wood)] rounded p-6">
+            <span className="text-terminal text-[var(--ink-secondary)]">ACTIVE SESSION DETECTED</span>
             <div className="mt-4 space-y-2">
               <div className="flex justify-between font-mono text-sm">
-                <span className="text-[var(--status-neutral)]">REMAINING:</span>
-                <span className="text-[var(--lumon-green)]">{formatNumber(remainingCards.length)}</span>
+                <span className="text-[var(--ink-secondary)]">REMAINING:</span>
+                <span className="text-[var(--positive)] font-semibold">{formatNumber(remainingCards.length)}</span>
               </div>
               <div className="flex justify-between font-mono text-sm">
-                <span className="text-[var(--status-neutral)]">TOTAL:</span>
-                <span className="text-[var(--lumon-black)]">{formatNumber(allCards.length)}</span>
+                <span className="text-[var(--ink-secondary)]">TOTAL:</span>
+                <span className="text-[var(--ink-primary)]">{formatNumber(allCards.length)}</span>
               </div>
-              <div className="h-px bg-[var(--grid-line)] my-3" />
+              <div className="h-px bg-[var(--border-wood)] my-3" />
               <div className="flex justify-between font-mono text-sm">
-                <span className="text-[var(--status-neutral)]">PROGRESS:</span>
-                <span className="text-[var(--lumon-black)]">
+                <span className="text-[var(--ink-secondary)]">PROGRESS:</span>
+                <span className="text-[var(--ink-primary)] font-semibold">
                   {Math.round(((allCards.length - remainingCards.length) / allCards.length) * 100)}%
                 </span>
               </div>
@@ -85,20 +74,14 @@ export default function HomePage() {
           {/* Action buttons */}
           <button
             onClick={handleContinueSession}
-            className="w-full px-6 py-4 bg-[var(--lumon-green)] border-2 border-[var(--lumon-green)]
-                       font-mono font-semibold uppercase tracking-wider text-[var(--lumon-white)]
-                       hover:bg-[var(--lumon-green-light)] transition-all duration-150
-                       active:scale-[0.98]"
+            className="w-full btn-tavern text-center"
           >
             Resume Sorting
           </button>
 
           <button
             onClick={handleNewSession}
-            className="w-full px-6 py-4 bg-transparent border-2 border-[var(--lumon-black)]
-                       font-mono font-semibold uppercase tracking-wider text-[var(--lumon-black)]
-                       hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)]
-                       transition-all duration-150 active:scale-[0.98]"
+            className="w-full btn-wood text-center"
           >
             New Session
           </button>
@@ -111,21 +94,21 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="relative z-10 mt-16 text-center">
-        <div className="h-px bg-[var(--grid-line)] w-64 mx-auto mb-6" />
+        <div className="h-px w-64 mx-auto mb-6" style={{ background: 'linear-gradient(90deg, transparent, var(--border-wood), transparent)' }} />
 
         {/* Accessibility toggle */}
         <div className="flex justify-center mb-6">
           <ColorblindToggle />
         </div>
 
-        <p className="text-terminal text-[var(--status-neutral)]">
+        <p className="text-terminal text-[var(--text-muted)]">
           ACCEPTABLE INPUT FORMATS
         </p>
         <div className="mt-3 space-y-1">
-          <p className="font-mono text-xs text-[var(--status-neutral)]">
+          <p className="font-mono text-xs text-[var(--text-muted)]">
             URL: archidekt.com/decks/123456
           </p>
-          <p className="font-mono text-xs text-[var(--status-neutral)]">
+          <p className="font-mono text-xs text-[var(--text-muted)]">
             ID: 123456
           </p>
         </div>
