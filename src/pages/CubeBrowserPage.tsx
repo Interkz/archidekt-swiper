@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useCubeStore } from '../stores/cubeStore'
 import CubeNav from '../components/cube/CubeNav'
@@ -14,8 +14,10 @@ export default function CubeBrowserPage() {
   const cube = useCubeStore((s) => s.cube)
   const cards = useCubeStore((s) => s.cards)
   const memberName = useCubeStore((s) => s.memberName)
+  const activeFilters = useCubeStore((s) => s.activeFilters)
   const getFilteredCards = useCubeStore((s) => s.getFilteredCards)
-  const filteredCards = getFilteredCards()
+  // Subscribe to activeFilters so component re-renders when filters change
+  const filteredCards = useMemo(() => getFilteredCards(), [cards, activeFilters, getFilteredCards])
 
   // No cube loaded — link back to setup
   if (!cube || !id) {
