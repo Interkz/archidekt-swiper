@@ -1,11 +1,25 @@
 import { useState, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useCubeStore } from '../stores/cubeStore'
-import { parseCubeList, resolveCards, resolveOtags } from '../services/scryfallImport'
+import { parseCubeList, resolveCards } from '../services/scryfallImport'
 import type { CubeCard } from '../types/cube'
 import MemberPicker from '../components/cube/MemberPicker'
 
 type ImportPhase = 'idle' | 'resolving' | 'tagging' | 'done' | 'error'
+
+/** Derive tags from type_line — instant, no API calls */
+function deriveTagsFromType(typeLine: string): string[] {
+  const t = typeLine.toLowerCase()
+  const tags: string[] = []
+  if (t.includes('creature')) tags.push('creature')
+  if (t.includes('instant')) tags.push('instant')
+  if (t.includes('sorcery')) tags.push('sorcery')
+  if (t.includes('enchantment')) tags.push('enchantment')
+  if (t.includes('artifact')) tags.push('artifact')
+  if (t.includes('planeswalker')) tags.push('planeswalker')
+  if (t.includes('land')) tags.push('land')
+  return tags
+}
 
 export default function CubeSetupPage() {
   const navigate = useNavigate()
@@ -40,14 +54,8 @@ export default function CubeSetupPage() {
         setProgress(p => ({ ...p, resolved: done, total }))
       })
 
-      // Step 2: Resolve otag categories
+      // Step 2: Tag cards locally (instant — no API calls)
       setPhase('tagging')
-      const tagMap = await resolveOtags(
-        resolved.map(c => c.name),
-        (category) => {
-          setProgress(p => ({ ...p, tag: category }))
-        }
-      )
 
       // Step 3: Create cube and import cards
       createCube(cubeName, 360, threshold)
@@ -62,7 +70,7 @@ export default function CubeSetupPage() {
         cmc: card.cmc,
         type_line: card.type_line,
         color_identity: card.color_identity,
-        tags: tagMap.get(card.name.toLowerCase()) || [],
+        tags: deriveTagsFromType(card.type_line),
         set_code: card.set_code,
         image_uri: card.image_uri,
         added_by: memberName,

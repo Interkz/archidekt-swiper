@@ -81,9 +81,9 @@ export const useCubeStore = create<CubeState>()(
 
           const defaultMembers: CubeMember[] = [
             { id: crypto.randomUUID(), cube_id: cubeId, name: 'Emil', color: '#c44536', joined_at: now },
-            { id: crypto.randomUUID(), cube_id: cubeId, name: 'Arnar', color: '#1a6fb5', joined_at: now },
-            { id: crypto.randomUUID(), cube_id: cubeId, name: 'Beggi', color: '#2d6a4f', joined_at: now },
-            { id: crypto.randomUUID(), cube_id: cubeId, name: 'Toggi', color: '#d4a020', joined_at: now },
+            { id: crypto.randomUUID(), cube_id: cubeId, name: 'Breki', color: '#1a6fb5', joined_at: now },
+            { id: crypto.randomUUID(), cube_id: cubeId, name: 'Joe', color: '#2d6a4f', joined_at: now },
+            { id: crypto.randomUUID(), cube_id: cubeId, name: 'Andri', color: '#d4a020', joined_at: now },
           ]
 
           set({

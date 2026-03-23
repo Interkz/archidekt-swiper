@@ -1,10 +1,10 @@
 import { useCubeStore } from '../../stores/cubeStore'
 
 const MEMBERS = [
-  { name: 'Emil', color: '#d4943a' },
-  { name: 'Arnar', color: '#2d6a4f' },
-  { name: 'Beggi', color: '#1a6fb5' },
-  { name: 'Toggi', color: '#c44536' },
+  { name: 'Emil', color: '#c44536' },
+  { name: 'Breki', color: '#1a6fb5' },
+  { name: 'Joe', color: '#2d6a4f' },
+  { name: 'Andri', color: '#d4a020' },
 ]
 
 export default function MemberPicker() {

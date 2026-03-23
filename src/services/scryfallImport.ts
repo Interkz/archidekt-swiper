@@ -125,7 +125,7 @@ export async function resolveCards(
     const batch = names.slice(i, i + batchSize)
     const identifiers = batch.map((name) => ({ name }))
 
-    const response = await fetch('/api/scryfall/collection', {
+    const response = await fetch('/api/scryfall/cards/collection', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ identifiers }),
@@ -170,7 +170,7 @@ async function fetchAllSearchPages(query: string): Promise<ScryfallCard[]> {
 
   while (hasMore) {
     const params = new URLSearchParams({ q: query, page: String(page) })
-    const response = await fetch(`/api/scryfall/search?${params.toString()}`)
+    const response = await fetch(`/api/scryfall/cards/search?${params.toString()}`)
 
     if (!response.ok) {
       // 404 means no results for this query — not an error
