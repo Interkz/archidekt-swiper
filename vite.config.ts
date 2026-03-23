@@ -18,6 +18,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/archidekt/, '/api'),
       },
+      '/api/scryfall': {
+        target: 'https://api.scryfall.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/scryfall/, ''),
+      },
     },
   },
 })
