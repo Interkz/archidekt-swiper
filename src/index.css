@@ -10,33 +10,33 @@
      COLOR PALETTE: Warm & Earthy Tavern
      ───────────────────────────────────────────────────────────────────────── */
 
-  /* Base surfaces */
-  --tavern-bg:          #2c1e14;  /* dark leather — page background */
-  --tavern-surface:     #3d2b1e;  /* warm oak — panels, drawers */
-  --tavern-surface-alt: #4a3728;  /* lighter oak — hover/elevated */
-  --tavern-sunken:      #241811;  /* deep shadow — recessed areas */
-  --tavern-card:        #f0e4cc;  /* aged parchment — card faces, inputs */
-  --tavern-card-alt:    #e6d7b8;  /* darker parchment — card hover */
+  /* Base surfaces — richer, more contrast */
+  --tavern-bg:          #1a120c;  /* deep tavern dark — more contrast */
+  --tavern-surface:     #2e2018;  /* rich walnut — panels */
+  --tavern-surface-alt: #3d2d20;  /* lighter walnut — hover */
+  --tavern-sunken:      #120c08;  /* near-black — recessed */
+  --tavern-card:        #f2e8d0;  /* bright warm parchment — POPS against dark */
+  --tavern-card-alt:    #e8dbc0;  /* slightly darker parchment */
 
-  /* Text */
-  --ink-primary:        #1a0f0a;  /* dark walnut ink — headings on light bg */
-  --ink-secondary:      #5c4a3a;  /* faded ink — secondary text on light bg */
-  --text-light:         #e8d5b5;  /* warm cream — text on dark bg */
-  --text-muted:         #9c8570;  /* dusty tan — muted text on dark bg */
+  /* Text — more contrast */
+  --ink-primary:        #1a0f0a;  /* dark walnut ink — on light bg */
+  --ink-secondary:      #6b5540;  /* warm brown — secondary on light bg */
+  --text-light:         #f0e0c8;  /* bright cream — primary on dark bg */
+  --text-muted:         #a89070;  /* warm tan — secondary on dark bg */
 
-  /* Accents */
-  --amber:              #d4943a;  /* primary accent — buttons, highlights */
-  --amber-light:        #e8b058;  /* hover amber */
-  --amber-glow:         rgba(212, 148, 58, 0.25);  /* glow effect */
-  --gold:               #c9a227;  /* special highlights — votes */
-  --gold-shimmer:       #f5d76e;  /* holographic shimmer */
+  /* Accents — PUNCHY gold/amber */
+  --amber:              #e8a030;  /* brighter, more saturated amber */
+  --amber-light:        #f0b840;  /* bright hover amber */
+  --amber-glow:         rgba(232, 160, 48, 0.35);  /* stronger glow */
+  --gold:               #dab030;  /* rich gold */
+  --gold-shimmer:       #ffe070;  /* bright shimmer */
 
-  /* Semantic */
-  --positive:           #2d6a4f;  /* forest jade — approve, keep */
-  --positive-light:     #40916c;  /* lighter for hover */
-  --negative:           #9b2226;  /* muted crimson — reject, cut */
-  --negative-light:     #c1292e;  /* lighter for hover */
-  --deferred:           #8b6914;  /* warm ochre — maybe pile */
+  /* Semantic — more vivid */
+  --positive:           #38845f;  /* brighter jade — approve, keep */
+  --positive-light:     #4ca878;  /* vivid hover */
+  --negative:           #c03030;  /* vivid crimson — reject, cut */
+  --negative-light:     #d84040;  /* brighter hover */
+  --deferred:           #c89020;  /* bright ochre — maybe pile */
 
   /* MTG Colors (warmed up, gem-like) */
   --mana-W:             #f9f3e3;  /* warm white — plains */
@@ -47,9 +47,27 @@
   --mana-C:             #8c7e72;  /* warm stone — colorless */
 
   /* Effects */
-  --border-wood:        #5c4a3a;  /* warm brown border */
-  --border-brass:       #b8860b;  /* brass accent border */
-  --shadow-warm:        rgba(26, 15, 10, 0.5);  /* warm black shadow */
+  --border-wood:        #6b5540;  /* visible warm brown border */
+  --border-brass:       #d4a020;  /* bright brass accent border */
+  --shadow-warm:        rgba(10, 6, 3, 0.6);  /* deep warm shadow */
+
+  /* Felt table (green card surface) */
+  --felt:               #1a3a28;
+  --felt-light:         #224a34;
+  --felt-dark:          #122a1c;
+  --felt-edge:          #0e2016;
+
+  /* Cobblestone accents */
+  --stone:              #9a9080;
+  --stone-light:        #b8b0a0;
+  --stone-dark:         #706858;
+  --stone-edge:         #585048;
+  --stone-glow:         rgba(154, 144, 128, 0.25);
+
+  /* Warm cream text variants */
+  --cream:              #f0e8d0;
+  --cream-dim:          #b0a888;
+  --ink:                var(--ink-primary);
 
   /* ─────────────────────────────────────────────────────────────────────────
      COMPATIBILITY ALIASES — old Lumon names → tavern equivalents
@@ -101,8 +119,12 @@ body {
   min-height: 100vh;
   background-color: var(--tavern-bg);
   background-image:
-    radial-gradient(ellipse at 50% 0%, rgba(60, 40, 25, 0.4) 0%, transparent 60%),
-    linear-gradient(180deg, var(--tavern-bg) 0%, #1e1410 100%);
+    /* Candlelight glow from above — warm orange spotlight */
+    radial-gradient(ellipse 60% 40% at 50% -5%, rgba(200, 140, 60, 0.15) 0%, transparent 100%),
+    /* Subtle warm vignette */
+    radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(10, 6, 3, 0.4) 100%),
+    /* Base gradient */
+    linear-gradient(180deg, #201510 0%, var(--tavern-bg) 30%, #140e08 100%);
   background-attachment: fixed;
   color: var(--text-light);
 }
@@ -291,7 +313,7 @@ body {
 
 /* Primary: warm amber, brass-feel */
 .btn-tavern {
-  background: linear-gradient(180deg, var(--amber) 0%, #b87d2f 100%);
+  background: linear-gradient(180deg, var(--amber-light) 0%, var(--amber) 40%, #b87d2f 100%);
   color: var(--ink-primary);
   font-family: var(--font-display);
   font-weight: 700;
@@ -300,14 +322,21 @@ body {
   border: 2px solid var(--border-brass);
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
-  box-shadow: 0 2px 4px var(--shadow-warm), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transition: all 0.15s;
+  box-shadow:
+    0 2px 8px var(--shadow-warm),
+    0 0 20px rgba(232, 160, 48, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.2s;
   cursor: pointer;
 }
 
 .btn-tavern:hover {
-  background: linear-gradient(180deg, var(--amber-light) 0%, var(--amber) 100%);
-  box-shadow: 0 4px 12px var(--amber-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, var(--gold-shimmer) 0%, var(--amber-light) 40%, var(--amber) 100%);
+  box-shadow:
+    0 4px 16px var(--amber-glow),
+    0 0 30px rgba(232, 160, 48, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .btn-tavern:active { transform: scale(0.97); }

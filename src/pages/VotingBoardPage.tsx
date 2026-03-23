@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useCubeStore } from '../stores/cubeStore'
 import CubeNav from '../components/cube/CubeNav'
@@ -11,12 +12,19 @@ export default function VotingBoardPage() {
   const memberName = useCubeStore((s) => s.memberName)
   const members = useCubeStore((s) => s.members)
   const cards = useCubeStore((s) => s.cards)
-  const getPendingProposals = useCubeStore((s) => s.getPendingProposals)
-  const getProposalVotes = useCubeStore((s) => s.getProposalVotes)
+  const proposals = useCubeStore((s) => s.proposals)
+  const votes = useCubeStore((s) => s.votes)
   const castVote = useCubeStore((s) => s.castVote)
 
-  const pendingProposals = getPendingProposals()
-  const cubeCards = cards.map((c) => ({ id: c.id, name: c.name, image_uri: c.image_uri }))
+  const pendingProposals = useMemo(
+    () => proposals.filter((p) => p.status === 'pending'),
+    [proposals]
+  )
+
+  const cubeCards = useMemo(
+    () => cards.map((c) => ({ id: c.id, name: c.name, image_uri: c.image_uri })),
+    [cards]
+  )
 
   function handleVote(proposalId: string, vote: 'approve' | 'reject') {
     castVote(proposalId, vote)
@@ -59,7 +67,7 @@ export default function VotingBoardPage() {
               <ProposalCard
                 key={proposal.id}
                 proposal={proposal}
-                votes={getProposalVotes(proposal.id)}
+                votes={votes[proposal.id] || []}
                 members={members}
                 cubeCards={cubeCards}
                 currentMember={memberName}

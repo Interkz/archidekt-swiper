@@ -19,6 +19,16 @@ interface CubeStatsPanelProps {
   onToggle: () => void
 }
 
+const MAIN_TYPES = ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land', 'Battle']
+
+function extractMainType(typeLine: string): string[] {
+  const t = typeLine.toLowerCase()
+  for (const mt of MAIN_TYPES) {
+    if (t.includes(mt.toLowerCase())) return [mt]
+  }
+  return ['Other']
+}
+
 function cubeCardToNormalized(card: CubeCard): NormalizedCard {
   return {
     id: card.id,
@@ -28,7 +38,7 @@ function cubeCardToNormalized(card: CubeCard): NormalizedCard {
     typeLine: card.type_line,
     scryfallId: card.scryfall_id,
     quantity: 1,
-    categories: card.tags.length > 0 ? card.tags : [card.type_line.split(' ')[0]],
+    categories: card.tags.length > 0 ? card.tags : extractMainType(card.type_line),
     setCode: card.set_code,
     colorIdentity: card.color_identity,
   }

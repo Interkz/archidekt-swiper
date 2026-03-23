@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-type CubeNavTab = 'dashboard' | 'browser' | 'voting' | 'propose'
+type CubeNavTab = 'dashboard' | 'browser' | 'voting' | 'propose' | 'history'
 
 interface CubeNavProps {
   cubeId: string
@@ -12,11 +12,12 @@ const TABS: { key: CubeNavTab; label: string; path: (id: string) => string }[] =
   { key: 'browser', label: 'Browser', path: (id) => `/cube/${id}/browser` },
   { key: 'voting', label: 'Voting', path: (id) => `/cube/${id}/voting` },
   { key: 'propose', label: 'Propose', path: (id) => `/cube/${id}/propose` },
+  { key: 'history', label: 'History', path: (id) => `/cube/${id}/history` },
 ]
 
 export default function CubeNav({ cubeId, active }: CubeNavProps) {
   return (
-    <nav className="flex gap-1 px-4 py-2 border-b border-[var(--border-wood)]"
+    <nav aria-label="Cube navigation" className="flex gap-1 px-4 py-2 border-b border-[var(--border-wood)]"
          style={{ background: 'var(--tavern-surface)' }}>
       {TABS.map((tab) => {
         const isActive = tab.key === active

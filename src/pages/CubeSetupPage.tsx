@@ -23,7 +23,7 @@ function deriveTagsFromType(typeLine: string): string[] {
 
 export default function CubeSetupPage() {
   const navigate = useNavigate()
-  const { memberName, createCube, setCards, currentCubeId } = useCubeStore()
+  const { memberName, createCube, setCards, currentCubeId, cards, clearFilters } = useCubeStore()
 
   const [cubeName, setCubeName] = useState('The Cube')
   const [threshold, setThreshold] = useState<'majority' | 'unanimous'>('majority')
@@ -93,14 +93,14 @@ export default function CubeSetupPage() {
   const progressPercent = progress.total > 0 ? Math.round((progress.resolved / progress.total) * 100) : 0
 
   // If cube already exists, offer to go to it
-  if (currentCubeId && useCubeStore.getState().cards.length > 0 && phase === 'idle') {
+  if (currentCubeId && cards.length > 0 && phase === 'idle') {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6">
         <h1 className="font-display text-3xl text-[var(--text-light)] tracking-wider mb-4">
           CUBE EXISTS
         </h1>
         <p className="text-[var(--text-muted)] mb-8">
-          You already have a cube loaded ({useCubeStore.getState().cards.length} cards).
+          You already have a cube loaded ({cards.length} cards).
         </p>
         <div className="flex gap-4">
           <Link to={`/cube/${currentCubeId}/browser`} className="btn-tavern px-6 py-3 inline-block text-center">
@@ -108,7 +108,8 @@ export default function CubeSetupPage() {
           </Link>
           <button
             onClick={() => {
-              useCubeStore.getState().setCards([])
+              setCards([])
+              clearFilters()
               useCubeStore.setState({ currentCubeId: null, cube: null, members: [], proposals: [], votes: {} })
             }}
             className="btn-wood px-6 py-3"
@@ -216,7 +217,7 @@ export default function CubeSetupPage() {
             </div>
             <p className="font-mono text-xs text-[var(--text-muted)] text-center">
               {phase === 'resolving' && `Resolving cards... ${progress.resolved}/${progress.total}`}
-              {phase === 'tagging' && `Tagging: ${progress.tag}...`}
+              {phase === 'tagging' && 'Categorizing cards...'}
             </p>
           </div>
         )}

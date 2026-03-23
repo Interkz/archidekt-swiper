@@ -67,7 +67,7 @@
   position: relative;
   border-radius: 6px;
   overflow: visible;
-  cursor: pointer;
+  cursor: default;
   /* CSS transition for hover — NOT animation fill-mode (that blocks hover) */
   transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1), z-index 0s;
 }
@@ -118,7 +118,7 @@
   font-family: 'Crimson Pro', serif;
   font-size: 0.7rem;
   font-weight: 600;
-  color: #f0e8d0;
+  color: var(--tavern-card, #f2e8d0);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

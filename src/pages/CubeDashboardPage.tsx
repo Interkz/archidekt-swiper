@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useCubeStore } from '../stores/cubeStore'
+import CubeNav from '../components/cube/CubeNav'
 import MemberPicker from '../components/cube/MemberPicker'
 
 export default function CubeDashboardPage() {
@@ -8,18 +10,23 @@ export default function CubeDashboardPage() {
   const cards = useCubeStore(s => s.cards)
   const members = useCubeStore(s => s.members)
   const proposals = useCubeStore(s => s.proposals)
-  const getPendingProposals = useCubeStore(s => s.getPendingProposals)
-  const pending = getPendingProposals()
 
-  // Quick stats
-  const creatureCount = cards.filter(c => c.type_line.toLowerCase().includes('creature')).length
-  const instantCount = cards.filter(c => c.type_line.toLowerCase().includes('instant')).length
-  const sorceryCount = cards.filter(c => c.type_line.toLowerCase().includes('sorcery')).length
-  const landCount = cards.filter(c => c.type_line.toLowerCase().includes('land')).length
-  const avgCmc = cards.length > 0
-    ? (cards.filter(c => !c.type_line.toLowerCase().includes('land')).reduce((sum, c) => sum + c.cmc, 0) /
-       Math.max(cards.filter(c => !c.type_line.toLowerCase().includes('land')).length, 1)).toFixed(2)
-    : '0.00'
+  const pending = useMemo(
+    () => proposals.filter(p => p.status === 'pending'),
+    [proposals]
+  )
+
+  const stats = useMemo(() => {
+    const creatures = cards.filter(c => c.type_line.toLowerCase().includes('creature')).length
+    const instants = cards.filter(c => c.type_line.toLowerCase().includes('instant')).length
+    const sorceries = cards.filter(c => c.type_line.toLowerCase().includes('sorcery')).length
+    const lands = cards.filter(c => c.type_line.toLowerCase().includes('land')).length
+    const nonLands = cards.filter(c => !c.type_line.toLowerCase().includes('land'))
+    const avgCmc = nonLands.length > 0
+      ? (nonLands.reduce((sum, c) => sum + c.cmc, 0) / nonLands.length).toFixed(2)
+      : '0.00'
+    return { creatures, instants, sorceries, lands, avgCmc }
+  }, [cards])
 
   if (!cube || cards.length === 0) {
     return (
@@ -33,8 +40,7 @@ export default function CubeDashboardPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="border-b-2 border-[var(--border-wood)] p-4"
-           style={{ background: 'linear-gradient(180deg, #5c3a1e, #3b2410 40%, #1a0e06)' }}>
+      <div className="border-b-2 border-[var(--border-wood)] p-4 wood-surface">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="font-display text-2xl text-[var(--text-light)] tracking-wider">{cube.name}</h1>
@@ -44,45 +50,24 @@ export default function CubeDashboardPage() {
         </div>
       </div>
 
-      {/* Nav */}
-      <div className="flex gap-1 px-4 py-2 border-b border-[var(--border-wood)]"
-           style={{ background: '#0e2016' }}>
-        {[
-          { label: 'Dashboard', path: `/cube/${id}`, active: true },
-          { label: 'Browser', path: `/cube/${id}/browser` },
-          { label: 'Voting', path: `/cube/${id}/voting`, badge: pending.length },
-          { label: 'Propose', path: `/cube/${id}/propose` },
-        ].map(tab => (
-          <Link
-            key={tab.label}
-            to={tab.path}
-            className={`font-mono text-xs uppercase tracking-wider px-4 py-2 rounded transition-all ${
-              tab.active
-                ? 'bg-[var(--stone)] text-[var(--ink-primary)]'
-                : 'text-[var(--cream-dim)] hover:text-[var(--text-light)] hover:bg-[rgba(154,144,128,0.1)]'
-            }`}
-          >
-            {tab.label}
-            {tab.badge ? <span className="ml-2 text-[var(--negative)]">({tab.badge})</span> : null}
-          </Link>
-        ))}
-      </div>
+      {/* Use shared CubeNav */}
+      <CubeNav cubeId={id || ''} active="dashboard" />
 
       {/* Dashboard content */}
       <div className="max-w-5xl mx-auto p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
           {/* Quick Stats */}
-          <div className="border-2 border-[var(--border-wood)] rounded p-5" style={{ background: '#2e2018' }}>
+          <div className="border-2 border-[var(--border-wood)] rounded p-5 bg-[var(--tavern-surface)]">
             <h2 className="text-terminal text-[var(--text-muted)] tracking-widest mb-4">CUBE STATS</h2>
             <div className="space-y-3">
               {[
                 ['Total Cards', cards.length],
-                ['Creatures', creatureCount],
-                ['Instants', instantCount],
-                ['Sorceries', sorceryCount],
-                ['Lands', landCount],
-                ['Avg CMC', avgCmc],
+                ['Creatures', stats.creatures],
+                ['Instants', stats.instants],
+                ['Sorceries', stats.sorceries],
+                ['Lands', stats.lands],
+                ['Avg CMC', stats.avgCmc],
               ].map(([label, value]) => (
                 <div key={String(label)} className="flex justify-between">
                   <span className="font-mono text-sm text-[var(--text-muted)]">{label}</span>
@@ -93,7 +78,7 @@ export default function CubeDashboardPage() {
           </div>
 
           {/* Members */}
-          <div className="border-2 border-[var(--border-wood)] rounded p-5" style={{ background: '#2e2018' }}>
+          <div className="border-2 border-[var(--border-wood)] rounded p-5 bg-[var(--tavern-surface)]">
             <h2 className="text-terminal text-[var(--text-muted)] tracking-widest mb-4">MEMBERS</h2>
             <div className="space-y-3">
               {members.map(m => (
@@ -112,7 +97,7 @@ export default function CubeDashboardPage() {
           </div>
 
           {/* Recent Proposals */}
-          <div className="border-2 border-[var(--border-wood)] rounded p-5" style={{ background: '#2e2018' }}>
+          <div className="border-2 border-[var(--border-wood)] rounded p-5 bg-[var(--tavern-surface)]">
             <h2 className="text-terminal text-[var(--text-muted)] tracking-widest mb-4">RECENT PROPOSALS</h2>
             {proposals.length === 0 ? (
               <p className="text-[var(--text-muted)] text-sm">No proposals yet.</p>

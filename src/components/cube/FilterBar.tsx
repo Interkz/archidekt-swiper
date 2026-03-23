@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useCubeStore } from '../../stores/cubeStore'
 
 const COLORS = [
@@ -28,9 +29,13 @@ export default function FilterBar({ filteredCount, totalCount }: FilterBarProps)
   const activeFilters = useCubeStore((s) => s.activeFilters)
   const toggleFilter = useCubeStore((s) => s.toggleFilter)
   const clearFilters = useCubeStore((s) => s.clearFilters)
-  const colorCounts = useCubeStore((s) => s.getColorCounts)()
-  const typeCounts = useCubeStore((s) => s.getTypeCounts)()
-  const tagCounts = useCubeStore((s) => s.getTagCounts)()
+  const cards = useCubeStore((s) => s.cards)
+  const getColorCounts = useCubeStore((s) => s.getColorCounts)
+  const getTypeCounts = useCubeStore((s) => s.getTypeCounts)
+  const getTagCounts = useCubeStore((s) => s.getTagCounts)
+  const colorCounts = useMemo(() => getColorCounts(), [cards, getColorCounts])
+  const typeCounts = useMemo(() => getTypeCounts(), [cards, getTypeCounts])
+  const tagCounts = useMemo(() => getTagCounts(), [cards, getTagCounts])
 
   const hasFilters =
     activeFilters.colors.length > 0 ||
