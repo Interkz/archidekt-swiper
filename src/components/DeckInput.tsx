@@ -20,11 +20,11 @@ export default function DeckInput() {
 
     setLoading(true)
     setError(null)
+    navigate('/swipe')
 
     try {
       const deck = await fetchDeck(deckId)
       setDeck(deck)
-      navigate('/swipe')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load deck')
     } finally {

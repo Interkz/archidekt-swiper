@@ -36,6 +36,7 @@ function cubeCardToNormalized(card: CubeCard): NormalizedCard {
     manaCost: card.mana_cost,
     cmc: card.cmc,
     typeLine: card.type_line,
+    oracleText: '',
     scryfallId: card.scryfall_id,
     quantity: 1,
     categories: card.tags.length > 0 ? card.tags : extractMainType(card.type_line),

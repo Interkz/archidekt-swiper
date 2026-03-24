@@ -1,11 +1,14 @@
 import { useEffect, useCallback, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
+import { useFavoritesStore } from '../stores/favoritesStore'
 import CardStack from '../components/CardStack'
+import SkeletonCard from '../components/SkeletonCard'
 import SwipeControls from '../components/SwipeControls'
 import ProgressBar from '../components/ProgressBar'
 import ViewModeToggle from '../components/ViewModeToggle'
 import KeptCardsModal from '../components/KeptCardsModal'
+import CardDetailsOverlay from '../components/CardDetailsOverlay'
 import DeckStatsPanel from '../components/stats/DeckStatsPanel'
 import QuickActionsDropdown from '../components/QuickActionsDropdown'
 import QuickActionConfirmModal from '../components/QuickActionConfirmModal'
@@ -16,7 +19,9 @@ export default function SwipePage() {
   const navigate = useNavigate()
   const [showKeptModal, setShowKeptModal] = useState(false)
   const [showStatsPanel, setShowStatsPanel] = useState(false)
+  const [showCardDetails, setShowCardDetails] = useState(false)
   const [pendingQuickAction, setPendingQuickAction] = useState<QuickAction | null>(null)
+  const favoritesCount = useFavoritesStore((s) => s.favorites.length)
 
   const {
     deckName,
@@ -25,11 +30,14 @@ export default function SwipePage() {
     remainingSideboardCards,
     allSideboardCards,
     keptCards,
+    removedCards,
     maybeCards,
     isReviewingMaybes,
     swipeHistory,
     swipeMode,
     viewMode,
+    isLoading,
+    error,
     keepCard,
     removeCard,
     maybeCard,
@@ -37,6 +45,7 @@ export default function SwipePage() {
     setSwipeMode,
     setViewMode,
     startMaybeReview,
+    endMaybeReview,
     getRemainingLands,
     getRemainingByCategory,
     getUniqueCategories,
@@ -50,12 +59,12 @@ export default function SwipePage() {
   // Format numbers with leading zeros
   const formatNumber = (n: number) => n.toString().padStart(3, '0')
 
-  // Redirect if no deck loaded
+  // Redirect if no deck loaded (but not while loading or showing error)
   useEffect(() => {
-    if (allCards.length === 0) {
+    if (allCards.length === 0 && !isLoading && !error) {
       navigate('/')
     }
-  }, [allCards, navigate])
+  }, [allCards, isLoading, error, navigate])
 
   // Handle view mode change
   const handleViewModeChange = (mode: ViewMode) => {
@@ -72,6 +81,11 @@ export default function SwipePage() {
       if (maybeCards.length > 0 && !isReviewingMaybes) {
         return
       }
+      // End maybe review and restore saved remaining cards
+      if (isReviewingMaybes) {
+        endMaybeReview()
+        return
+      }
       // If there are sideboard cards, offer to switch; otherwise go to results
       if (allSideboardCards.length > 0 && remainingSideboardCards.length > 0) {
         // Stay on page, user can switch to sideboard
@@ -79,27 +93,44 @@ export default function SwipePage() {
         navigate('/results')
       }
     }
-  }, [remainingCards, allCards, swipeMode, allSideboardCards, remainingSideboardCards, maybeCards, isReviewingMaybes, navigate])
+  }, [remainingCards, allCards, swipeMode, allSideboardCards, remainingSideboardCards, maybeCards, isReviewingMaybes, endMaybeReview, navigate])
+
+  // Close details when card changes
+  useEffect(() => {
+    setShowCardDetails(false)
+  }, [currentCards.length])
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (currentCards.length === 0) return
+      // Close details with Escape or Down arrow
+      if (showCardDetails) {
+        if (e.key === 'Escape' || e.key === 'ArrowDown') {
+          e.preventDefault()
+          setShowCardDetails(false)
+          return
+        }
+      }
 
-      const currentCard = currentCards[0]
+      if (currentCards.length === 0) return
 
       switch (e.key) {
         case 'ArrowRight':
           e.preventDefault()
-          keepCard(currentCard)
+          keepCard(currentCards[0])
           break
         case 'ArrowLeft':
           e.preventDefault()
-          removeCard(currentCard)
+          removeCard(currentCards[0])
           break
         case 'ArrowUp':
           e.preventDefault()
-          maybeCard(currentCard)
+          setShowCardDetails(true)
+          break
+        case 'ArrowDown':
+        case 'Escape':
+          e.preventDefault()
+          setShowCardDetails(false)
           break
         case 'z':
         case 'Z':
@@ -113,7 +144,7 @@ export default function SwipePage() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentCards, swipeHistory, keepCard, removeCard, maybeCard, undoLastSwipe])
+  }, [currentCards, showCardDetails, swipeHistory, keepCard, removeCard, undoLastSwipe])
 
   const handleKeep = useCallback(() => {
     if (currentCards.length > 0) {
@@ -150,7 +181,7 @@ export default function SwipePage() {
     }
   }
 
-  if (allCards.length === 0) {
+  if (allCards.length === 0 && !isLoading && !error) {
     return null
   }
 
@@ -186,6 +217,21 @@ export default function SwipePage() {
                 Pending ({formatNumber(maybeCards.length)})
               </span>
             )}
+            <Link
+              to="/favorites"
+              className="relative font-mono text-sm uppercase tracking-wider text-[var(--lumon-black)]
+                         hover:text-[var(--lumon-green)] transition-colors flex items-center gap-1"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth={1}>
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              {favoritesCount > 0 && (
+                <span className="absolute -top-2 -right-3 min-w-[16px] h-4 px-1 flex items-center justify-center
+                                 bg-[var(--lumon-green)] text-[var(--lumon-white)] font-mono text-[10px] font-bold">
+                  {favoritesCount}
+                </span>
+              )}
+            </Link>
             <button
               onClick={() => setShowKeptModal(true)}
               className="font-mono text-sm uppercase tracking-wider text-[var(--amber)]
@@ -199,6 +245,14 @@ export default function SwipePage() {
 
       {/* Kept cards modal */}
       <KeptCardsModal isOpen={showKeptModal} onClose={() => setShowKeptModal(false)} />
+
+      {/* Card details overlay */}
+      {showCardDetails && currentCards.length > 0 && (
+        <CardDetailsOverlay
+          card={currentCards[0]}
+          onClose={() => setShowCardDetails(false)}
+        />
+      )}
 
       {/* Stats panel */}
       <DeckStatsPanel isOpen={showStatsPanel} onToggle={() => setShowStatsPanel(!showStatsPanel)} />
@@ -280,7 +334,13 @@ export default function SwipePage() {
 
       {/* Progress */}
       <div className="py-6 px-4">
-        <ProgressBar current={currentCards.length} total={totalCards} />
+        <ProgressBar
+          current={currentCards.length}
+          total={totalCards}
+          keptCount={keptCards.length}
+          removedCount={removedCards.length}
+          maybeCount={maybeCards.length}
+        />
         {swipeMode === 'sideboard' && (
           <p className="text-center font-mono text-xs text-[var(--status-warning)] mt-3 uppercase tracking-wider">
             Accept sideboard cards to add to deck
@@ -288,9 +348,38 @@ export default function SwipePage() {
         )}
       </div>
 
-      {/* Card stack or completion message */}
+      {/* Card stack, skeleton, error, or completion message */}
       <div className="flex-1 flex items-center justify-center px-4 pb-4">
-        {currentCards.length > 0 ? (
+        {isLoading ? (
+          <div className="text-center">
+            <SkeletonCard />
+            <p className="mt-6 text-terminal text-[var(--status-neutral)] tracking-widest animate-pulse">
+              LOADING DECK DATA...
+            </p>
+          </div>
+        ) : error ? (
+          <div className="text-center max-w-md">
+            <div className="w-16 h-16 mx-auto mb-6 border-2 border-[var(--lumon-black)] flex items-center justify-center">
+              <svg className="w-8 h-8 text-[var(--lumon-black)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <p className="text-terminal text-[var(--lumon-black)] tracking-widest mb-2">
+              INITIALIZATION FAILED
+            </p>
+            <div className="border-2 border-[var(--lumon-black)] p-4 mb-6 bg-[var(--surface-elevated)]">
+              <p className="font-mono text-sm text-[var(--lumon-black)]">{error}</p>
+            </div>
+            <button
+              onClick={() => navigate('/')}
+              className="px-6 py-3 border-2 border-[var(--lumon-black)]
+                         font-mono font-semibold uppercase tracking-wider
+                         hover:bg-[var(--lumon-black)] hover:text-[var(--lumon-white)] transition-all duration-150"
+            >
+              Return to Input
+            </button>
+          </div>
+        ) : currentCards.length > 0 ? (
           <CardStack
             cards={currentCards}
             onKeep={keepCard}
@@ -399,14 +488,16 @@ export default function SwipePage() {
           <span className="hidden sm:inline text-terminal text-[var(--status-neutral)]">
             CONTROLS: <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">←</kbd> REJECT
             <span className="mx-2">|</span>
-            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">↑</kbd> DEFER
-            <span className="mx-2">|</span>
             <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">→</kbd> ACCEPT
+            <span className="mx-2">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">↑</kbd> DETAILS
+            <span className="mx-2">|</span>
+            <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">ESC</kbd> CLOSE
             <span className="mx-2">|</span>
             <kbd className="px-2 py-1 border border-[var(--grid-line)] font-mono text-xs mx-1">Z</kbd> UNDO
           </span>
           <span className="sm:hidden text-terminal text-[var(--status-neutral)]">
-            SWIPE: LEFT REJECT, UP DEFER, RIGHT ACCEPT
+            SWIPE: LEFT REJECT, RIGHT ACCEPT, UP DEFER
           </span>
         </div>
       </div>

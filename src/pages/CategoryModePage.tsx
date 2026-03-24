@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
+import { useFavoritesStore } from '../stores/favoritesStore'
 import CategoryTabs from '../components/category/CategoryTabs'
 import CategorySection from '../components/category/CategorySection'
 import ViewModeToggle from '../components/ViewModeToggle'
@@ -13,6 +14,7 @@ export default function CategoryModePage() {
   const [showLimitInput, setShowLimitInput] = useState(false)
   const [limitValue, setLimitValue] = useState('')
   const [showKeptModal, setShowKeptModal] = useState(false)
+  const favoritesCount = useFavoritesStore((s) => s.favorites.length)
 
   const {
     deckName,
@@ -198,13 +200,30 @@ export default function CategoryModePage() {
 
           <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
 
-          <button
-            onClick={() => setShowKeptModal(true)}
-            className="font-mono text-sm uppercase tracking-wider text-[var(--lumon-green)]
-                       hover:text-[var(--lumon-green-light)] transition-colors"
-          >
-            Inventory ({formatNumber(keptCards.length)})
-          </button>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/favorites"
+              className="relative font-mono text-sm uppercase tracking-wider text-[var(--lumon-black)]
+                         hover:text-[var(--lumon-green)] transition-colors flex items-center gap-1"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth={1}>
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              {favoritesCount > 0 && (
+                <span className="absolute -top-2 -right-3 min-w-[16px] h-4 px-1 flex items-center justify-center
+                                 bg-[var(--lumon-green)] text-[var(--lumon-white)] font-mono text-[10px] font-bold">
+                  {favoritesCount}
+                </span>
+              )}
+            </Link>
+            <button
+              onClick={() => setShowKeptModal(true)}
+              className="font-mono text-sm uppercase tracking-wider text-[var(--lumon-green)]
+                         hover:text-[var(--lumon-green-light)] transition-colors"
+            >
+              Inventory ({formatNumber(keptCards.length)})
+            </button>
+          </div>
         </div>
       </header>
 

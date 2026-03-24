@@ -51,6 +51,7 @@ export interface NormalizedCard {
   manaCost: string
   cmc: number
   typeLine: string
+  oracleText: string
   scryfallId: string
   quantity: number
   categories: string[]
