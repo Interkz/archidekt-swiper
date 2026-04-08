@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
+import PileManaCurveChart from '../components/stats/PileManaCurveChart'
 import {
   formatForArchidektImport,
   formatWithCategories,
@@ -131,6 +132,9 @@ export default function ResultsPage() {
             </div>
           </div>
         </div>
+
+        {/* Mana curve by pile */}
+        <PileManaCurveChart keptCards={keptCards} removedCards={removedCards} maybeCards={maybeCards} />
 
         {/* Commander deck check */}
         <div className={`mb-6 border-2 p-4 ${deckComplete ? 'border-[var(--lumon-green)]' : 'border-[var(--lumon-black)]'}`}>
