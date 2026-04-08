@@ -1,10 +1,14 @@
+import { useState } from 'react'
 import type { NormalizedCard } from '../types/archidekt'
+import RulingsModal from './RulingsModal'
 
 interface CardDetailsProps {
   card: NormalizedCard
 }
 
 export default function CardDetails({ card }: CardDetailsProps) {
+  const [showRulings, setShowRulings] = useState(false)
+
   return (
     <div className="mt-6 text-center">
       {/* Card name - clinical typography */}
@@ -32,6 +36,22 @@ export default function CardDetails({ card }: CardDetailsProps) {
           // {card.categories[0]}
         </p>
       )}
+
+      {/* Rulings button */}
+      <button
+        onClick={() => setShowRulings(true)}
+        className="mt-3 px-4 py-1.5 border border-[var(--grid-line)] font-mono text-xs uppercase tracking-wider text-[var(--status-neutral)]
+                   hover:border-[var(--lumon-black)] hover:text-[var(--lumon-black)] transition-all duration-150"
+      >
+        Rulings
+      </button>
+
+      <RulingsModal
+        isOpen={showRulings}
+        onClose={() => setShowRulings(false)}
+        cardName={card.name}
+        scryfallId={card.scryfallId}
+      />
     </div>
   )
 }
