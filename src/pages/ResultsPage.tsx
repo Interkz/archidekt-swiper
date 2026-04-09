@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDeckStore } from '../stores/deckStore'
+import ColorIdentityBreakdown from '../components/stats/ColorIdentityBreakdown'
 import {
   formatForArchidektImport,
   formatWithCategories,
@@ -159,6 +160,15 @@ export default function ResultsPage() {
               </>
             )}
           </div>
+        </div>
+
+        {/* Color identity breakdown */}
+        <div className="mb-6">
+          <ColorIdentityBreakdown
+            keptCards={keptCards}
+            removedCards={removedCards}
+            maybeCards={maybeCards}
+          />
         </div>
 
         {/* Export section */}
